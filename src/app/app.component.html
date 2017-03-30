@@ -1,4 +1,5 @@
-<button (click)="current = !current">{{ current ? 'Show all' : 'Show current'}}</button>
+<app-staff-list-filter (updateFilter)="updateFilter($event)">
+</app-staff-list-filter>
 {{(staffModel | async)?.total}}
 <app-staff-list 
     [staff]="(staffModel | async)?.staff">

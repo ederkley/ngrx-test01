@@ -5,8 +5,14 @@ import { type } from '../util';
 export const ActionTypes = {
    SHOW_ALL: type('[PeopleFilter] Show all'),
    SHOW_CURRENT: type('[PeopleFilter] Show current'),
-   SHOW_EXECUTIVE: type('[PeopleFilter] Show executive level')
+   SHOW_EXECUTIVE: type('[PeopleFilter] Show executive')
  };
+
+ export const peopleFilterSelect = [
+     { action: ActionTypes.SHOW_ALL, friendly: 'Show all' },
+     { action: ActionTypes.SHOW_CURRENT, friendly: 'Show current' },
+     { action: ActionTypes.SHOW_EXECUTIVE, friendly: 'Show executive level' }
+ ];
 
 // remember to avoid mutation within reducers
 export const peopleFilter = (state = member => member, action) => {
@@ -14,11 +20,16 @@ export const peopleFilter = (state = member => member, action) => {
         case ActionTypes.SHOW_ALL:
             return member => member;
         case ActionTypes.SHOW_CURRENT:
-            return member => !member.person.endDate;
+            return member => Object.assign({}, { person: { endDate: true } });
         case ActionTypes.SHOW_EXECUTIVE:
-            return member => member.position === 'EL1' || member.position === 'EL2' || member.position === 'SES1' || member.position === 'SES2'
+            return member => Object.assign({}, { position: { level: (level) => {
+                level === 'EL1' || level === 'EL2' || level === 'SES1' || level === 'SES2'
+            } } });
         // always have default return of previous state when action is not relevant
         default:
             return state;
     };
 };
+
+
+// SELECTORS

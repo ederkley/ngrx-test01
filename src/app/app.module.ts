@@ -20,11 +20,13 @@ import { PersonService } from './_services/person.service';
 
 import { AppComponent } from './app.component';
 import { StaffListComponent } from './staff-list/staff-list.component';
+import { StaffListFilterComponent } from './staff-list-filter/staff-list-filter.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    StaffListComponent
+    StaffListComponent,
+    StaffListFilterComponent
   ],
   imports: [
     BrowserModule,

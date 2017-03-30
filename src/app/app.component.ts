@@ -10,7 +10,6 @@ import { PersonService } from './_services/person.service';
 import * as peopleReducer from './_reducers/people.reducer';
 import * as assignmentReducer from './_reducers/assignments.reducer';
 import * as positionReducer from './_reducers/positions.reducer';
-import * as peopleFilterReducer from './_reducers/people-filter.reducer';
 
 @Component({
     selector: 'app-ngrx',
@@ -20,7 +19,6 @@ import * as peopleFilterReducer from './_reducers/people-filter.reducer';
 export class AppComponent implements OnInit {
   public staffModel: Observable<any>;
   public current = false;
-  public filters = [];
   errorMessage: string;
 
   constructor(
@@ -48,10 +46,10 @@ export class AppComponent implements OnInit {
           this._store.dispatch({type: positionReducer.ActionTypes.LOAD_POSITIONS, payload: { positions: positionList } });
         },
         error => this.errorMessage = <any>error);
-      this.filters = Object.keys(peopleFilterReducer.ActionTypes);
   };
 
   updateFilter(filter) {
+    console.log(filter);
     this._store.dispatch({type: filter});
   }
 
