@@ -26,12 +26,12 @@ export const people = (state: Person[] = [], action) => {
 
 // SELECTORS
 
-export const getStaff = () => {
+export const getStaff = (filter) => {
   return state => state
     .map(([peopleModel, assignmentsModel, positionsModel]) => {
         let staff = [];
         if (assignmentsModel && assignmentsModel.length > 0) {
-            staff = peopleModel.map(person => {
+            staff = peopleModel.filter(filter).map(person => {
                 const personsAssignments: Assignment[] = assignmentsModel.filter(assignment => assignment.personId === person.id);
                 let thisAssignment: Assignment;
                 let thisPosition: Position;

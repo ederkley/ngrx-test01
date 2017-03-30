@@ -10,6 +10,7 @@ import { PersonService } from './_services/person.service';
 import * as peopleReducer from './_reducers/people.reducer';
 import * as assignmentReducer from './_reducers/assignments.reducer';
 import * as positionReducer from './_reducers/positions.reducer';
+import * as peopleFilterReducer from './_reducers/people-filter.reducer';
 
 @Component({
     selector: 'app-ngrx',
@@ -19,6 +20,7 @@ import * as positionReducer from './_reducers/positions.reducer';
 export class AppComponent implements OnInit {
   public staffModel: Observable<any>;
   public current = false;
+  public filters = [];
   errorMessage: string;
 
   constructor(
@@ -28,7 +30,8 @@ export class AppComponent implements OnInit {
       this.staffModel = Observable.combineLatest(
           _store.select('people'),
           _store.select('assignments'),
-          _store.select('positions')
+          _store.select('positions'),
+          _store.select('peopleFilter')
         )
         .let(peopleReducer.getStaff());
   };
@@ -45,32 +48,12 @@ export class AppComponent implements OnInit {
           this._store.dispatch({type: positionReducer.ActionTypes.LOAD_POSITIONS, payload: { positions: positionList } });
         },
         error => this.errorMessage = <any>error);
+      this.filters = Object.keys(peopleFilterReducer.ActionTypes);
   };
 
-    // this._store.dispatch({type: people.ActionTypes.ADD_PERSON, payload: {id: newId(), name}});
-
-
-    // all state-changing actions get dispatched to and handled by reducers
-    /*
-    addPerson(name){
-      this._store.dispatch({type: people.ActionTypes.ADD_PERSON, payload: {id: newId(), name}});
-    }
-    addGuest(id){
-      this._store.dispatch({type: people.ActionTypes.ADD_GUEST, payload: id});
-    }
-
-    removeGuest(id){
-      this._store.dispatch({type: people.ActionTypes.REMOVE_GUEST, payload: id});
-    }
-
-    removePerson(id){
-      this._store.dispatch({type: people.ActionTypes.REMOVE_PERSON, payload: id});
-    }
-
-    toggleAttending(id){
-      this._store.dispatch({type: people.ActionTypes.TOGGLE_ATTENDING, payload: id})
-    }
-    */
+  updateFilter(filter) {
+    this._store.dispatch({type: filter});
+  }
 
 }
 

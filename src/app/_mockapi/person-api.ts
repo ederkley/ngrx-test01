@@ -16,14 +16,14 @@ export class PersonData implements InMemoryDbService {
     ];
 
     const positions: Position[] = [
-        {id: 17, title: 'IT System Administrator', supervisorId: 29, sectionId: 1, branchId: 1 },
-        {id: 18, title: 'IT Helpdesk', supervisorId: 29, sectionId: 1, branchId: 1},
-        {id: 29, title: 'IT Manager', supervisorId: 5, sectionId: 1, branchId: 1},
-        {id: 5, title: 'Director, Corporate', supervisorId: 2, branchId: 1},
-        {id: 2, title: 'Deputy Chief Executive Officer', supervisorId: 1, branchId: 3},
-        {id: 1, title: 'Chief Executive Officer'},
-        {id: 30, title: 'Assistant Director, Local Sales', supervisorId: 3, sectionId: 2, branchId: 2},
-        {id: 3, title: 'Director, Sales', supervisorId: 2, branchId: 2}
+        {id: 17, title: 'IT System Administrator', level: 'GH06', supervisorId: 29, sectionId: 1, branchId: 1 },
+        {id: 18, title: 'IT Helpdesk', level: 'GH04', supervisorId: 29, sectionId: 1, branchId: 1},
+        {id: 29, title: 'IT Manager', level: 'EL1', supervisorId: 5, sectionId: 1, branchId: 1},
+        {id: 5, title: 'Director, Corporate', level: 'EL2', supervisorId: 2, branchId: 1},
+        {id: 2, title: 'Deputy Chief Executive Officer', level: 'SES1', supervisorId: 1, branchId: 3},
+        {id: 1, title: 'Chief Executive Officer', level: 'SES2', },
+        {id: 30, title: 'Assistant Director, Local Sales', level: 'EL1', supervisorId: 3, sectionId: 2, branchId: 2},
+        {id: 3, title: 'Director, Sales', level: 'EL2', supervisorId: 2, branchId: 2}
     ];
 
     const branches: Branch[] = [
@@ -50,10 +50,6 @@ export class PersonData implements InMemoryDbService {
         {id: 109, personId: 101, positionId: 5, startDate: new Date('22 Mar 2017'), acting: true }
     ];
 
-    const executives: number[] = [
-        5, 2, 1, 3
-    ];
-
-    return {people, positions, assignments, branches, sections, executives};
+    return {people, positions, assignments, branches, sections};
   }
 }

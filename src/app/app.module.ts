@@ -14,6 +14,8 @@ import { PersonData } from './_mockapi/person-api';
 import { people } from './_reducers/people.reducer';
 import { positions } from './_reducers/positions.reducer';
 import { assignments } from './_reducers/assignments.reducer';
+import { peopleFilter } from './_reducers/people-filter.reducer';
+
 import { PersonService } from './_services/person.service';
 
 import { AppComponent } from './app.component';
@@ -30,7 +32,7 @@ import { StaffListComponent } from './staff-list/staff-list.component';
     HttpModule,
     MaterialModule,
     FlexLayoutModule,
-    StoreModule.provideStore({people, positions, assignments}),
+    StoreModule.provideStore({people, positions, assignments, peopleFilter}),
     InMemoryWebApiModule.forRoot(PersonData)
   ],
   providers: [PersonService],

@@ -7,6 +7,7 @@ export const newId = () => {
 export interface Position {
   id: number;
   title: string;
+  level: string;
   sectionId?: number;
   branchId?: number;
   notes?: string;
