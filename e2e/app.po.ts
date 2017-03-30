@@ -1,6 +1,6 @@
 import { browser, element, by } from 'protractor';
 
-export class NgrxTest01Page {
+export class Redux02Page {
   navigateTo() {
     return browser.get('/');
   }

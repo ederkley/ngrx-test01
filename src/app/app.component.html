@@ -1,3 +1,6 @@
-<h1>
-  {{title}}
-</h1>
+<button (click)="current = !current">{{ current ? 'Show all' : 'Show current'}}</button>
+{{(staffModel | async)?.total}}
+<app-staff-list 
+    [staff]="(staffModel | async)?.staff">
+</app-staff-list>
+{{errorMessage}}

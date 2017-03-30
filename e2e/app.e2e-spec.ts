@@ -1,10 +1,10 @@
-import { NgrxTest01Page } from './app.po';
+import { Redux02Page } from './app.po';
 
-describe('ngrx-test01 App', () => {
-  let page: NgrxTest01Page;
+describe('redux02 App', () => {
+  let page: Redux02Page;
 
   beforeEach(() => {
-    page = new NgrxTest01Page();
+    page = new Redux02Page();
   });
 
   it('should display message saying app works', () => {

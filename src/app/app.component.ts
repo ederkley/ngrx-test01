@@ -1,10 +1,77 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/let';
+
+import {Store, provideStore} from '@ngrx/store';
+
+import { Person, Position, newId } from './_models/person';
+import { PersonService } from './_services/person.service';
+import * as peopleReducer from './_reducers/people.reducer';
+import * as assignmentReducer from './_reducers/assignments.reducer';
+import * as positionReducer from './_reducers/positions.reducer';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-ngrx',
+    templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent {
-  title = 'app works!';
+export class AppComponent implements OnInit {
+  public staffModel: Observable<any>;
+  public current = false;
+  errorMessage: string;
+
+  constructor(
+    private _store: Store<any>,
+    private _personService: PersonService
+  ) {
+      this.staffModel = Observable.combineLatest(
+          _store.select('people'),
+          _store.select('assignments'),
+          _store.select('positions')
+        )
+        .let(peopleReducer.getStaff());
+  };
+
+  ngOnInit() {
+      Observable.forkJoin(
+        this._personService.getPeople(),
+        this._personService.getAssignments(),
+        this._personService.getPositions()
+      )
+        .subscribe(([peopleList, assignmentList, positionList]) => {
+          this._store.dispatch({type: peopleReducer.ActionTypes.LOAD_PEOPLE, payload: { people: peopleList } });
+          this._store.dispatch({type: assignmentReducer.ActionTypes.LOAD_ASSIGNMENTS, payload: { assignments: assignmentList } });
+          this._store.dispatch({type: positionReducer.ActionTypes.LOAD_POSITIONS, payload: { positions: positionList } });
+        },
+        error => this.errorMessage = <any>error);
+  };
+
+    // this._store.dispatch({type: people.ActionTypes.ADD_PERSON, payload: {id: newId(), name}});
+
+
+    // all state-changing actions get dispatched to and handled by reducers
+    /*
+    addPerson(name){
+      this._store.dispatch({type: people.ActionTypes.ADD_PERSON, payload: {id: newId(), name}});
+    }
+    addGuest(id){
+      this._store.dispatch({type: people.ActionTypes.ADD_GUEST, payload: id});
+    }
+
+    removeGuest(id){
+      this._store.dispatch({type: people.ActionTypes.REMOVE_GUEST, payload: id});
+    }
+
+    removePerson(id){
+      this._store.dispatch({type: people.ActionTypes.REMOVE_PERSON, payload: id});
+    }
+
+    toggleAttending(id){
+      this._store.dispatch({type: people.ActionTypes.TOGGLE_ATTENDING, payload: id})
+    }
+    */
+
 }
+
+

@@ -1,0 +1,5 @@
+<ul>
+  <li *ngFor="let member of staff">
+      {{member.person.name}} ({{member.person.commenceDate | date:'d MMM yyyy'}}) {{member.position && member.position.title}} {{ member.assignment && member.assignment.acting ? '(acting)' : ''}}
+  </li>
+</ul>
