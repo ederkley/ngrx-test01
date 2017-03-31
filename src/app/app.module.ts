@@ -22,13 +22,15 @@ import { AppComponent } from './app.component';
 import { StaffListComponent } from './staff-list/staff-list.component';
 import { StaffListFilterComponent } from './staff-list-filter/staff-list-filter.component';
 import { PersonEditComponent } from './person-edit/person-edit.component';
+import { StaffAssignmentComponent } from './staff-assignment/staff-assignment.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     StaffListComponent,
     StaffListFilterComponent,
-    PersonEditComponent
+    PersonEditComponent,
+    StaffAssignmentComponent
   ],
   imports: [
     BrowserModule,
