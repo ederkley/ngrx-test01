@@ -4,7 +4,7 @@ export const newId = () => {
   return ++start;
 };
 
-export interface Position {
+export class Position {
   id: number;
   title: string;
   level: string;
@@ -14,30 +14,38 @@ export interface Position {
   supervisorId?: number;
 }
 
-export interface Person {
+export class Person {
   id: number;
   name: string;
   commenceDate: Date;
   exitDate?: Date;
 }
 
-export interface Assignment {
+export class Assignment {
   id: number;
   personId: number;
   positionId: number;
   acting: boolean;
   startDate: Date;
   endDate?: Date;
+  position?: Position;
 }
 
-export interface Branch {
+export class Staff {
+  person: Person;
+  assignments: Assignment[];
+  currentAssignment: Assignment;
+  actualAssignment: Assignment;
+}
+
+export class Branch {
   id: number;
   name: string;
   abbrev: string;
   branchHeadId?: number;
 }
 
-export interface Section {
+export class Section {
   id: number;
   name: string;
   abbrev: string;

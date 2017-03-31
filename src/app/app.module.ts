@@ -11,7 +11,7 @@ import 'hammerjs';
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { PersonData } from './_mockapi/person-api';
 
-import { people } from './_reducers/people.reducer';
+import { people, selectedPerson } from './_reducers/people.reducer';
 import { positions } from './_reducers/positions.reducer';
 import { assignments } from './_reducers/assignments.reducer';
 import { peopleFilter } from './_reducers/people-filter.reducer';
@@ -21,12 +21,14 @@ import { PersonService } from './_services/person.service';
 import { AppComponent } from './app.component';
 import { StaffListComponent } from './staff-list/staff-list.component';
 import { StaffListFilterComponent } from './staff-list-filter/staff-list-filter.component';
+import { PersonEditComponent } from './person-edit/person-edit.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     StaffListComponent,
-    StaffListFilterComponent
+    StaffListFilterComponent,
+    PersonEditComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +36,7 @@ import { StaffListFilterComponent } from './staff-list-filter/staff-list-filter.
     HttpModule,
     MaterialModule,
     FlexLayoutModule,
-    StoreModule.provideStore({people, positions, assignments, peopleFilter}),
+    StoreModule.provideStore({people, selectedPerson, positions, assignments, peopleFilter}),
     InMemoryWebApiModule.forRoot(PersonData)
   ],
   providers: [PersonService],

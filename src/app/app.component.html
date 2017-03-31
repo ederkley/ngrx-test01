@@ -2,9 +2,16 @@
     (updateFilter)="updateFilter($event)" 
     [defaultFilter]="defaultFilter">
 </app-staff-list-filter>
-{{(staffModel | async)?.total}}
+Total: {{(staffModel | async)?.total}}
+<button (click)="addNewPerson()">Add new</button>
 <app-staff-list 
     [staff]="(staffModel | async)?.staff"
-    [filter]="filter">
+    [filter]="filter"
+    (selectPerson)="selectPerson($event)">
 </app-staff-list>
+<app-person-edit *ngIf="selectedPerson || addingNew"
+    [staff]="selectedPerson"
+    [addingNew]="addingNew"
+    (updateStaff)="updateStaff($event)">
+</app-person-edit>
 {{errorMessage}}

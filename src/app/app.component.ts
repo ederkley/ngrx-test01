@@ -5,7 +5,7 @@ import 'rxjs/add/operator/let';
 
 import {Store, provideStore} from '@ngrx/store';
 
-import { Person, Position, newId } from './_models/person';
+import { Person, Position, newId, Staff } from './_models/person';
 import { PersonService } from './_services/person.service';
 import * as peopleReducer from './_reducers/people.reducer';
 import * as assignmentReducer from './_reducers/assignments.reducer';
@@ -19,8 +19,10 @@ import * as peopleFilterReducer from './_reducers/people-filter.reducer';
 })
 export class AppComponent implements OnInit {
   public staffModel: Observable<any>;
-  public filter;
+  public filter : string;
   public defaultFilter = peopleFilterReducer.ActionTypes.SHOW_EXECUTIVE;
+  public selectedPerson: Staff;
+  public addingNew = false;
   errorMessage: string;
 
   constructor(
@@ -33,7 +35,7 @@ export class AppComponent implements OnInit {
           _store.select('positions'),
           _store.select('peopleFilter')
         )
-        .let(peopleReducer.getStaff());
+        .let(peopleReducer.getStaffList());
   };
 
   ngOnInit() {
@@ -50,9 +52,26 @@ export class AppComponent implements OnInit {
         error => this.errorMessage = <any>error);
   };
 
-  updateFilter(newFilter) {
+  updateFilter(newFilter : string) {
     this.filter = newFilter;
     this._store.dispatch({type: newFilter});
+  };
+
+  addNewPerson() {
+    this.selectedPerson = undefined;
+    this.addingNew = true;
+  };
+
+  selectPerson(staff: Staff) {
+    this.selectedPerson = staff;
+  };
+
+  updateStaff(staff: Staff) {
+    if (!staff) {
+      this.addingNew = false;
+    } else {
+      console.log(staff);
+    }
   }
 
 }
