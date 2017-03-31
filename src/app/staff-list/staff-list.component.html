@@ -1,5 +1,16 @@
 <ul>
   <li *ngFor="let member of staff">
-      {{member.person.name}} ({{member.person.commenceDate | date:'d MMM yyyy'}}) {{member.position && member.position.title}} {{ member.assignment && member.assignment.acting ? '(acting)' : ''}}
+      {{member.person.name}} 
+      (Commence date: {{member.person.commenceDate | date:'d MMM yyyy'}}) 
+      <span *ngIf="!showCurrentOnly && member.actualPosition && member.currentPosition && member.actualPosition.id != member.currentPosition.id">
+        Actual: {{member.actualPosition && member.actualPosition.title}}
+        &nbsp;({{member.actualPosition && member.actualPosition.level}})
+      </span>
+      <span *ngIf="member.currentAssignment; else nonCurrent">
+        Current: {{member.currentPosition && member.currentPosition.title}}
+        &nbsp;({{member.currentPosition && member.currentPosition.level}}{{member.currentAssignment && member.currentAssignment.acting ? ', acting' : ''}})
+      </span>
+      <ng-template #nonCurrent>(Exit date: {{member.person.exitDate | date:'d MMM yyyy'}})</ng-template>
   </li>
 </ul>
+{{filter}}

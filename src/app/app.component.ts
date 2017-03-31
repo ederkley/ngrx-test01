@@ -10,6 +10,7 @@ import { PersonService } from './_services/person.service';
 import * as peopleReducer from './_reducers/people.reducer';
 import * as assignmentReducer from './_reducers/assignments.reducer';
 import * as positionReducer from './_reducers/positions.reducer';
+import * as peopleFilterReducer from './_reducers/people-filter.reducer';
 
 @Component({
     selector: 'app-ngrx',
@@ -18,13 +19,14 @@ import * as positionReducer from './_reducers/positions.reducer';
 })
 export class AppComponent implements OnInit {
   public staffModel: Observable<any>;
-  public current = false;
+  public filter;
+  public defaultFilter = peopleFilterReducer.ActionTypes.SHOW_EXECUTIVE;
   errorMessage: string;
 
   constructor(
     private _store: Store<any>,
     private _personService: PersonService
-  ) {
+  ) {    
       this.staffModel = Observable.combineLatest(
           _store.select('people'),
           _store.select('assignments'),
@@ -48,9 +50,9 @@ export class AppComponent implements OnInit {
         error => this.errorMessage = <any>error);
   };
 
-  updateFilter(filter) {
-    console.log(filter);
-    this._store.dispatch({type: filter});
+  updateFilter(newFilter) {
+    this.filter = newFilter;
+    this._store.dispatch({type: newFilter});
   }
 
 }

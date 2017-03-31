@@ -31,26 +31,33 @@ export const getStaff = () => {
     .map(([peopleModel, assignmentsModel, positionsModel, peopleFilterModel]) => {
         let staff = [];
         if (assignmentsModel && assignmentsModel.length > 0) {
-            console.log(peopleFilterModel);
-            staff = peopleModel.filter(peopleFilterModel).map(person => {
+            staff = peopleModel.map(person => {
                 const personsAssignments: Assignment[] = assignmentsModel.filter(assignment => assignment.personId === person.id);
-                let thisAssignment: Assignment;
-                let thisPosition: Position;
+                let thisActualAssignment: Assignment;
+                let thisCurrentAssignment: Assignment;
+                let thisActualPosition: Position;
+                let thisCurrentPosition: Position;
                 if (personsAssignments.length > 0) {
-                    thisAssignment = personsAssignments.reduce((r, a) => r.startDate > a.startDate ? r : a);
-                    thisPosition = positionsModel.filter(position => position.id === thisAssignment.positionId)[0];
+                    thisCurrentAssignment = personsAssignments.reduce((r, a) => r.startDate > a.startDate ? r : a);
+                    thisCurrentPosition = positionsModel.filter(position => position.id === thisCurrentAssignment.positionId)[0];
+                    thisActualAssignment = personsAssignments.filter(assignment => !assignment.acting).reduce((r, a) => r.startDate > a.startDate ? r : a);
+                    thisActualPosition = positionsModel.filter(position => position.id === thisActualAssignment.positionId)[0];
                 }
                 return {
                     person: person,
-                    assignment: thisAssignment,
-                    position: thisPosition
+                    currentAssignment: thisCurrentAssignment,
+                    currentPosition: thisCurrentPosition,
+                    actualAssignment: thisActualAssignment,
+                    actualPosition: thisActualPosition
                 };
-            });
+            }).filter(peopleFilterModel);
+            console.log(peopleFilterModel);
         }
         return {
-            total: peopleModel.length,
+            total: staff.length,
             people: peopleModel,
-            staff: staff
+            staff: staff,
+            filter: peopleFilterModel
         };
       });
 };

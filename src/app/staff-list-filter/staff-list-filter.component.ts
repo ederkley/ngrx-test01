@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter} from "@angular/core";
+import {Component, OnInit, Input, Output, EventEmitter} from "@angular/core";
 
 import * as peopleFilterReducer from '../_reducers/people-filter.reducer';
 
@@ -6,7 +6,7 @@ import * as peopleFilterReducer from '../_reducers/people-filter.reducer';
     selector: 'app-staff-list-filter',
     template: `
       <div class="margin-bottom-10">
-        <select #selectList (change)="updateFilter.emit(selectList.value)">
+        <select [ngModel]="defaultFilter" #selectFilter (change)="updateFilter.emit(selectFilter.value)">
             <option *ngFor="let filter of filters" value="{{filter.action}}">
                 {{filter.friendly}}
             </option>
@@ -15,10 +15,12 @@ import * as peopleFilterReducer from '../_reducers/people-filter.reducer';
     `
 })
 export class StaffListFilterComponent implements OnInit {
-    public filters = []
+    public filters = [];
+    @Input() defaultFilter = peopleFilterReducer.peopleFilterSelect[0].action;
     @Output() updateFilter : EventEmitter<any> = new EventEmitter<any>();
 
     ngOnInit() {
       this.filters = peopleFilterReducer.peopleFilterSelect;
+      this.updateFilter.emit(this.defaultFilter);
     };
 };

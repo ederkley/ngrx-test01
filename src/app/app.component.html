@@ -1,7 +1,10 @@
-<app-staff-list-filter (updateFilter)="updateFilter($event)">
+<app-staff-list-filter 
+    (updateFilter)="updateFilter($event)" 
+    [defaultFilter]="defaultFilter">
 </app-staff-list-filter>
 {{(staffModel | async)?.total}}
 <app-staff-list 
-    [staff]="(staffModel | async)?.staff">
+    [staff]="(staffModel | async)?.staff"
+    [filter]="filter">
 </app-staff-list>
 {{errorMessage}}
