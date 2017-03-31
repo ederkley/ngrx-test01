@@ -10,10 +10,10 @@ export const ActionTypes = {
  };
 
  export const peopleFilterSelect = [
-     { action: ActionTypes.SHOW_ALL, friendly: 'Show all' },
-     { action: ActionTypes.SHOW_CURRENT, friendly: 'Show current positions' },
-     { action: ActionTypes.SHOW_ACTUAL_POS, friendly: 'Show actual positions' },
-     { action: ActionTypes.SHOW_EXECUTIVE, friendly: 'Show executive level' }
+     { action: ActionTypes.SHOW_ALL, friendly: 'Show all', order: 4 },
+     { action: ActionTypes.SHOW_CURRENT, friendly: 'Show current positions', order: 2 },
+     { action: ActionTypes.SHOW_ACTUAL_POS, friendly: 'Show actual positions', order: 1 },
+     { action: ActionTypes.SHOW_EXECUTIVE, friendly: 'Show executive level', order: 3 }
  ];
 
 // remember to avoid mutation within reducers

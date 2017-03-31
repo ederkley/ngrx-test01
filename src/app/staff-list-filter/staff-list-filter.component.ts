@@ -20,7 +20,7 @@ export class StaffListFilterComponent implements OnInit {
     @Output() updateFilter : EventEmitter<any> = new EventEmitter<any>();
 
     ngOnInit() {
-      this.filters = peopleFilterReducer.peopleFilterSelect;
+      this.filters = peopleFilterReducer.peopleFilterSelect.sort((filtera, filterb) => { return filtera.order - filterb.order });
       this.updateFilter.emit(this.defaultFilter);
     };
 };

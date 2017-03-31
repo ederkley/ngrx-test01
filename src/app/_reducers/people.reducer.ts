@@ -51,7 +51,6 @@ export const getStaff = () => {
                     actualPosition: thisActualPosition
                 };
             }).filter(peopleFilterModel);
-            console.log(peopleFilterModel);
         }
         return {
             total: staff.length,
