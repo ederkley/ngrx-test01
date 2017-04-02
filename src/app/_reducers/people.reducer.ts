@@ -1,38 +1,41 @@
-import { Person, Assignment, Staff } from '../_models/person';
-import { type } from '../util';
+import { Action } from '@ngrx/store';
+import * as _ from 'lodash';
 
-// Person Action Constants
-export const ActionTypes = {
-   ADD_PERSON: type('[Person] Add person'),
-   REMOVE_PERSON: type('[Person] Remove person'),
-   LOAD_PEOPLE: type('[Person] Load people'),
-   SELECT_PERSON: type('[selectedPerson] Select person')
- };
+import { Person, Assignment, Staff } from '../_models/person';
+import { PersonActionTypes } from '../_actions';
+
+export type PeopleState = Person[];
+const initialState: PeopleState = [];
 
 // remember to avoid mutation within reducers
-export const people = (state: Person[] = [], action) => {
+export const people = (state: PeopleState = initialState, action: Action): PeopleState => {
     switch (action.type) {
-        case ActionTypes.ADD_PERSON :
-            return [...state, Object.assign({}, {
-                id: action.payload.id, name: action.payload.name, commenceDate: action.payload.commenceDate
-            })];
-        case ActionTypes.REMOVE_PERSON :
-            return state.filter(person => person.id !== action.payload);
-        case ActionTypes.LOAD_PEOPLE :
-            return action.payload.people;
+        case PersonActionTypes.ADD_PERSON_SUCCESS: 
+            return [ ...state, action.payload ];
+        case PersonActionTypes.SAVE_PERSON_SUCCESS: {
+            let index = _.findIndex(state, {id: action.payload.id});
+            if (index >= 0) {
+                return [
+                    ...state.slice(0, index),
+                    action.payload,
+                    ...state.slice(index + 1)
+                ];
+            }
+            return state;
+        }
+        case PersonActionTypes.DELETE_PERSON_SUCCESS:{
+            return state.filter(person => {
+                return person.id !== action.payload.id;
+            });
+        }
+        case PersonActionTypes.LOAD_PEOPLE_SUCCESS:
+            return action.payload;
+        // always have default return of previous state when action is not relevant
         default:
             return state;
-    }
+    };
 };
 
-export const selectedPerson = (state : Person, action) => {
-    switch (action.type) {
-        case ActionTypes.SELECT_PERSON :
-            return Object.assign({}, state, action.payload)
-        default:
-            return state;
-    }
-}
 
 // SELECTORS
 

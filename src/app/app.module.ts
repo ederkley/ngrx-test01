@@ -6,15 +6,15 @@ import { HttpModule } from '@angular/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from '@angular/material';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 import 'hammerjs';
 
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { PersonData } from './_mockapi/person-api';
 
-import { people, selectedPerson } from './_reducers/people.reducer';
-import { positions } from './_reducers/positions.reducer';
-import { assignments } from './_reducers/assignments.reducer';
-import { peopleFilter } from './_reducers/people-filter.reducer';
+import reducer from './_reducers';
+import { PersonEffects, AssignmentEffects, PositionEffects } from './_effects';
+import { PersonActions, AssignmentActions, PositionActions } from './_actions';
 
 import { PersonService } from './_services/person.service';
 
@@ -38,10 +38,13 @@ import { StaffAssignmentComponent } from './staff-assignment/staff-assignment.co
     HttpModule,
     MaterialModule,
     FlexLayoutModule,
-    StoreModule.provideStore({people, selectedPerson, positions, assignments, peopleFilter}),
+    StoreModule.provideStore(reducer),
+    EffectsModule.run(PersonEffects),
+    EffectsModule.run(AssignmentEffects),
+    EffectsModule.run(PositionEffects),
     InMemoryWebApiModule.forRoot(PersonData)
   ],
-  providers: [PersonService],
+  providers: [PersonService, PersonActions, AssignmentActions, PositionActions],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

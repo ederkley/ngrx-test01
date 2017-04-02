@@ -2,15 +2,14 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/let';
-
 import {Store, provideStore} from '@ngrx/store';
 
-import { Person, Position, newId, Staff } from './_models/person';
-import { PersonService } from './_services/person.service';
+import { AppState } from './_reducers';
+import { PersonActions, AssignmentActions, PositionActions } from './_actions';
+import { Person, Position, Assignment, newId, Staff } from './_models/person';
 import * as peopleReducer from './_reducers/people.reducer';
-import * as assignmentReducer from './_reducers/assignments.reducer';
-import * as positionReducer from './_reducers/positions.reducer';
 import * as peopleFilterReducer from './_reducers/people-filter.reducer';
+//import { PersonService } from './_services/person.service';
 
 @Component({
     selector: 'app-ngrx',
@@ -22,34 +21,29 @@ export class AppComponent implements OnInit {
   public filter : string;
   public defaultFilter = peopleFilterReducer.ActionTypes.SHOW_EXECUTIVE;
   public selectedPerson: Staff;
-  public addingNew = false;
+  private _addingPerson = false;
+  private _addingAssignment = false;
   errorMessage: string;
 
   constructor(
-    private _store: Store<any>,
-    private _personService: PersonService
+    private _store: Store<AppState>,
+    private personActions: PersonActions,
+    private assignmentActions: AssignmentActions,
+    private positionActions: PositionActions
   ) {    
-      this.staffModel = Observable.combineLatest(
-          _store.select('people'),
-          _store.select('assignments'),
-          _store.select('positions'),
-          _store.select('peopleFilter')
-        )
-        .let(peopleReducer.getStaffList());
+    this.staffModel = Observable.combineLatest(
+        _store.select('people'),
+        _store.select('assignments'),
+        _store.select('positions'),
+        _store.select('peopleFilter')
+      )
+      .let(peopleReducer.getStaffList());
   };
 
   ngOnInit() {
-      Observable.forkJoin(
-        this._personService.getPeople(),
-        this._personService.getAssignments(),
-        this._personService.getPositions()
-      )
-        .subscribe(([peopleList, assignmentList, positionList]) => {
-          this._store.dispatch({type: peopleReducer.ActionTypes.LOAD_PEOPLE, payload: { people: peopleList } });
-          this._store.dispatch({type: assignmentReducer.ActionTypes.LOAD_ASSIGNMENTS, payload: { assignments: assignmentList } });
-          this._store.dispatch({type: positionReducer.ActionTypes.LOAD_POSITIONS, payload: { positions: positionList } });
-        },
-        error => this.errorMessage = <any>error);
+    this._store.dispatch(this.personActions.loadPeople());
+    this._store.dispatch(this.assignmentActions.loadAssignments());
+    this._store.dispatch(this.positionActions.loadPositions());
   };
 
   updateFilter(newFilter : string) {
@@ -59,7 +53,7 @@ export class AppComponent implements OnInit {
 
   addNewPerson() {
     this.selectedPerson = undefined;
-    this.addingNew = true;
+    this._addingPerson = true;
   };
 
   selectPerson(staff: Staff) {
@@ -68,10 +62,24 @@ export class AppComponent implements OnInit {
 
   updateStaff(staff: Staff) {
     if (!staff) {
-      this.addingNew = false;
+      this._addingPerson = false;
     } else {
       console.log(staff);
     }
+  }
+
+  addAssignment() {
+    this._addingAssignment = true;
+  }
+
+  updateAssignment(assignment) {
+    if (assignment) {
+      let newAssignment = new Assignment(this.selectedPerson.person.id, assignment.positionId, assignment.acting, assignment.startDate);
+      newAssignment.endDate = assignment.endDate;
+      newAssignment.position = assignment.position;
+      //this._store.dispatch({type: assignmentsReducer.ActionTypes.ADD_ASSIGNMENT, payload: { assignment: newAssignment } });
+    }
+    this._addingAssignment = false;
   }
 
 }

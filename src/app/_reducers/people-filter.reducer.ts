@@ -1,6 +1,9 @@
 import { Person } from '../_models/person';
 import { type } from '../util';
 
+export type PeopleFilterState = any;
+const initialState: PeopleFilterState = null;
+
 // Person Filter Action Constants
 export const ActionTypes = {
    SHOW_ALL: type('[PeopleFilter] Show all'),
@@ -19,7 +22,7 @@ export const ActionTypes = {
  ];
 
 // remember to avoid mutation within reducers
-export const peopleFilter = (state = member => member, action) => {
+export const peopleFilter = (state: PeopleFilterState = member => member, action): PeopleFilterState => {
     switch (action.type) {
         case ActionTypes.SHOW_ALL:
             return member => member.person;

@@ -1,11 +1,13 @@
 <form>
   <select [(ngModel)]="positionId" name="position">
-      <option ng-disabled="true" value="-99">Select a position...<option>
       <option *ngFor="let position of positions" value="{{position.id}}">
           {{position.title}}
       </option>
   </select>
-  Date Start: <input name="dateStart" type="date" />
-  Date End: <input name="dateEnd" type="date" />
-  <button *ngIf="addingNew" (click)="cancelAdd()">Cancel</button>
+  
+  Date Start: <input [(ngModel)]="dateStart" name="startDate" type="date" />
+  Date End: <input [(ngModel)]="dateEnd" name="endDate" type="date" />
+  <input [(ngModel)]="acting" name="acting" type="checkbox" />
+  <button type="button" (click)="setAssignment()">OK</button>
+  <button type="button" (click)="updateAssignment.emit(undefined)">Cancel</button>
 </form>

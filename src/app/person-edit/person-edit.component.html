@@ -1,7 +1,7 @@
-<button *ngIf="addingNew" (click)="cancelAdd()">Cancel</button>
+<button *ngIf="addingNew" type="button" (click)="cancelAdd()">Cancel</button>
 Name: {{staff.person && staff.person.name}}
 Current Position: {{staff.currentAssignment && staff.currentAssignment.position.title}}
-<button (click)="addAssignment()">New Assignment</button>
+<button type="button" (click)="addAssignment.emit()">New Assignment</button>
 <div *ngIf="staff.assignments">
   Previous assignments: <button (click)="changeSort()">{{ _reverseSort ? 'Asc' : 'Desc' }}</button>
   <ul>
@@ -13,5 +13,3 @@ Current Position: {{staff.currentAssignment && staff.currentAssignment.position.
     </li>
   </ul>
 </div>
-<app-staff-assignment *ngIf="_addingAssignment">
-</app-staff-assignment>

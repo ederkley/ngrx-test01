@@ -23,10 +23,13 @@ export class Person {
 
 export class Assignment {
   id: number;
-  personId: number;
-  positionId: number;
-  acting: boolean;
-  startDate: Date;
+  constructor (
+    public personId: number,
+    public positionId: number,
+    public acting: boolean,
+    public startDate: Date
+  ) {
+  }
   endDate?: Date;
   position?: Position;
 }

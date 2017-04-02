@@ -6,7 +6,6 @@ import 'rxjs/add/operator/let';
 import {Store} from '@ngrx/store';
 
 import { Person, Staff, Assignment } from '../_models/person';
-import * as peopleReducer from '../_reducers/people.reducer';
 
 @Component({
   selector: 'app-person-edit',
@@ -16,12 +15,14 @@ export class PersonEditComponent implements OnInit, OnChanges {
   @Input() staff: Staff;
   @Input() addingNew: boolean;
   @Output() updateStaff: EventEmitter<Staff> = new EventEmitter<Staff>();
+  @Output() addAssignment: EventEmitter<any> = new EventEmitter<any>();
   public sortedAssignments: Assignment[] = [];
   private _reverseSort = true;
-  private _addingAssignment = false;
 
   constructor(
+    private _store: Store<any>
   ) {
+
   }
 
   ngOnInit() {
@@ -46,15 +47,6 @@ export class PersonEditComponent implements OnInit, OnChanges {
       return this._reverseSort ? 
         new Date(b.startDate).getTime() - new Date(a.startDate).getTime() :
         new Date(a.startDate).getTime() - new Date(b.startDate).getTime() });
-  }
-
-  cancelAdd() {
-    this.addingNew = false;
-    this.updateStaff.emit(undefined);
-  }
-
-  addAssignment() {
-    this._addingAssignment = true;
   }
 
 }

@@ -45,6 +45,30 @@ export class PersonService {
                .catch(this.handleError);
   };
 
+  getAssignment(id): Observable<Assignment> {
+    return this.http.get(this.assignmentsUrl, {
+                  withCredentials: true
+                })
+                .map(this.extractData)
+                .catch(this.handleError);
+  };
+
+  saveAssignment(assignment) {
+    if (assignment.id === 0) {
+      return this.http.post(this.assignmentsUrl, {
+                    withCredentials: true
+                  })
+                  .map(this.extractData)
+                  .catch(this.handleError);
+    } else {
+      return this.http.put(this.assignmentsUrl, {
+                    withCredentials: true
+                  })
+                  .map(this.extractData)
+                  .catch(this.handleError);
+    }
+  }
+
   private handleError(error: Response | any) {
     // In a real world app, we might use a remote logging infrastructure
     let errMsg: string;
