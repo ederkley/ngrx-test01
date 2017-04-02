@@ -25,14 +25,6 @@ export class Assignment {
   ) {
   }
   endDate?: Date;
-  position?: Position;
-}
-
-export class Staff {
-  person: Person;
-  assignments: Assignment[];
-  currentAssignment: Assignment;
-  actualAssignment: Assignment;
 }
 
 export class Branch {

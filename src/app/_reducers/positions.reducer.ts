@@ -23,7 +23,7 @@ export const positions = (state: PositionsState = initialState, action: Action):
             }
             return state;
         }
-        case PositionActionTypes.DELETE_POSITION_SUCCESS:{
+        case PositionActionTypes.DELETE_POSITION_SUCCESS: {
             return state.filter(position => {
                 return position.id !== action.payload.id;
             });

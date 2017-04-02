@@ -1,8 +1,9 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
-import { Person, Section, Branch, Position, Assignment } from '../_models/person';
+import { Person, Section, Branch, Position, Assignment } from './person';
 
 export class PersonData implements InMemoryDbService {
-  createDb() {
+  createDb() {    
+
     const people: Person[] = [
         {id: 100, name: 'Frank Smith', commenceDate: new Date('18 Sep 1998') },
         {id: 101, name: 'Jessica Jones', commenceDate: new Date('18 Sep 2005')},

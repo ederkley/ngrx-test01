@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 
 import { type } from '../util';
+import { Assignment } from '../_models/person';
 
-// Person Action Constants
+// Assignment Action Constants
 export const AssignmentActionTypes = {
+   GET_ASSIGNMENT: type('[Assignment] Get assignment'),
+   GET_ASSIGNMENT_SUCCESS: type('[Assignment] Get assignment assignment'),
    ADD_ASSIGNMENT: type('[Assignment] Add assignment'),
    ADD_ASSIGNMENT_SUCCESS: type('[Assignment] Add assignment success'),
    SAVE_ASSIGNMENT: type('[Assignment] Save assignment'),
@@ -23,10 +26,66 @@ export class AssignmentActions {
         };
     };
 
-    loadAssignmentsSuccess(assignments): Action {
+    loadAssignmentsSuccess(assignments: Assignment[]): Action {
         return {
             type: AssignmentActionTypes.LOAD_ASSIGNMENTS_SUCCESS,
             payload: assignments
         };
     };
+
+    getAssignment(id: number): Action {
+        return {
+            type: AssignmentActionTypes.GET_ASSIGNMENT,
+            payload: id
+        };
+    }
+
+    getAssignmentSuccess(assignment: Assignment): Action {
+        return {
+            type: AssignmentActionTypes.GET_ASSIGNMENT_SUCCESS,
+            payload: assignment
+        };
+    }
+
+    saveAssignment(assignment: Assignment): Action {
+        return {
+            type: AssignmentActionTypes.SAVE_ASSIGNMENT,
+            payload: assignment
+        };
+    }
+
+    saveAssignmentSuccess(assignment: Assignment): Action {
+        return {
+            type: AssignmentActionTypes.SAVE_ASSIGNMENT_SUCCESS,
+            payload: assignment
+        };
+    }
+
+    addAssignment(assignment: Assignment): Action {
+        return {
+            type: AssignmentActionTypes.ADD_ASSIGNMENT,
+            payload: assignment
+        };
+    }
+
+    addAssignmentSuccess(assignment: Assignment): Action {
+        return {
+            type: AssignmentActionTypes.ADD_ASSIGNMENT_SUCCESS,
+            payload: assignment
+        };
+    }
+
+    deleteAssignment(assignment: Assignment): Action {
+        return {
+            type: AssignmentActionTypes.DELETE_ASSIGNMENT,
+            payload: assignment
+        };
+    }
+
+    deleteAssignmentSuccess(assignment: Assignment): Action {
+        return {
+            type: AssignmentActionTypes.DELETE_ASSIGNMENT_SUCCESS,
+            payload: assignment
+        };
+    }
 };

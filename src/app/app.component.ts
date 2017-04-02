@@ -6,10 +6,9 @@ import {Store, provideStore} from '@ngrx/store';
 
 import { AppState } from './_reducers';
 import { PersonActions, AssignmentActions, PositionActions } from './_actions';
-import { Person, Position, Assignment, newId, Staff } from './_models/person';
+import { Person, Position, Assignment, Staff } from './_models/person';
 import * as peopleReducer from './_reducers/people.reducer';
 import * as peopleFilterReducer from './_reducers/people-filter.reducer';
-//import { PersonService } from './_services/person.service';
 
 @Component({
     selector: 'app-ngrx',
@@ -77,7 +76,7 @@ export class AppComponent implements OnInit {
       let newAssignment = new Assignment(this.selectedPerson.person.id, assignment.positionId, assignment.acting, assignment.startDate);
       newAssignment.endDate = assignment.endDate;
       newAssignment.position = assignment.position;
-      //this._store.dispatch({type: assignmentsReducer.ActionTypes.ADD_ASSIGNMENT, payload: { assignment: newAssignment } });
+      this._store.dispatch(this.assignmentActions.addAssignment(newAssignment));
     }
     this._addingAssignment = false;
   }
