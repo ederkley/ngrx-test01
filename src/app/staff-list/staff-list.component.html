@@ -2,11 +2,11 @@
   <li *ngFor="let member of staff" (click)="selectPerson.emit(member)">
       {{member.person.name}} 
       (Commence date: {{member.person.commenceDate | date:'d MMM yyyy'}}) 
-      <span *ngIf="!showCurrentOnly && member.currentAssignment && member.actualAssignment && member.currentAssignment.positionId != member.actualAssignment.positionId">
+      <span *ngIf="!showCurrentOnly && member.currentAssignment && member.actualAssignment && member.actualAssignment.position && member.currentAssignment.positionId != member.actualAssignment.positionId">
         Actual: {{member.actualAssignment.position.title}}
         &nbsp;({{member.actualAssignment.position.level}})
       </span>
-      <span *ngIf="member.currentAssignment; else nonCurrent">
+      <span *ngIf="member.currentAssignment && member.currentAssignment.position; else nonCurrent">
         Current: {{member.currentAssignment.position.title}}
         &nbsp;({{member.currentAssignment.position.level}}{{member.currentAssignment.acting ? ', acting' : ''}})
       </span>

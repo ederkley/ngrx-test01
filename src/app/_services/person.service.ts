@@ -13,6 +13,11 @@ export class PersonService {
   private peopleUrl = Global.BASE_API_URL + 'people/';
   private positionsUrl = Global.BASE_API_URL + 'positions/';
   private assignmentsUrl = Global.BASE_API_URL + 'assignments/';
+  private _id = 5000;
+
+  newId(): number {
+    return this._id++;
+  }
 
   constructor(private http: Http) { }
 
@@ -41,6 +46,8 @@ export class PersonService {
 
   savePerson(person: Person) {
     if (person.id == 0) {
+      // remove when no longer mocking
+      person.id = this.newId();
       return this.http.post(this.peopleUrl, person, {
                     withCredentials: true
                   })
@@ -83,6 +90,8 @@ export class PersonService {
 
   savePosition(position: Position) {
     if (position.id == 0) {
+      // remove when no longer mocking
+      position.id = this.newId();
       return this.http.post(this.positionsUrl, position, {
                     withCredentials: true
                   })
@@ -125,6 +134,8 @@ export class PersonService {
 
   saveAssignment(assignment: Assignment) {
     if (assignment.id == 0) {
+      // remove when no longer mocking
+      assignment.id = this.newId();
       return this.http.post(this.assignmentsUrl, assignment, {
                     withCredentials: true
                   })
@@ -145,7 +156,14 @@ export class PersonService {
                 })
                 .map(this.extractData)
                 .catch(this.handleError);
-  }
+  };
+
+  addPositionInfo(assignment: Assignment, positions: Position[]) {
+      let position = positions.filter(position => position.id == assignment.positionId)[0];
+      return Object.assign(assignment, {position: position});
+  };
+
+
 
   // ERROR-HANDLER
 

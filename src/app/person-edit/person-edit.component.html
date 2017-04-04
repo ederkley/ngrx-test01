@@ -1,12 +1,12 @@
 <button *ngIf="addingNew" type="button" (click)="updateStaff.emit(undefined)">Cancel</button>
 Name: {{staff.person && staff.person.name}}
-Current Position: {{staff.currentAssignment && staff.currentAssignment.position.title}}
+Current Position: {{staff.currentAssignment && staff.currentAssignment.position && staff.currentAssignment.position.title}}
 <button type="button" (click)="addAssignment.emit()">New Assignment</button>
 <div *ngIf="staff.assignments">
   Previous assignments: <button (click)="changeSort()">{{ _reverseSort ? 'Asc' : 'Desc' }}</button>
   <ul>
     <li *ngFor="let assignment of sortedAssignments">
-      {{assignment.position.title}} - 
+      {{assignment.position && assignment.position.title}} - 
       from {{assignment.startDate | date:'d MMM yyyy'}} 
       to {{assignment.endDate ? (assignment.endDate | date:'d MMM yyyy') : 'current' }}
       {{assignment.acting ? '(acting)' : ''}}

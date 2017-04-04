@@ -10,8 +10,9 @@ const initialState: AssignmentState = [];
 // remember to avoid mutation within reducers
 export const assignments = (state: AssignmentState = initialState, action: Action): AssignmentState => {
     switch (action.type) {
-        case AssignmentActionTypes.ADD_ASSIGNMENT_SUCCESS: 
-            return [ ...state, action.payload ];
+        case AssignmentActionTypes.ADD_ASSIGNMENT_SUCCESS:            
+            let position = this.positions.filter(position => position.id == action.payload.positionId)[0];
+            return [ ...state, Object.assign(action.payload, {position: position}) ];
         case AssignmentActionTypes.SAVE_ASSIGNMENT_SUCCESS: {
             let index = _.findIndex(state, {id: action.payload.id});
             if (index >= 0) {

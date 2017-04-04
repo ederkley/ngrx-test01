@@ -34,7 +34,6 @@ export class StaffAssignmentComponent implements OnInit {
       startDate: this.dateStart,
       endDate: this.dateEnd,
       positionId: this.positionId,
-      position: this.positions.filter(position => position.id == this.positionId)[0],
       acting: this.acting
     })
   }
