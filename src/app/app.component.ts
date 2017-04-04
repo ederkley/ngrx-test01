@@ -73,9 +73,8 @@ export class AppComponent implements OnInit {
 
   updateAssignment(assignment) {
     if (assignment) {
-      let newAssignment = new Assignment(this.selectedPerson.person.id, assignment.positionId, assignment.acting, assignment.startDate);
-      newAssignment.endDate = assignment.endDate;
-      newAssignment.position = assignment.position;
+      let newAssignment = new Assignment(this.selectedPerson.person.id, assignment.positionId, assignment.acting, assignment.startDate, assignment.endDate, assignment.position);
+      console.dir(newAssignment);
       this._store.dispatch(this.assignmentActions.addAssignment(newAssignment));
     }
     this._addingAssignment = false;

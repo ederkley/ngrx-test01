@@ -40,7 +40,7 @@ export class PersonService {
   };
 
   savePerson(person: Person) {
-    if (person.id === 0) {
+    if (person.id == 0) {
       return this.http.post(this.peopleUrl, person, {
                     withCredentials: true
                   })
@@ -82,7 +82,7 @@ export class PersonService {
   };
 
   savePosition(position: Position) {
-    if (position.id === 0) {
+    if (position.id == 0) {
       return this.http.post(this.positionsUrl, position, {
                     withCredentials: true
                   })
@@ -124,7 +124,7 @@ export class PersonService {
   };
 
   saveAssignment(assignment: Assignment) {
-    if (assignment.id === 0) {
+    if (assignment.id == 0) {
       return this.http.post(this.assignmentsUrl, assignment, {
                     withCredentials: true
                   })

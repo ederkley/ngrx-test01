@@ -14,7 +14,7 @@ import { Person, Staff, Assignment } from '../_models/person';
 export class PersonEditComponent implements OnInit, OnChanges {
   @Input() staff: Staff;
   @Input() addingNew: boolean;
-  @Output() updateStaff: EventEmitter<Staff> = new EventEmitter<Staff>();
+  @Output() updateStaff: EventEmitter<any> = new EventEmitter<any>();
   @Output() addAssignment: EventEmitter<any> = new EventEmitter<any>();
   public sortedAssignments: Assignment[] = [];
   private _reverseSort = true;

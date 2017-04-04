@@ -21,11 +21,12 @@ export class Assignment {
     public personId: number,
     public positionId: number,
     public acting: boolean,
-    public startDate: Date
+    public startDate: Date,
+    public endDate?: Date,
+    public position?: Position
   ) {
+    this.id = 0;
   }
-  endDate?: Date;
-  position?: Position;
 }
 
 export class Staff {

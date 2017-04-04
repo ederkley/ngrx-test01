@@ -11,7 +11,7 @@ import { Position } from '../_models/person';
 })
 export class StaffAssignmentComponent implements OnInit {
   public positions;
-  public positionId = -99;
+  public positionId = 0;
   public dateStart: string;
   public dateEnd: string;
   public acting = true;
