@@ -3,11 +3,11 @@
     [defaultFilter]="defaultFilter">
 </app-staff-list-filter>
 
-Total: {{(staffModel | async)?.total}}
+Total: {{(staffListView | async)?.total}} of {{(staffListModel | async)?.total}}
 <button (click)="addNewPerson()">Add new</button>
 
 <app-staff-list 
-    [staff]="(staffModel | async)?.staff"
+    [staff]="(staffListView | async)?.staff"
     [filter]="filter"
     (selectPerson)="selectPerson($event)">
 </app-staff-list>

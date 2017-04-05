@@ -37,37 +37,19 @@ export const people = (state: PeopleState = initialState, action: Action): Peopl
 };
 
 
-// SELECTORS
-
-export const getStaffList = () => {
+export const getStaffListView = () => {
   return state => state
-    .map(([peopleModel, assignmentsModel, positionsModel, peopleFilterModel]) => {
+    .map(([staffModel, peopleFilterModel]) => {
         let staffList: Staff[] = [];
-        if (assignmentsModel && assignmentsModel.length > 0) {
-            staffList = peopleModel.map(person => {
-                let personsAssignments: Assignment[] = assignmentsModel.filter(assignment => assignment.personId === person.id);
-                personsAssignments.map(assignment => assignment.position = positionsModel.filter(position => position.id === assignment.positionId)[0]);
-                let thisActualAssignment: Assignment;
-                let thisCurrentAssignment: Assignment;
-                if (personsAssignments.length > 0) {
-                    thisCurrentAssignment = personsAssignments.reduce((r, a) => r.startDate > a.startDate ? r : a);
-                    thisCurrentAssignment.position = positionsModel.filter(position => position.id === thisCurrentAssignment.positionId)[0];
-                    thisActualAssignment = personsAssignments.filter(assignment => !assignment.acting).reduce((r, a) => r.startDate > a.startDate ? r : a);
-                    thisActualAssignment.position = positionsModel.filter(position => position.id === thisActualAssignment.positionId)[0];
-                }
-                return {
-                    person: person,
-                    assignments: personsAssignments,
-                    currentAssignment: thisCurrentAssignment,
-                    actualAssignment: thisActualAssignment
-                };
-            }).filter(peopleFilterModel);
-        }
-        return {
+        if (staffModel.staff) {
+            staffList = staffModel.staff.filter(peopleFilterModel);
+        };
+        let response = {
             total: staffList.length,
-            people: peopleModel,
             staff: staffList,
             filter: peopleFilterModel
         };
+        console.dir(response);
+        return response;
       });
 };

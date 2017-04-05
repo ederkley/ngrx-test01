@@ -30,8 +30,9 @@ export class Assignment {
 }
 
 export class Staff {
+  id: number;
   person: Person;
-  assignments: Assignment[];
+  assignments: Assignment[] = [];
   currentAssignment: Assignment;
   actualAssignment: Assignment;
 }

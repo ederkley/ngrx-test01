@@ -7,12 +7,14 @@ import * as fromPeople from './people.reducer';
 import * as fromPositions from './positions.reducer';
 import * as fromAssignments from './assignments.reducer';
 import * as fromPeopleFilter from './people-filter.reducer';
+import * as fromStaff from './staff.reducer';
 
 export interface AppState {
     people: fromPeople.PeopleState;    
     positions: fromPositions.PositionsState;
     assignments: fromAssignments.AssignmentState;
     peopleFilter: fromPeopleFilter.PeopleFilterState;
+    staff: fromStaff.StaffState;
 };
 
 //uncomment the storeLogger import and this line
@@ -25,5 +27,6 @@ export default compose(storeLogger(), combineReducers)({
     people: fromPeople.people,
     positions: fromPositions.positions,
     assignments: fromAssignments.assignments,
-    peopleFilter: fromPeopleFilter.peopleFilter
+    peopleFilter: fromPeopleFilter.peopleFilter,
+    staff: fromStaff.staff
 });

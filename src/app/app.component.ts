@@ -8,6 +8,7 @@ import { AppState } from './_reducers';
 import { PersonActions, AssignmentActions, PositionActions } from './_actions';
 import { Person, Position, Assignment, Staff } from './_models/person';
 import * as peopleReducer from './_reducers/people.reducer';
+import * as staffReducer from './_reducers/staff.reducer';
 import * as peopleFilterReducer from './_reducers/people-filter.reducer';
 
 @Component({
@@ -16,7 +17,8 @@ import * as peopleFilterReducer from './_reducers/people-filter.reducer';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
-  public staffModel: Observable<any>;
+  public staffModel: Observable<Staff[]>;
+  public staffListView: Observable<Staff[]>;
   public filter : string;
   public defaultFilter = peopleFilterReducer.ActionTypes.SHOW_EXECUTIVE;
   public selectedPerson: Staff;
@@ -33,10 +35,14 @@ export class AppComponent implements OnInit {
     this.staffModel = Observable.combineLatest(
         _store.select('people'),
         _store.select('assignments'),
-        _store.select('positions'),
+        _store.select('positions')
+      )
+      .let(staffReducer.getStaffModel());
+    this.staffListView = Observable.combineLatest(
+        _store.select('staff'),
         _store.select('peopleFilter')
       )
-      .let(peopleReducer.getStaffList());
+      .let(peopleReducer.getStaffListView());
   };
 
   ngOnInit() {
