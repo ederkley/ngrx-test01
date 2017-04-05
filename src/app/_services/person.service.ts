@@ -4,22 +4,36 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import { Store } from '@ngrx/store';
 
 import { Global } from '../global';
-import { Person, Position, Assignment } from '../_models/person';
+import { Person, Position, Assignment, Staff } from '../_models/person';
+import { AppState } from '../_reducers';
+
 
 @Injectable()
-export class PersonService {
+export class PersonService {   
+
   private peopleUrl = Global.BASE_API_URL + 'people/';
   private positionsUrl = Global.BASE_API_URL + 'positions/';
   private assignmentsUrl = Global.BASE_API_URL + 'assignments/';
+  assignments: Observable<Assignment[]>;
+  positions: Observable<Position[]>;
+  people: Observable<Person[]>
   private _id = 5000;
 
   newId(): number {
     return this._id++;
   }
 
-  constructor(private http: Http) { }
+  constructor(
+    private _http: Http,
+    private _store: Store<AppState>
+  ) { 
+    this.assignments = _store.select('assignments');
+    this.positions = _store.select('positions');
+    this.people = _store.select('people');
+  }
 
   private extractData(res: Response) {
     const body = res.json();
@@ -29,43 +43,33 @@ export class PersonService {
   // PEOPLE API CALLS
 
   getPeople(): Observable<Person[]> {
-    return this.http.get(this.peopleUrl, {
-                  withCredentials: true
-                })
-               .map(this.extractData)
-               .catch(this.handleError);
-  };
-
-  getPerson(id: number): Observable<Person> {
-    return this.http.get(this.peopleUrl + id, {
-                  withCredentials: true
-                })
+    return this._http.get(this.peopleUrl, Global.HEADER)
                 .map(this.extractData)
                 .catch(this.handleError);
   };
 
-  savePerson(person: Person) {
+  getPerson(id: number): Observable<Person> {
+    return this._http.get(this.peopleUrl + id, Global.HEADER)
+                .map(this.extractData)
+                .catch(this.handleError);
+  };
+
+  savePerson(person: Person): Observable<Person> {
     if (person.id == 0) {
       // remove when no longer mocking
       person.id = this.newId();
-      return this.http.post(this.peopleUrl, person, {
-                    withCredentials: true
-                  })
+      return this._http.post(this.peopleUrl, person, Global.HEADER)
                   .map(this.extractData)
                   .catch(this.handleError);
     } else {
-      return this.http.put(this.peopleUrl + person.id, person, {
-                    withCredentials: true
-                  })
+      return this._http.put(this.peopleUrl + person.id, person, Global.HEADER)
                   .map(this.extractData)
                   .catch(this.handleError);
     }
   };
   
-  deletePerson(person: Person) {
-    return this.http.delete(this.peopleUrl + person.id, {
-                  withCredentials: true
-                })
+  deletePerson(person: Person): Observable<Person> {
+    return this._http.delete(this.peopleUrl + person.id, Global.HEADER)
                 .map(this.extractData)
                 .catch(this.handleError);
   }
@@ -73,43 +77,33 @@ export class PersonService {
   // POSITION API CALLS
 
   getPositions(): Observable<Position[]> {
-    return this.http.get(this.positionsUrl, {
-                  withCredentials: true
-                })
+    return this._http.get(this.positionsUrl, Global.HEADER)
                .map(this.extractData)
                .catch(this.handleError);
   };
 
   getPosition(id: number): Observable<Position> {
-    return this.http.get(this.positionsUrl + id, {
-                  withCredentials: true
-                })
+    return this._http.get(this.positionsUrl + id, Global.HEADER)
                 .map(this.extractData)
                 .catch(this.handleError);
   };
 
-  savePosition(position: Position) {
+  savePosition(position: Position): Observable<Position> {
     if (position.id == 0) {
       // remove when no longer mocking
       position.id = this.newId();
-      return this.http.post(this.positionsUrl, position, {
-                    withCredentials: true
-                  })
+      return this._http.post(this.positionsUrl, position, Global.HEADER)
                   .map(this.extractData)
                   .catch(this.handleError);
     } else {
-      return this.http.put(this.positionsUrl + position.id, position, {
-                    withCredentials: true
-                  })
+      return this._http.put(this.positionsUrl + position.id, position, Global.HEADER)
                   .map(this.extractData)
                   .catch(this.handleError);
     }
   };
   
-  deletePosition(position: Position) {
-    return this.http.delete(this.positionsUrl + position.id, {
-                  withCredentials: true
-                })
+  deletePosition(position: Position): Observable<Position> {
+    return this._http.delete(this.positionsUrl + position.id, Global.HEADER)
                 .map(this.extractData)
                 .catch(this.handleError);
   }
@@ -117,50 +111,35 @@ export class PersonService {
   // ASSIGNMENT API CALLS
 
   getAssignments(): Observable<Assignment[]> {
-    return this.http.get(this.assignmentsUrl, {
-                  withCredentials: true
-                })
-               .map(this.extractData)
-               .catch(this.handleError);
+    return this._http.get(this.assignmentsUrl, Global.HEADER)
+                .map(this.extractData)
+                .catch(this.handleError);
   };
 
   getAssignment(id: number): Observable<Assignment> {
-    return this.http.get(this.assignmentsUrl + id, {
-                  withCredentials: true
-                })
+    return this._http.get(this.assignmentsUrl + id, Global.HEADER)
                 .map(this.extractData)
                 .catch(this.handleError);
   };
 
-  saveAssignment(assignment: Assignment) {
+  saveAssignment(assignment: Assignment): Observable<Assignment> {
     if (assignment.id == 0) {
       // remove when no longer mocking
       assignment.id = this.newId();
-      return this.http.post(this.assignmentsUrl, assignment, {
-                    withCredentials: true
-                  })
+      return this._http.post(this.assignmentsUrl, assignment, Global.HEADER)
                   .map(this.extractData)
                   .catch(this.handleError);
     } else {
-      return this.http.put(this.assignmentsUrl + assignment.id, assignment, {
-                    withCredentials: true
-                  })
+      return this._http.put(this.assignmentsUrl + assignment.id, assignment, Global.HEADER)
                   .map(this.extractData)
                   .catch(this.handleError);
-    }
+    };
   };
   
-  deleteAssignment(assignment: Assignment) {
-    return this.http.delete(this.assignmentsUrl + assignment.id, {
-                  withCredentials: true
-                })
+  deleteAssignment(assignment: Assignment): Observable<Assignment> {
+    return this._http.delete(this.assignmentsUrl + assignment.id, Global.HEADER)
                 .map(this.extractData)
                 .catch(this.handleError);
-  };
-
-  addPositionInfo(assignment: Assignment, positions: Position[]) {
-      let position = positions.filter(position => position.id == assignment.positionId)[0];
-      return Object.assign(assignment, {position: position});
   };
 
 

@@ -14,7 +14,7 @@ export class AssignmentEffects {
         private svc: PersonService,
     ) {}
 
-    @Effect() loadHeroes$ = this.update$
+    @Effect() loadAssignments$ = this.update$
         .ofType(AssignmentActionTypes.LOAD_ASSIGNMENTS)
         .switchMap(() => this.svc.getAssignments())
         .map(assignments => this.assignmentActions.loadAssignmentsSuccess(assignments));

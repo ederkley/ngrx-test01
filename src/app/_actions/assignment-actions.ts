@@ -15,8 +15,7 @@ export const AssignmentActionTypes = {
    DELETE_ASSIGNMENT: type('[Assignment] Delete assignment'),
    DELETE_ASSIGNMENT_SUCCESS: type('[Assignment] Delete assignment success'),
    LOAD_ASSIGNMENTS: type('[Assignment] Load assignments'),
-   LOAD_ASSIGNMENTS_SUCCESS: type('[Assignment] Load assignments success'),
-   UPDATE_POSITION: type('[Assignment] Update position')
+   LOAD_ASSIGNMENTS_SUCCESS: type('[Assignment] Load assignments success')
 };
 
 @Injectable()
@@ -87,13 +86,6 @@ export class AssignmentActions {
         return {
             type: AssignmentActionTypes.DELETE_ASSIGNMENT_SUCCESS,
             payload: assignment
-        };
-    }
-
-    updatePosition(assignment: Assignment, positions: Position[]): Action {
-        return {
-            type: AssignmentActionTypes.UPDATE_POSITION,
-            payload: { assignment: assignment, positions: positions }
         };
     }
 };

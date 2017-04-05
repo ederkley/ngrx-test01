@@ -14,11 +14,10 @@ export class PositionEffects {
         private svc: PersonService,
     ) {}
 
-    @Effect() loadHeroes$ = this.update$
+    @Effect() loadPositions$ = this.update$
         .ofType(PositionActionTypes.LOAD_POSITIONS)
         .switchMap(() => this.svc.getPositions())
         .map(positions => this.positionActions.loadPositionsSuccess(positions));
-
 
     @Effect() getPosition$ = this.update$
         .ofType(PositionActionTypes.GET_POSITION)
