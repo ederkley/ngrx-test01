@@ -1,19 +1,19 @@
 import { Staff } from '../_models/person';
 import { type } from '../util';
 
-export type PeopleFilterState = any;
-const initialState: PeopleFilterState = null;
+export type StaffFilterState = any;
+const initialState: StaffFilterState = null;
 
 // Person Filter Action Constants
 export const ActionTypes = {
-   SHOW_ALL: type('[PeopleFilter] Show all'),
-   SHOW_EXSTAFF: type('[PeopleFilter] Show former staff'),
-   SHOW_CURRENT: type('[PeopleFilter] Show current positions'),
-   SHOW_ACTUAL_POS: type('[PeopleFilter] Show actual positions'),
-   SHOW_EXECUTIVE: type('[PeopleFilter] Show executive')
+   SHOW_ALL: type('[StaffFilter] Show all'),
+   SHOW_EXSTAFF: type('[StaffFilter] Show former staff'),
+   SHOW_CURRENT: type('[StaffFilter] Show current positions'),
+   SHOW_ACTUAL_POS: type('[StaffFilter] Show actual positions'),
+   SHOW_EXECUTIVE: type('[StaffFilter] Show executive')
  };
 
- export const peopleFilterSelect = [
+ export const staffFilterSelect = [
      { action: ActionTypes.SHOW_ALL, friendly: 'Show all', order: 5 },
      { action: ActionTypes.SHOW_EXSTAFF, friendly: 'Show former staff', order: 4 },
      { action: ActionTypes.SHOW_CURRENT, friendly: 'Show current positions', order: 2 },
@@ -22,7 +22,7 @@ export const ActionTypes = {
  ];
 
 // remember to avoid mutation within reducers
-export const peopleFilter = (state: PeopleFilterState = member => member, action): PeopleFilterState => {
+export const staffFilter = (state: StaffFilterState = member => member, action): StaffFilterState => {
     switch (action.type) {
         case ActionTypes.SHOW_ALL:
             return member => member.person;
@@ -47,12 +47,12 @@ export const peopleFilter = (state: PeopleFilterState = member => member, action
 export const getStaffListView = () => {
     console.log('getStaffListView');
     return state => state
-        .map(([staffModel, peopleFilterModel]) => {
-            const staffList = staffModel.filter(peopleFilterModel);
+        .map(([staffModel, staffFilterModel]) => {
+            const staffList = staffModel.filter(staffFilterModel);
             return {
                 total: staffList.length,
                 staff: staffList,
-                filter: peopleFilterModel
+                filter: staffFilterModel
             };
         });
 };

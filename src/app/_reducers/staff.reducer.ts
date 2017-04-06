@@ -71,7 +71,7 @@ export const staff = (state: StaffState = initialState, action: Action): StaffSt
 };
 
 
-export const staffSelect = (state: SelectStaffState = initialSelectState, action: Action): SelectStaffState => {
+export const selectStaff = (state: SelectStaffState = initialSelectState, action: Action): SelectStaffState => {
     switch (action.type) {
         case StaffActionTypes.SELECT_STAFF:
             return action.payload;        

@@ -8,7 +8,7 @@ import { AppState } from './_reducers';
 import { StaffActions, PersonActions, AssignmentActions, PositionActions } from './_actions';
 import { Person, Position, Assignment, Staff } from './_models/person';
 import * as staffReducer from './_reducers/staff.reducer';
-import * as peopleFilterReducer from './_reducers/people-filter.reducer';
+import * as staffFilterReducer from './_reducers/staff-filter.reducer';
 
 @Component({
     selector: 'app-ngrx',
@@ -19,9 +19,10 @@ export class AppComponent implements OnInit {
   public staffModel: Observable<Staff[]>;
   public staffListView: Observable<Staff[]>;
   public filter : string;
-  public defaultFilter = peopleFilterReducer.ActionTypes.SHOW_EXECUTIVE;
-  public selectedPerson: Staff;
+  public defaultFilter = staffFilterReducer.ActionTypes.SHOW_EXECUTIVE;
+  public selectedStaff: Observable<Staff>;
   private _addingPerson = false;
+  private _selectedStaff = false;
   private _addingAssignment = false;
   errorMessage: string;
 
@@ -52,12 +53,13 @@ export class AppComponent implements OnInit {
       _store.select('staff'),
       _store.select('peopleFilter')
     )
-    .let(peopleFilterReducer.getStaffListView());
+    .let(staffFilterReducer.getStaffListView());
     // update staff model whenever staff changes
     this.staffModel = Observable.combineLatest(
       _store.select('staff')
     )
     .let(staffReducer.getStaffModel());
+    this.selectedStaff = _store.select('selectStaff');
   };
 
   ngOnInit() {
@@ -69,31 +71,30 @@ export class AppComponent implements OnInit {
   };
 
   addNewPerson() {
-    this.selectedPerson = undefined;
     this._addingPerson = true;
   };
 
-  selectPerson(staff: Staff) {
-    this.selectedPerson = staff;
+  selectStaff(staff: Staff) {
+    this._selectedStaff = true;
+    this._store.dispatch(this.staffActions.selectStaff(staff));
   };
 
   updateStaff(staff: Staff) {
-    if (!staff) {
-      this._addingPerson = false;
+    if (staff) {
+      // save change
     } else {
-      console.log(staff);
-    }
-  }
+      this._addingPerson = false;
+      this._selectedStaff = false;
+    };
+  };
 
   addAssignment() {
     this._addingAssignment = true;
-  }
+  };
 
   updateAssignment(assignment) {
     if (assignment) {
-      let newAssignment = new Assignment(this.selectedPerson.person.id, assignment.positionId, assignment.acting, assignment.startDate, assignment.endDate, assignment.position);
-      console.dir(newAssignment);
-      this._store.dispatch(this.assignmentActions.addAssignment(newAssignment));
+      this._store.dispatch(this.assignmentActions.addAssignment(assignment));
     }
     this._addingAssignment = false;
   }

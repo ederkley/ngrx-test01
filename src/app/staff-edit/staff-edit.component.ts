@@ -8,10 +8,10 @@ import {Store} from '@ngrx/store';
 import { Person, Staff, Assignment } from '../_models/person';
 
 @Component({
-  selector: 'app-person-edit',
-  templateUrl: './person-edit.component.html'
+  selector: 'app-staff-edit',
+  templateUrl: './staff-edit.component.html'
 })
-export class PersonEditComponent implements OnInit, OnChanges {
+export class StaffEditComponent implements OnInit, OnChanges {
   @Input() staff: Staff;
   @Input() addingNew: boolean;
   @Output() updateStaff: EventEmitter<any> = new EventEmitter<any>();
@@ -20,7 +20,6 @@ export class PersonEditComponent implements OnInit, OnChanges {
   private _reverseSort = true;
 
   constructor(
-    private _store: Store<any>
   ) {
 
   }

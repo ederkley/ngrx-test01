@@ -21,7 +21,7 @@ import { PersonService } from './_services/person.service';
 import { AppComponent } from './app.component';
 import { StaffListComponent } from './staff-list/staff-list.component';
 import { StaffListFilterComponent } from './staff-list-filter/staff-list-filter.component';
-import { PersonEditComponent } from './person-edit/person-edit.component';
+import { StaffEditComponent } from './staff-edit/staff-edit.component';
 import { StaffAssignmentComponent } from './staff-assignment/staff-assignment.component';
 
 @NgModule({
@@ -29,7 +29,7 @@ import { StaffAssignmentComponent } from './staff-assignment/staff-assignment.co
     AppComponent,
     StaffListComponent,
     StaffListFilterComponent,
-    PersonEditComponent,
+    StaffEditComponent,
     StaffAssignmentComponent
   ],
   imports: [

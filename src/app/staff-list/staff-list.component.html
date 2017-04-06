@@ -1,5 +1,5 @@
 <ul>
-  <li *ngFor="let member of staff" (click)="selectPerson.emit(member)">
+  <li *ngFor="let member of staff" (click)="selectStaff.emit(member)">
       {{member.person.name}} 
       (Commence date: {{member.person.commenceDate | date:'d MMM yyyy'}}) 
       <span *ngIf="!showCurrentOnly && member.currentAssignment && member.actualAssignment && member.actualAssignment.position && member.currentAssignment.positionId != member.actualAssignment.positionId">

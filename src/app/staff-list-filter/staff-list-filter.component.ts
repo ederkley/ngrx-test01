@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, Output, EventEmitter} from "@angular/core";
 
-import * as peopleFilterReducer from '../_reducers/people-filter.reducer';
+import * as staffFilterReducer from '../_reducers/staff-filter.reducer';
 
 @Component({
     selector: 'app-staff-list-filter',
@@ -16,11 +16,11 @@ import * as peopleFilterReducer from '../_reducers/people-filter.reducer';
 })
 export class StaffListFilterComponent implements OnInit {
     public filters = [];
-    @Input() defaultFilter = peopleFilterReducer.peopleFilterSelect[0].action;
+    @Input() defaultFilter = staffFilterReducer.staffFilterSelect[0].action;
     @Output() updateFilter : EventEmitter<any> = new EventEmitter<any>();
 
     ngOnInit() {
-      this.filters = peopleFilterReducer.peopleFilterSelect.sort((filtera, filterb) => { return filtera.order - filterb.order });
+      this.filters = staffFilterReducer.staffFilterSelect.sort((filtera, filterb) => { return filtera.order - filterb.order });
       this.updateFilter.emit(this.defaultFilter);
     };
 };

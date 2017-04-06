@@ -9,15 +9,15 @@ Total: {{(staffListView | async)?.total}} of {{(staffModel | async)?.total}}
 <app-staff-list 
     [staff]="(staffListView | async)?.staff"
     [filter]="filter"
-    (selectPerson)="selectPerson($event)">
+    (selectStaff)="selectStaff($event)">
 </app-staff-list>
 
-<app-person-edit *ngIf="selectedPerson || _addingPerson"
-    [staff]="selectedPerson"
+<app-staff-edit *ngIf="_selectedStaff || _addingPerson"
+    [staff]="selectedStaff | async"
     [addingNew]="_addingPerson"
     (updateStaff)="updateStaff($event)"
     (addAssignment)="addAssignment()">
-</app-person-edit>
+</app-staff-edit>
 
 <app-staff-assignment *ngIf="_addingAssignment"
   (updateAssignment)="updateAssignment($event)">

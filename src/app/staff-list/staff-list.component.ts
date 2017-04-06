@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core
 
 import { Staff } from '../_models/person';
 import * as peopleReducer from '../_reducers/people.reducer';
-import * as peopleFilterReducer from '../_reducers/people-filter.reducer';
+import * as staffFilterReducer from '../_reducers/staff-filter.reducer';
 
 @Component({
   selector: 'app-staff-list',
@@ -12,13 +12,13 @@ export class StaffListComponent implements OnChanges {
   public showCurrentOnly : boolean;
   @Input() staff: Staff[];
   @Input() filter;
-  @Output() selectPerson : EventEmitter<any> = new EventEmitter<any>();
+  @Output() selectStaff : EventEmitter<any> = new EventEmitter<any>();
 
   constructor() {
   }
 
   ngOnChanges() {
-    this.showCurrentOnly = (this.filter !== peopleFilterReducer.ActionTypes.SHOW_ACTUAL_POS);
+    this.showCurrentOnly = (this.filter !== staffFilterReducer.ActionTypes.SHOW_ACTUAL_POS);
   }
 
 }
