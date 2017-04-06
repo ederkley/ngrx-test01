@@ -8,7 +8,6 @@ import { Store } from '@ngrx/store';
 
 import { Global } from '../global';
 import { Person, Position, Assignment, Staff } from '../_models/person';
-import { getPosition } from '../_reducers/positions.reducer';
 import { AppState } from '../_reducers';
 
 
@@ -127,7 +126,6 @@ export class PersonService {
     if (assignment.id == 0) {
       // remove when no longer mocking
       assignment.id = this.newId();
-      console.log(assignment);
       return this._http.post(this.assignmentsUrl, assignment, Global.HEADER)
                   .map(this.extractData)
                   .catch(this.handleError);

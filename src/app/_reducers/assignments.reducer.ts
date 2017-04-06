@@ -7,6 +7,9 @@ import { AssignmentActionTypes } from '../_actions';
 export type AssignmentState = Assignment[];
 const initialState: AssignmentState = [];
 
+export type SelectAssignmentState = Assignment;
+const initialSelectState: SelectAssignmentState = undefined;
+
 // remember to avoid mutation within reducers
 export const assignments = (state: AssignmentState = initialState, action: Action): AssignmentState => {
     switch (action.type) {
@@ -37,6 +40,17 @@ export const assignments = (state: AssignmentState = initialState, action: Actio
                 let newPosition: Position = positions.filter(position => position.id == assignment.positionId)[0]
                 return Object.assign({}, assignment, { position: newPosition } );
             });
+        // always have default return of previous state when action is not relevant
+        default:
+            return state;
+    };
+};
+
+
+export const selectAssignment = (state: SelectAssignmentState = initialSelectState, action: Action): SelectAssignmentState => {
+    switch (action.type) {
+        case AssignmentActionTypes.SELECT_ASSIGNMENT:
+            return action.payload;        
         // always have default return of previous state when action is not relevant
         default:
             return state;

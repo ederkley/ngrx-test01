@@ -13,7 +13,8 @@ export interface AppState {
     people: fromPeople.PeopleState;    
     positions: fromPositions.PositionsState;
     assignments: fromAssignments.AssignmentState;
-    peopleFilter: fromStaffFilter.StaffFilterState;
+    selectAssignment: fromAssignments.SelectAssignmentState;
+    staffFilter: fromStaffFilter.StaffFilterState;
     staff: fromStaff.StaffState;
     selectStaff: fromStaff.SelectStaffState;
 };
@@ -28,7 +29,8 @@ export default compose(storeLogger(), combineReducers)({
     people: fromPeople.people,
     positions: fromPositions.positions,
     assignments: fromAssignments.assignments,
-    peopleFilter: fromStaffFilter.staffFilter,
+    selectAssignment: fromAssignments.selectAssignment,
+    staffFilter: fromStaffFilter.staffFilter,
     staff: fromStaff.staff,
     selectStaff: fromStaff.selectStaff
 });

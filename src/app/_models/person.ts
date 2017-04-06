@@ -3,9 +3,12 @@ export class Position {
   title: string;
   level: string;
   sectionId?: number;
+  section?: Section;
   branchId?: number;
+  branch?: Branch;
   notes?: string;
   supervisorId?: number;
+  supervisor: Staff;
 }
 
 export class Person {
@@ -30,7 +33,6 @@ export class Assignment {
 }
 
 export class Staff {
-  id: number;
   person: Person;
   assignments: Assignment[] = [];
   currentAssignment: Assignment;
@@ -41,7 +43,9 @@ export class Branch {
   id: number;
   name: string;
   abbrev: string;
+  order: number;
   branchHeadId?: number;
+  branchHead?: Staff;
 }
 
 export class Section {
@@ -49,5 +53,8 @@ export class Section {
   name: string;
   abbrev: string;
   branchId: number;
+  branch?: Branch;
+  order: number;
   sectionHeadId?: number;
+  sectionHead?: Staff;
 }

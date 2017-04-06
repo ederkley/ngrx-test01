@@ -16,6 +16,7 @@ export const AssignmentActionTypes = {
    DELETE_ASSIGNMENT_SUCCESS: type('[Assignment] Delete assignment success'),
    LOAD_ASSIGNMENTS: type('[Assignment] Load assignments'),
    LOAD_ASSIGNMENTS_SUCCESS: type('[Assignment] Load assignments success'),
+   SELECT_ASSIGNMENT: type('[Assignment] Select assignment'),
    SET_POSITIONS: type('[Assignment] Set positions')
 };
 
@@ -89,6 +90,13 @@ export class AssignmentActions {
             payload: assignment
         };
     }
+
+    selectAssignment(assignment: Assignment): Action {
+        return {
+            type: AssignmentActionTypes.SELECT_ASSIGNMENT,
+            payload: assignment
+        };
+    };
 
     setPositions(positions): Action {
         return {

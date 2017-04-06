@@ -23,7 +23,6 @@ export class AppComponent implements OnInit {
   public selectedStaff: Observable<Staff>;
   private _addingPerson = false;
   private _selectedStaff = false;
-  private _addingAssignment = false;
   errorMessage: string;
 
   constructor(
@@ -51,7 +50,7 @@ export class AppComponent implements OnInit {
     // update staff list whenever staff or filter changes
     this.staffListView = Observable.combineLatest(
       _store.select('staff'),
-      _store.select('peopleFilter')
+      _store.select('staffFilter')
     )
     .let(staffFilterReducer.getStaffListView());
     // update staff model whenever staff changes
@@ -87,17 +86,6 @@ export class AppComponent implements OnInit {
       this._selectedStaff = false;
     };
   };
-
-  addAssignment() {
-    this._addingAssignment = true;
-  };
-
-  updateAssignment(assignment) {
-    if (assignment) {
-      this._store.dispatch(this.assignmentActions.addAssignment(assignment));
-    }
-    this._addingAssignment = false;
-  }
 
 }
 
