@@ -7,6 +7,9 @@ import { StaffActionTypes } from '../_actions';
 export type StaffState = Staff[];
 const initialState: StaffState = [];
 
+export type SelectStaffState = Staff;
+const initialSelectState: SelectStaffState = undefined;
+
 // remember to avoid mutation within reducers
 export const staff = (state: StaffState = initialState, action: Action): StaffState => {
     switch (action.type) {
@@ -25,11 +28,53 @@ export const staff = (state: StaffState = initialState, action: Action): StaffSt
         }
         case StaffActionTypes.DELETE_STAFF:{
             return state.filter(staff => {
-                return staff.person && staff.person.id !== action.payload.person.id;
+                return staff.person && staff.person.id != action.payload.person.id;
             });
         }
         case StaffActionTypes.LOAD_STAFF:
-            return action.payload;
+            const assignments = action.payload.assignments;
+            const people = action.payload.people;
+            
+            return [...people.map(person => {
+                if (assignments && assignments.length > 0) {
+                    let thisActualAssignment: Assignment;
+                    let thisCurrentAssignment: Assignment;
+                    let personsAssignments: Assignment[] = assignments.filter(assignment => assignment.personId == person.id);
+                    let actualAssignments: Assignment[] = personsAssignments.filter(assignment => new Date(assignment.startDate) <= new Date && !assignment.acting);
+                    let currentAssignments: Assignment[] = personsAssignments.filter(assignment => new Date(assignment.startDate) <= new Date && 
+                        (!assignment.endDate || new Date(assignment.endDate) >= new Date ));
+                    if (actualAssignments.length > 0) {
+                        thisActualAssignment = actualAssignments.reduce((r, a) => r.startDate > a.startDate ? r : a);
+                    };
+                    if (currentAssignments.length > 0) {
+                        thisCurrentAssignment = currentAssignments.reduce((r, a) => r.startDate > a.startDate ? r : a);
+                    };
+
+                    return Object.assign({}, {
+                        id: person.id,
+                        person: person,
+                        assignments: personsAssignments,
+                        currentAssignment: thisCurrentAssignment,
+                        actualAssignment: thisActualAssignment
+                    });
+                };
+                return {
+                    id: person.id,
+                    person: person,
+                    assignments: []
+                };
+            })];
+        // always have default return of previous state when action is not relevant
+        default:
+            return state;
+    };
+};
+
+
+export const staffSelect = (state: SelectStaffState = initialSelectState, action: Action): SelectStaffState => {
+    switch (action.type) {
+        case StaffActionTypes.SELECT_STAFF:
+            return action.payload;        
         // always have default return of previous state when action is not relevant
         default:
             return state;
@@ -39,38 +84,12 @@ export const staff = (state: StaffState = initialState, action: Action): StaffSt
 // SELECTORS
 
 export const getStaffModel = () => {
-  return state => state
-    .map(([peopleModel, assignmentsModel, positionsModel]) => {
-        let staffList: Staff[] = [];
-        staffList = peopleModel.map(person => {
-            if (assignmentsModel && assignmentsModel.length > 0) {
-                let personsAssignments: Assignment[] = assignmentsModel.filter(assignment => assignment.personId === person.id);
-                personsAssignments.map(assignment => assignment.position = positionsModel.filter(position => position.id === assignment.positionId)[0]);
-                let thisActualAssignment: Assignment;
-                let thisCurrentAssignment: Assignment;
-                if (personsAssignments.length > 0) {
-                    thisCurrentAssignment = personsAssignments.reduce((r, a) => r.startDate > a.startDate ? r : a);
-                    thisCurrentAssignment.position = positionsModel.filter(position => position.id === thisCurrentAssignment.positionId)[0];
-                    thisActualAssignment = personsAssignments.filter(assignment => !assignment.acting).reduce((r, a) => r.startDate > a.startDate ? r : a);
-                    thisActualAssignment.position = positionsModel.filter(position => position.id === thisActualAssignment.positionId)[0];
-                }
-                return {
-                    id: person.id,
-                    person: person,
-                    assignments: personsAssignments,
-                    currentAssignment: thisCurrentAssignment,
-                    actualAssignment: thisActualAssignment
-                };
-            };
-            return { 
-                id: person.id,
-                person: person,
-                assignments: []
+    console.log('getStaffModel');
+    return state => state
+        .map(([staffModel]) => {
+            return {
+                total: staffModel.length,
+                staff: staffModel
             };
         });
-        return {
-            total: staffList.length,
-            staff: staffList
-        };
-      });
 };

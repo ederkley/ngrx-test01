@@ -25,11 +25,18 @@ export const assignments = (state: AssignmentState = initialState, action: Actio
         }
         case AssignmentActionTypes.DELETE_ASSIGNMENT_SUCCESS:{
             return state.filter(assignment => {
-                return assignment.id !== action.payload.id;
+                return assignment.id != action.payload.id;
             });
         }
         case AssignmentActionTypes.LOAD_ASSIGNMENTS_SUCCESS:
             return action.payload;
+        case AssignmentActionTypes.SET_POSITIONS:
+            const positions = action.payload;
+            const assignments = state;
+            return assignments.map(assignment => {
+                let newPosition: Position = positions.filter(position => position.id == assignment.positionId)[0]
+                return Object.assign({}, assignment, { position: newPosition } );
+            });
         // always have default return of previous state when action is not relevant
         default:
             return state;

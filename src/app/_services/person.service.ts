@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 
 import { Global } from '../global';
 import { Person, Position, Assignment, Staff } from '../_models/person';
+import { getPosition } from '../_reducers/positions.reducer';
 import { AppState } from '../_reducers';
 
 
@@ -17,9 +18,9 @@ export class PersonService {
   private peopleUrl = Global.BASE_API_URL + 'people/';
   private positionsUrl = Global.BASE_API_URL + 'positions/';
   private assignmentsUrl = Global.BASE_API_URL + 'assignments/';
-  assignments: Observable<Assignment[]>;
-  positions: Observable<Position[]>;
-  people: Observable<Person[]>
+  private assignments$: Observable<Assignment[]>;
+  private positions$: Observable<Position[]>;
+  private people$: Observable<Person[]>
   private _id = 5000;
 
   newId(): number {
@@ -30,9 +31,9 @@ export class PersonService {
     private _http: Http,
     private _store: Store<AppState>
   ) { 
-    this.assignments = _store.select('assignments');
-    this.positions = _store.select('positions');
-    this.people = _store.select('people');
+    this.assignments$ = _store.select('assignments');
+    this.positions$ = _store.select('positions');
+    this.people$ = _store.select('people');    
   }
 
   private extractData(res: Response) {
@@ -126,6 +127,7 @@ export class PersonService {
     if (assignment.id == 0) {
       // remove when no longer mocking
       assignment.id = this.newId();
+      console.log(assignment);
       return this._http.post(this.assignmentsUrl, assignment, Global.HEADER)
                   .map(this.extractData)
                   .catch(this.handleError);
@@ -141,7 +143,6 @@ export class PersonService {
                 .map(this.extractData)
                 .catch(this.handleError);
   };
-
 
 
   // ERROR-HANDLER

@@ -10,11 +10,12 @@ export const StaffActionTypes = {
    SAVE_STAFF: type('[Staff] Save staff'),
    DELETE_STAFF: type('[Staff] Delete staff'),
    LOAD_STAFF: type('[Staff] Load staff'),
+   SELECT_STAFF: type('[Staff] Select staff')
 };
 
 @Injectable()
 export class StaffActions {
-    loadStaff(people: Person[], assignments: Assignment[]): Action {
+    loadStaff(people, assignments): Action {
         return {
             type: StaffActionTypes.LOAD_STAFF,
             payload: { 
@@ -32,7 +33,7 @@ export class StaffActions {
                 assignments: assignments
             }
         };
-    }
+    };
 
     saveStaff(person: Person, assignments: Assignment[]): Action {
         return {
@@ -42,12 +43,20 @@ export class StaffActions {
                 assignments: assignments
             }
         };
-    }
+    };
 
-    deleteStaff(person: Person): Action {
+    deleteStaff(staff: Staff): Action {
         return {
             type: StaffActionTypes.DELETE_STAFF,
-            payload: person
+            payload: staff
         };
-    }
+    };
+
+    selectStaff(staff: Staff): Action {
+        return {
+            type: StaffActionTypes.SELECT_STAFF,
+            payload: staff
+        };
+    };
+    
 };

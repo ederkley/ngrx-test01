@@ -15,6 +15,7 @@ export interface AppState {
     assignments: fromAssignments.AssignmentState;
     peopleFilter: fromPeopleFilter.PeopleFilterState;
     staff: fromStaff.StaffState;
+    staffSelect: fromStaff.SelectStaffState;
 };
 
 //uncomment the storeLogger import and this line
@@ -28,5 +29,6 @@ export default compose(storeLogger(), combineReducers)({
     positions: fromPositions.positions,
     assignments: fromAssignments.assignments,
     peopleFilter: fromPeopleFilter.peopleFilter,
-    staff: fromStaff.staff
+    staff: fromStaff.staff,
+    staffSelect: fromStaff.staffSelect
 });

@@ -35,3 +35,8 @@ export const positions = (state: PositionsState = initialState, action: Action):
             return state;
     };
 };
+
+// SELECTORS
+export const getPosition = (state: PositionsState, positionId: number) => {
+    return state.filter(position => position.id==positionId)[0];
+};

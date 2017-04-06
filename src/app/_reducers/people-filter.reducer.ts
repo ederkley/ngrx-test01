@@ -1,4 +1,4 @@
-import { Person } from '../_models/person';
+import { Staff } from '../_models/person';
 import { type } from '../util';
 
 export type PeopleFilterState = any;
@@ -43,3 +43,16 @@ export const peopleFilter = (state: PeopleFilterState = member => member, action
 
 
 // SELECTORS
+
+export const getStaffListView = () => {
+    console.log('getStaffListView');
+    return state => state
+        .map(([staffModel, peopleFilterModel]) => {
+            const staffList = staffModel.filter(peopleFilterModel);
+            return {
+                total: staffList.length,
+                staff: staffList,
+                filter: peopleFilterModel
+            };
+        });
+};

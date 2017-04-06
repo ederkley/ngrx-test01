@@ -11,7 +11,7 @@ import { Position } from '../_models/person';
 })
 export class StaffAssignmentComponent implements OnInit {
   public positions;
-  public positionId = 0;
+  public selectedPosition: Position;
   public dateStart: string;
   public dateEnd: string;
   public acting = true;
@@ -30,11 +30,13 @@ export class StaffAssignmentComponent implements OnInit {
   }
 
   setAssignment() {
+    console.log(this.selectedPosition);
     this.updateAssignment.emit({
       startDate: this.dateStart,
       endDate: this.dateEnd,
-      positionId: this.positionId,
-      acting: this.acting
+      positionId: this.selectedPosition && this.selectedPosition.id,
+      acting: this.acting,
+      position: this.selectedPosition
     })
   }
 

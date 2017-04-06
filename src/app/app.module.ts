@@ -14,7 +14,7 @@ import { PersonData } from './_mockapi/person-api';
 
 import reducer from './_reducers';
 import { PersonEffects, AssignmentEffects, PositionEffects } from './_effects';
-import { PersonActions, AssignmentActions, PositionActions } from './_actions';
+import { PersonActions, AssignmentActions, PositionActions, StaffActions } from './_actions';
 
 import { PersonService } from './_services/person.service';
 
@@ -44,7 +44,7 @@ import { StaffAssignmentComponent } from './staff-assignment/staff-assignment.co
     EffectsModule.run(PositionEffects),
     InMemoryWebApiModule.forRoot(PersonData)
   ],
-  providers: [PersonService, PersonActions, AssignmentActions, PositionActions],
+  providers: [PersonService, PersonActions, AssignmentActions, PositionActions, StaffActions],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

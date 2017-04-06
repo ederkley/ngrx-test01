@@ -1,10 +1,10 @@
 <form>
-  <select [(ngModel)]="positionId" name="position">
-      <option *ngFor="let position of positions" value="{{position.id}}">
+  <select [(ngModel)]="selectedPosition" name="position">
+      <option *ngFor="let position of positions" [ngValue]="position">
           {{position.title}}
       </option>
   </select>
-  
+  Position: {{selectedPosition || none}}
   Date Start: <input [(ngModel)]="dateStart" name="startDate" type="date" />
   Date End: <input [(ngModel)]="dateEnd" name="endDate" type="date" />
   <input [(ngModel)]="acting" name="acting" type="checkbox" />

@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import * as _ from 'lodash';
 
-import { Person, Assignment, Staff } from '../_models/person';
+import { Person } from '../_models/person';
 import { PersonActionTypes } from '../_actions';
 
 export type PeopleState = Person[];
@@ -25,7 +25,7 @@ export const people = (state: PeopleState = initialState, action: Action): Peopl
         }
         case PersonActionTypes.DELETE_PERSON_SUCCESS:{
             return state.filter(person => {
-                return person.id !== action.payload.id;
+                return person.id != action.payload.id;
             });
         }
         case PersonActionTypes.LOAD_PEOPLE_SUCCESS:
@@ -34,22 +34,4 @@ export const people = (state: PeopleState = initialState, action: Action): Peopl
         default:
             return state;
     };
-};
-
-
-export const getStaffListView = () => {
-  return state => state
-    .map(([staffModel, peopleFilterModel]) => {
-        let staffList: Staff[] = [];
-        if (staffModel.staff) {
-            staffList = staffModel.staff.filter(peopleFilterModel);
-        };
-        let response = {
-            total: staffList.length,
-            staff: staffList,
-            filter: peopleFilterModel
-        };
-        console.dir(response);
-        return response;
-      });
 };
