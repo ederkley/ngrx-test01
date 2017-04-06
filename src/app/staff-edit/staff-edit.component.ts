@@ -28,7 +28,7 @@ export class StaffEditComponent implements OnInit, OnChanges {
     private staffActions: StaffActions
   ) {
     this.selectedStaff = _store.select('selectStaff');
-    this.selectedAssignment = _store.select('selectAssignment');
+    this.selectedAssignment = _store.select('selectAssignment');    
     // sort Assignments when selected staff changed
     this.selectedStaff.subscribe(staff => {
       this.sortedAssignments = staff.assignments.sort((a, b) => {
@@ -36,6 +36,8 @@ export class StaffEditComponent implements OnInit, OnChanges {
           new Date(b.startDate).getTime() - new Date(a.startDate).getTime() :
           new Date(a.startDate).getTime() - new Date(b.startDate).getTime() });
     });
+    // update selected Staff assignments whenever assignments change
+    _store.select('assignments').subscribe(assignments => _store.dispatch(staffActions.updateAssignments(assignments)));
   }
 
   ngOnInit() {
@@ -62,11 +64,8 @@ export class StaffEditComponent implements OnInit, OnChanges {
     if (assignment) {
       let thisStaff: Staff;
       this.selectedStaff.subscribe(staff => thisStaff = staff);
-      console.log(thisStaff);
       assignment = Object.assign({}, assignment, { personId: thisStaff.person.id });
-      console.dir(assignment);
       this._store.dispatch(this.assignmentActions.addAssignment(assignment));
-      this._store.dispatch(this.staffActions.selectStaff(thisStaff));
     };
     this._addingAssignment = false;
     this._selectAssignment = false;

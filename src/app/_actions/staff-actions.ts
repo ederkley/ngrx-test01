@@ -10,7 +10,8 @@ export const StaffActionTypes = {
    SAVE_STAFF: type('[Staff] Save staff'),
    DELETE_STAFF: type('[Staff] Delete staff'),
    LOAD_STAFF: type('[Staff] Load staff'),
-   SELECT_STAFF: type('[Staff] Select staff')
+   SELECT_STAFF: type('[Staff] Select staff'),
+   UPDATE_ASSIGNMENTS: type('[Staff] Update assignments of selected staff')
 };
 
 @Injectable()
@@ -56,6 +57,13 @@ export class StaffActions {
         return {
             type: StaffActionTypes.SELECT_STAFF,
             payload: staff
+        };
+    };
+
+    updateAssignments(assignments): Action {
+        return {
+            type: StaffActionTypes.UPDATE_ASSIGNMENTS,
+            payload: assignments
         };
     };
     

@@ -74,7 +74,29 @@ export const staff = (state: StaffState = initialState, action: Action): StaffSt
 export const selectStaff = (state: SelectStaffState = initialSelectState, action: Action): SelectStaffState => {
     switch (action.type) {
         case StaffActionTypes.SELECT_STAFF:
-            return action.payload;        
+            return action.payload;
+        case StaffActionTypes.UPDATE_ASSIGNMENTS:
+            const assignments = action.payload;
+            let personsAssignments: Assignment[] = [];
+            let thisActualAssignment: Assignment;
+            let thisCurrentAssignment: Assignment;
+            if (assignments && assignments.length > 0) {
+                personsAssignments = assignments.filter(assignment => assignment.personId == state.person.id);
+            };
+            let actualAssignments: Assignment[] = personsAssignments.filter(assignment => new Date(assignment.startDate) <= new Date && !assignment.acting);
+            let currentAssignments: Assignment[] = personsAssignments.filter(assignment => new Date(assignment.startDate) <= new Date && 
+                (!assignment.endDate || new Date(assignment.endDate) >= new Date ));
+            if (actualAssignments.length > 0) {
+                thisActualAssignment = actualAssignments.reduce((r, a) => r.startDate > a.startDate ? r : a);
+            };
+            if (currentAssignments.length > 0) {
+                thisCurrentAssignment = currentAssignments.reduce((r, a) => r.startDate > a.startDate ? r : a);
+            };
+            return Object.assign({}, state, {
+                assignments: personsAssignments,
+                currentAssignment: thisCurrentAssignment,
+                actualAssignment: thisActualAssignment 
+            });
         // always have default return of previous state when action is not relevant
         default:
             return state;
