@@ -5,15 +5,15 @@ export class PersonData implements InMemoryDbService {
   createDb() {    
 
     const people: Person[] = [
-        {id: 100, name: 'Frank Smith', commenceDate: new Date('18 Sep 1998') },
-        {id: 101, name: 'Jessica Jones', commenceDate: new Date('18 Sep 2005')},
-        {id: 102, name: 'Luke Cage', commenceDate: new Date('18 Sep 2008')},
-        {id: 103, name: 'Iron Fist', commenceDate: new Date('18 Oct 1998')},
-        {id: 104, name: 'Captain America', commenceDate: new Date('18 Sep 2005')},
-        {id: 105, name: 'Wolverine', commenceDate: new Date('18 Sep 2010')},
-        {id: 106, name: 'Wanda Maximoff', commenceDate: new Date('18 Sep 1990')},
-        {id: 107, name: 'Black Panther', commenceDate: new Date('18 Jan 2006')},
-        {id: 108, name: 'Jackie Smith', commenceDate: new Date('18 Sep 1990'), exitDate: new Date('1 Jan 2006')}
+        {id: 100, name: 'Frank Smith', commenceDate: new Date('18 Sep 1998Z') },
+        {id: 101, name: 'Jessica Jones', commenceDate: new Date('18 Sep 2005Z')},
+        {id: 102, name: 'Luke Cage', commenceDate: new Date('18 Sep 2008Z')},
+        {id: 103, name: 'Iron Fist', commenceDate: new Date('18 Oct 1998Z')},
+        {id: 104, name: 'Captain America', commenceDate: new Date('18 Sep 2005Z')},
+        {id: 105, name: 'Wolverine', commenceDate: new Date('18 Sep 2010Z')},
+        {id: 106, name: 'Wanda Maximoff', commenceDate: new Date('18 Sep 1990Z')},
+        {id: 107, name: 'Black Panther', commenceDate: new Date('18 Jan 2006Z')},
+        {id: 108, name: 'Jackie Smith', commenceDate: new Date('18 Sep 1990Z'), exitDate: new Date('1 Jan 2006Z')}
     ];
 
     const positions: Position[] = [
@@ -39,17 +39,17 @@ export class PersonData implements InMemoryDbService {
     ];
 
     const assignments: Assignment[] = [
-        {id: 108, personId: 100, positionId: 17, startDate: new Date('18 Sep 2000'), acting: false },
-        {id: 109, personId: 101, positionId: 18, startDate: new Date('18 Sep 2005'), acting: false },
-        {id: 110, personId: 102, positionId: 29, startDate: new Date('18 Sep 2008'), acting: false },
-        {id: 111, personId: 103, positionId: 5, startDate: new Date('18 Oct 1998'), acting: false },
-        {id: 112, personId: 104, positionId: 2, startDate: new Date('18 Sep 2005'), acting: false },
-        {id: 113, personId: 105, positionId: 1, startDate: new Date('18 Sep 2010'), acting: false },
-        {id: 114, personId: 106, positionId: 30, startDate: new Date('18 Sep 1990'), acting: false },
-        {id: 115, personId: 107, positionId: 3, startDate: new Date('18 Sep 2006'), acting: false },
-        {id: 108, personId: 100, positionId: 29, startDate: new Date('22 Mar 2017'), acting: true },
-        {id: 109, personId: 100, positionId: 29, startDate: new Date('1 Jun 2016'), endDate: new Date('30 Jun 2016'), acting: true },
-        {id: 110, personId: 102, positionId: 5, startDate: new Date('22 Mar 2017'), acting: true }
+        {id: 108, personId: 100, positionId: 17, startDate: new Date('18 Sep 2000Z',), acting: false },
+        {id: 109, personId: 101, positionId: 18, startDate: new Date('18 Sep 2005Z'), acting: false },
+        {id: 110, personId: 102, positionId: 29, startDate: new Date('18 Sep 2008Z'), acting: false },
+        {id: 111, personId: 103, positionId: 5, startDate: new Date('18 Oct 1998Z'), acting: false },
+        {id: 112, personId: 104, positionId: 2, startDate: new Date('18 Sep 2005Z'), acting: false },
+        {id: 113, personId: 105, positionId: 1, startDate: new Date('18 Sep 2010Z'), acting: false },
+        {id: 114, personId: 106, positionId: 30, startDate: new Date('18 Sep 1990Z'), acting: false },
+        {id: 115, personId: 107, positionId: 3, startDate: new Date('18 Sep 2006Z'), acting: false },
+        {id: 108, personId: 100, positionId: 29, startDate: new Date('22 Mar 2017Z'), acting: true },
+        {id: 109, personId: 100, positionId: 29, startDate: new Date('1 Jun 2016Z'), endDate: new Date('30 Jun 2016Z'), acting: true },
+        {id: 110, personId: 102, positionId: 5, startDate: new Date('22 Mar 2017Z'), acting: true }
     ];
 
     return {people, positions, assignments, branches, sections};

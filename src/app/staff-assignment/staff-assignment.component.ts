@@ -19,10 +19,11 @@ export class StaffAssignmentComponent implements OnInit {
   @Input() addingNew = false;
   @Output() updateAssignment: EventEmitter<Assignment> = new EventEmitter<Assignment>();
 
-  @Input('assignment') set assignment(assignment: Assignment){
-    if (assignment) {
-      Object.assign({}, this.selectedAssignment, assignment);
-    };
+  @Input() set assignment(assignment: Assignment){
+    this.selectedAssignment = Object.assign({}, assignment);
+    this.selectedPosition = assignment && assignment.position;
+    this.dateStart = assignment && new Date(assignment.startDate).toISOString().substring(0, 10);
+    this.dateEnd = assignment && assignment.endDate && new Date(assignment.endDate).toISOString().substring(0, 10);
   };
 
   constructor(
@@ -41,12 +42,11 @@ export class StaffAssignmentComponent implements OnInit {
   }
 
   setAssignment() {
-    console.log(this.selectedPosition);
     this.updateAssignment.emit({
       id: 0,
       personId: 0,
-      startDate: new Date(this.dateStart),
-      endDate: new Date(this.dateEnd),
+      startDate: this.dateStart && new Date(this.dateStart),
+      endDate: this.dateEnd && new Date(this.dateEnd),
       positionId: this.selectedPosition && this.selectedPosition.id,
       acting: this.acting,
       position: this.selectedPosition

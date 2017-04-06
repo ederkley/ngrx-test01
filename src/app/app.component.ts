@@ -36,28 +36,21 @@ export class AppComponent implements OnInit {
     this._store.dispatch(this.personActions.loadPeople());
     this._store.dispatch(this.assignmentActions.loadAssignments());
     this._store.dispatch(this.positionActions.loadPositions());
-    // update position on assignments whenever positions change
-    Observable.combineLatest(
-      _store.select('positions')
-    )
-    .subscribe(([positions]) => this._store.dispatch(this.assignmentActions.setPositions(positions)));
+    // set position on assignments whenever positions change
+    _store.select('positions').subscribe(positions => _store.dispatch(assignmentActions.setPositions(positions)));
     // update staff model whenever people or assignments change
     Observable.combineLatest(
       _store.select('people'),
       _store.select('assignments')
-    )
-    .subscribe(([people, assignments]) => this._store.dispatch(this.staffActions.loadStaff(people, assignments)));
+    ).subscribe(([people, assignments]) => _store.dispatch(staffActions.loadStaff(people, assignments)));
     // update staff list whenever staff or filter changes
     this.staffListView = Observable.combineLatest(
       _store.select('staff'),
       _store.select('staffFilter')
-    )
-    .let(staffFilterReducer.getStaffListView());
+    ).let(staffFilterReducer.getStaffListView());
     // update staff model whenever staff changes
-    this.staffModel = Observable.combineLatest(
-      _store.select('staff')
-    )
-    .let(staffReducer.getStaffModel());
+    this.staffModel = _store.select('staff')
+      .let(staffReducer.getStaffModel());
     this.selectedStaff = _store.select('selectStaff');
   };
 

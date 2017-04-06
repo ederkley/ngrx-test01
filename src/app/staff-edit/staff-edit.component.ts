@@ -6,14 +6,14 @@ import {Store} from '@ngrx/store';
 
 import { AppState } from '../_reducers';
 import { Person, Staff, Assignment } from '../_models/person';
-import { PersonActions, AssignmentActions } from '../_actions';
+import { PersonActions, StaffActions, AssignmentActions } from '../_actions';
 
 @Component({
   selector: 'app-staff-edit',
   templateUrl: './staff-edit.component.html'
 })
 export class StaffEditComponent implements OnInit, OnChanges {
-  @Input() selectedStaff: Staff;
+  public selectedStaff: Observable<Staff>;
   @Input() addingNew: boolean;
   @Output() updateStaff: EventEmitter<any> = new EventEmitter<any>();
   public selectedAssignment: Observable<Assignment>;
@@ -25,33 +25,28 @@ export class StaffEditComponent implements OnInit, OnChanges {
   constructor(
     private _store: Store<AppState>,
     private assignmentActions: AssignmentActions,
-  ) {  
+    private staffActions: StaffActions
+  ) {
+    this.selectedStaff = _store.select('selectStaff');
     this.selectedAssignment = _store.select('selectAssignment');
+    // sort Assignments when selected staff changed
+    this.selectedStaff.subscribe(staff => {
+      this.sortedAssignments = staff.assignments.sort((a, b) => {
+        return this._reverseSort ? 
+          new Date(b.startDate).getTime() - new Date(a.startDate).getTime() :
+          new Date(a.startDate).getTime() - new Date(b.startDate).getTime() });
+    });
   }
 
   ngOnInit() {
   }
 
   ngOnChanges() {
-    if (!this.selectedStaff || this.addingNew) {
-      this.selectedStaff = new Staff;
-    }
-    if (this.selectedStaff.assignments) {
-      this.sortAssignments();
-    }
   }
 
   changeSort() {
     this._reverseSort = !this._reverseSort;
-    this.sortAssignments();
-  }
-
-  sortAssignments() {
-    this.sortedAssignments = this.selectedStaff.assignments.sort((a, b) => { 
-      return this._reverseSort ? 
-        new Date(b.startDate).getTime() - new Date(a.startDate).getTime() :
-        new Date(a.startDate).getTime() - new Date(b.startDate).getTime() });
-  }
+  };
 
   selectAssignment(assignment: Assignment) {
     this._selectAssignment = true;
@@ -60,15 +55,21 @@ export class StaffEditComponent implements OnInit, OnChanges {
 
   addAssignment() {
     this._addingAssignment = true;
+    this._store.dispatch(this.assignmentActions.selectAssignment(undefined));
   };
 
   updateAssignment(assignment) {
     if (assignment) {
-      assignment = Object.assign({}, assignment, { personId: this.selectedStaff.person.id });
+      let thisStaff: Staff;
+      this.selectedStaff.subscribe(staff => thisStaff = staff);
+      console.log(thisStaff);
+      assignment = Object.assign({}, assignment, { personId: thisStaff.person.id });
+      console.dir(assignment);
       this._store.dispatch(this.assignmentActions.addAssignment(assignment));
-    }
+      this._store.dispatch(this.staffActions.selectStaff(thisStaff));
+    };
     this._addingAssignment = false;
     this._selectAssignment = false;
-  }
+  };
 
-}
+};

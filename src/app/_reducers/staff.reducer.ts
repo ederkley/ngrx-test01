@@ -86,7 +86,7 @@ export const selectStaff = (state: SelectStaffState = initialSelectState, action
 export const getStaffModel = () => {
     console.log('getStaffModel');
     return state => state
-        .map(([staffModel]) => {
+        .map(staffModel => {
             return {
                 total: staffModel.length,
                 staff: staffModel
