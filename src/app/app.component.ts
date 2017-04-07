@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
     // update staff model whenever staff changes
     this.staffModel = _store.select('staff')
       .let(staffReducer.getStaffModel());
-    this.selectedStaff = _store.select('selectStaff');    
+    this.selectedStaff = _store.select('selectStaff');
   };
 
   ngOnInit() {

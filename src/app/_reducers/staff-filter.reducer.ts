@@ -45,7 +45,6 @@ export const staffFilter = (state: StaffFilterState = member => member, action):
 // SELECTORS
 
 export const getStaffListView = () => {
-    console.log('getStaffListView');
     return state => state
         .map(([staffModel, staffFilterModel]) => {
             const staffList = staffModel.filter(staffFilterModel);

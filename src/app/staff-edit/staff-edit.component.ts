@@ -7,6 +7,7 @@ import {Store} from '@ngrx/store';
 import { AppState } from '../_reducers';
 import { Person, Staff, Assignment } from '../_models/person';
 import { PersonActions, StaffActions, AssignmentActions } from '../_actions';
+import * as staffReducer from '../_reducers/staff.reducer';
 
 @Component({
   selector: 'app-staff-edit',
@@ -14,11 +15,11 @@ import { PersonActions, StaffActions, AssignmentActions } from '../_actions';
 })
 export class StaffEditComponent implements OnInit, OnChanges {
   public selectedStaff: Observable<Staff>;
+  public sortAssignmentListAsc: Observable<boolean>;
   @Input() addingNew: boolean;
   @Output() updateStaff: EventEmitter<any> = new EventEmitter<any>();
   public selectedAssignment: Observable<Assignment>;
-  public sortedAssignments: Assignment[] = [];
-  private _reverseSort = true;
+  public sortedAssignments: Observable<Assignment[]>;
   private _selectAssignment = false;
   private _addingAssignment = false;
 
@@ -28,14 +29,10 @@ export class StaffEditComponent implements OnInit, OnChanges {
     private staffActions: StaffActions
   ) {
     this.selectedStaff = _store.select('selectStaff');
-    this.selectedAssignment = _store.select('selectAssignment');    
-    // sort Assignments when selected staff changed
-    this.selectedStaff.subscribe(staff => {
-      this.sortedAssignments = staff.assignments.sort((a, b) => {
-        return this._reverseSort ? 
-          new Date(b.startDate).getTime() - new Date(a.startDate).getTime() :
-          new Date(a.startDate).getTime() - new Date(b.startDate).getTime() });
-    });
+    this.selectedAssignment = _store.select('selectAssignment');
+    // update assignment sort order whenever selectStaff changes
+    this.sortedAssignments = this.selectedStaff.let(staffReducer.getSortedAssignments());
+    this.sortAssignmentListAsc = this.selectedStaff.let(staffReducer.getSortAssignmentListAsc());
     // update selected Staff assignments whenever assignments change
     _store.select('assignments').subscribe(assignments => _store.dispatch(staffActions.updateAssignments(assignments)));
   }
@@ -47,7 +44,7 @@ export class StaffEditComponent implements OnInit, OnChanges {
   }
 
   changeSort() {
-    this._reverseSort = !this._reverseSort;
+    this._store.dispatch(this.staffActions.toggleSortAssignmentListOrder());
   };
 
   selectAssignment(assignment: Assignment) {

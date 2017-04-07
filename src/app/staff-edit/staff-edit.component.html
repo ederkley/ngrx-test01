@@ -1,11 +1,12 @@
 <button type="button" (click)="updateStaff.emit(undefined)">Cancel</button>
-Name: {{(selectedStaff | async)?.person && (selectedStaff | async)?.person.name}}
-Current Position: {{(selectedStaff | async)?.currentAssignment && (selectedStaff | async)?.currentAssignment.position && (selectedStaff | async)?.currentAssignment.position.title}}
+Name: {{(selectedStaff | async)?.staff && (selectedStaff | async)?.staff.person.name}}
+Current Position: {{(selectedStaff | async)?.staff && (selectedStaff | async)?.staff.currentAssignment && 
+  (selectedStaff | async)?.staff.currentAssignment.position && (selectedStaff | async)?.staff.currentAssignment.position.title}}
 <button type="button" (click)="addAssignment()">New Assignment</button>
-<div *ngIf="(selectedStaff | async)?.assignments">
-  Previous assignments: <button (click)="changeSort()">{{ _reverseSort ? 'Asc' : 'Desc' }}</button>
+<div *ngIf="(selectedStaff | async)?.staff.assignments">
+  Previous assignments: <button (click)="changeSort()">{{ (sortAssignmentListAsc | async) ? 'Asc' : 'Desc' }}</button>
   <ul>
-    <li *ngFor="let assignment of sortedAssignments" (click)="selectAssignment(assignment)">
+    <li *ngFor="let assignment of (sortedAssignments | async)" (click)="selectAssignment(assignment)">
       {{assignment.position && assignment.position.title}} - 
       from {{assignment.startDate | date:'d MMM yyyy'}} 
       to {{assignment.endDate ? (assignment.endDate | date:'d MMM yyyy') : 'current' }}

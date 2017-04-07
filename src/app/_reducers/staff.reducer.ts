@@ -7,8 +7,14 @@ import { StaffActionTypes } from '../_actions';
 export type StaffState = Staff[];
 const initialState: StaffState = [];
 
-export type SelectStaffState = Staff;
-const initialSelectState: SelectStaffState = undefined;
+export type SelectStaffState = {
+    staff: Staff,
+    sortAssignmentListAsc: boolean
+};
+const initialSelectState: SelectStaffState = {
+    staff: undefined,
+    sortAssignmentListAsc: false
+};
 
 // remember to avoid mutation within reducers
 export const staff = (state: StaffState = initialState, action: Action): StaffState => {
@@ -74,14 +80,16 @@ export const staff = (state: StaffState = initialState, action: Action): StaffSt
 export const selectStaff = (state: SelectStaffState = initialSelectState, action: Action): SelectStaffState => {
     switch (action.type) {
         case StaffActionTypes.SELECT_STAFF:
-            return action.payload;
+            return Object.assign({}, state, { staff: Object.assign({}, state.staff, action.payload) });
+        case StaffActionTypes.TOGGLE_ASSIGNMENT_SORT:
+            return Object.assign({}, state, { sortAssignmentListAsc: !state.sortAssignmentListAsc });
         case StaffActionTypes.UPDATE_ASSIGNMENTS:
             const assignments = action.payload;
             let personsAssignments: Assignment[] = [];
             let thisActualAssignment: Assignment;
             let thisCurrentAssignment: Assignment;
             if (assignments && assignments.length > 0) {
-                personsAssignments = assignments.filter(assignment => assignment.personId == state.person.id);
+                personsAssignments = assignments.filter(assignment => state.staff && (assignment.personId == state.staff.person.id));
             };
             let actualAssignments: Assignment[] = personsAssignments.filter(assignment => new Date(assignment.startDate) <= new Date && !assignment.acting);
             let currentAssignments: Assignment[] = personsAssignments.filter(assignment => new Date(assignment.startDate) <= new Date && 
@@ -92,10 +100,10 @@ export const selectStaff = (state: SelectStaffState = initialSelectState, action
             if (currentAssignments.length > 0) {
                 thisCurrentAssignment = currentAssignments.reduce((r, a) => r.startDate > a.startDate ? r : a);
             };
-            return Object.assign({}, state, {
+            return Object.assign({}, state, { staff: Object.assign({}, state.staff, {
                 assignments: personsAssignments,
                 currentAssignment: thisCurrentAssignment,
-                actualAssignment: thisActualAssignment 
+                actualAssignment: thisActualAssignment }) 
             });
         // always have default return of previous state when action is not relevant
         default:
@@ -106,7 +114,6 @@ export const selectStaff = (state: SelectStaffState = initialSelectState, action
 // SELECTORS
 
 export const getStaffModel = () => {
-    console.log('getStaffModel');
     return state => state
         .map(staffModel => {
             return {
@@ -115,3 +122,21 @@ export const getStaffModel = () => {
             };
         });
 };
+
+export const getSortedAssignments = () => {
+    console.log('getSortedAssignments');
+    return state => state.map(selectStaff => {
+        console.log(selectStaff.staff);
+        const assignments: Assignment[] = selectStaff.staff && selectStaff.staff.assignments;
+        if (assignments && assignments.length > 0) {
+            return selectStaff.staff.assignments.sort((a, b) => {
+                return selectStaff.sortAssignmentListAsc ? 
+                new Date(b.startDate).getTime() - new Date(a.startDate).getTime() :
+                new Date(a.startDate).getTime() - new Date(b.startDate).getTime() 
+                });
+        };
+        return assignments;        
+    });
+};
+
+export const getSortAssignmentListAsc = () => state => { return state.sortAssignmentListAsc };

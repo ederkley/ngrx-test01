@@ -11,7 +11,8 @@ export const StaffActionTypes = {
    DELETE_STAFF: type('[Staff] Delete staff'),
    LOAD_STAFF: type('[Staff] Load staff'),
    SELECT_STAFF: type('[Staff] Select staff'),
-   UPDATE_ASSIGNMENTS: type('[Staff] Update assignments of selected staff')
+   UPDATE_ASSIGNMENTS: type('[Staff] Update assignments of selected staff'),
+   TOGGLE_ASSIGNMENT_SORT: type('[Staff] Toggle sort assignment list order')
 };
 
 @Injectable()
@@ -67,4 +68,7 @@ export class StaffActions {
         };
     };
     
+    toggleSortAssignmentListOrder(): Action {
+        return { type: StaffActionTypes.TOGGLE_ASSIGNMENT_SORT };
+    };
 };
