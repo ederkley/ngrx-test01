@@ -13,9 +13,13 @@ export class Position {
 
 export class Person {
   id: number;
-  name: string;
-  commenceDate: Date;
-  exitDate?: Date;
+  constructor (
+    public name: string,
+    public commenceDate: Date,
+    public exitDate?: Date
+  ) {
+    this.id = 0;
+  };
 }
 
 export class Assignment {
@@ -32,11 +36,18 @@ export class Assignment {
   }
 }
 
-export class Staff {
-  person: Person;
+export class Staff {  
   assignments: Assignment[] = [];
   currentAssignment: Assignment;
   actualAssignment: Assignment;
+  constructor(
+    public person: Person,
+    public assignment: Assignment 
+  ) {
+    this.assignments.push(assignment);
+    this.currentAssignment = assignment;
+    this.actualAssignment = assignment;
+  }
 }
 
 export class Branch {

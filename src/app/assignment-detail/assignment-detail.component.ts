@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
 import {Store} from '@ngrx/store';
 
@@ -6,39 +7,40 @@ import { Assignment } from '../_models/person';
 import { Position } from '../_models/person';
 
 @Component({
-  selector: 'app-staff-assignment',
-  templateUrl: './staff-assignment.component.html'
+  selector: 'app-assignment-detail',
+  templateUrl: './assignment-detail.component.html'
 })
-export class StaffAssignmentComponent implements OnInit {
+export class AssignmentDetailComponent implements OnInit {
+  form: FormGroup;
   public positions;
   public selectedPosition: Position;
   public dateStart: string;
   public dateEnd: string;
   public acting = true;
-  public selectedAssignment: Assignment;
   @Input() addingNew = false;
+  @Input() assignment: Assignment;
   @Output() updateAssignment: EventEmitter<Assignment> = new EventEmitter<Assignment>();
 
-  @Input() set assignment(assignment: Assignment){
-    this.selectedAssignment = Object.assign({}, assignment);
-    this.selectedPosition = assignment && assignment.position;
-    this.dateStart = assignment && new Date(assignment.startDate).toISOString().substring(0, 10);
-    this.dateEnd = assignment && assignment.endDate && new Date(assignment.endDate).toISOString().substring(0, 10);
-  };
-
   constructor(
-      private _store: Store<any>
+      private _store: Store<any>,
+      private fb: FormBuilder
     ) {
       _store.select('positions').subscribe(positions => this.positions = positions);
   }
 
   ngOnInit() {
+    this.form.valueChanges
+        .filter(data => this.form.valid)
+        .subscribe(data => console.log(JSON.stringify(data)));
   }
 
   ngOnChanges() {
-    if (!this.selectedAssignment || this.addingNew) {
-      this.selectedAssignment = new Assignment(0, 0, true, new Date);
-    }
+    this.form = this.fb.group({
+      "position": this.selectedPosition,
+      "dateStart": this.dateStart,
+      "dateEnd": this.dateEnd,
+      "acting": this.acting
+    });
   }
 
   setAssignment() {

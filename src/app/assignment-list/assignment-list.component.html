@@ -1,0 +1,18 @@
+<button type="button" (click)="addAssignment()">New Assignment</button>
+Assignments: <button (click)="changeSort()">{{ (sortAssignmentListAsc | async) ? 'Asc' : 'Desc' }}</button>
+<ul>
+  <li *ngFor="let assignment of (sortedAssignments | async)" 
+    [ngClass]="{selected:(selectedAssignment | async)==assignment}"         
+    (click)="!addingNew && selectAssignment(assignment)">
+    <span>
+    {{assignment?.position?.title}} - 
+    from {{assignment?.startDate | date:'d MMM yyyy'}} 
+    to {{assignment.endDate ? (assignment.endDate | date:'d MMM yyyy') : 'current' }}
+    {{assignment.acting ? '(acting)' : ''}}
+    </span>
+  </li>
+</ul>
+<app-assignment-detail *ngIf="_addingAssignment || _selectAssignment"
+  [assignment]="selectedAssignment | async"
+  (updateAssignment)="updateAssignment($event)">
+</app-assignment-detail>

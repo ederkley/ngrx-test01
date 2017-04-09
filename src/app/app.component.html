@@ -12,9 +12,10 @@ Total: {{(staffListView | async)?.total}} of {{(staffModel | async)?.total}}
     (selectStaff)="selectStaff($event)">
 </app-staff-list>
 
-<app-staff-edit *ngIf="_selectedStaff || _addingPerson"    
+<app-staff-detail *ngIf="_selectedStaff || _addingPerson"
+    [staff]="(selectedStaff | async)?.staff"
     [addingNew]="_addingPerson"
     (updateStaff)="updateStaff($event)">
-</app-staff-edit>
+</app-staff-detail>
 
 {{errorMessage}}

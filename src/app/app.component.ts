@@ -77,6 +77,7 @@ export class AppComponent implements OnInit {
     } else {
       this._addingPerson = false;
       this._selectedStaff = false;
+      this._store.dispatch(this.staffActions.selectStaff(undefined));
     };
   };
 

@@ -1,26 +1,32 @@
 import {Component, OnInit, Input, Output, EventEmitter} from "@angular/core";
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
 import * as staffFilterReducer from '../_reducers/staff-filter.reducer';
 
 @Component({
     selector: 'app-staff-list-filter',
-    template: `
-      <div class="margin-bottom-10">
-        <select [ngModel]="defaultFilter" #selectFilter (change)="updateFilter.emit(selectFilter.value)">
-            <option *ngFor="let filter of filters" value="{{filter.action}}">
-                {{filter.friendly}}
-            </option>
-        </select>
-      </div>
-    `
+    templateUrl: "./staff-list-filter.component.html"
 })
 export class StaffListFilterComponent implements OnInit {
+    form: FormGroup;
     public filters = [];
-    @Input() defaultFilter = staffFilterReducer.staffFilterSelect[0].action;
+    selectFilter: any;
+    @Input() defaultFilter: any;
     @Output() updateFilter : EventEmitter<any> = new EventEmitter<any>();
 
+    constructor(private fb: FormBuilder) {
+        this.filters = staffFilterReducer.staffFilterSelect.sort((filtera, filterb) => { return filtera.order - filterb.order });
+    };
+
     ngOnInit() {
-      this.filters = staffFilterReducer.staffFilterSelect.sort((filtera, filterb) => { return filtera.order - filterb.order });
-      this.updateFilter.emit(this.defaultFilter);
+        this.updateFilter.emit(this.defaultFilter);
+        this.form = this.fb.group({
+            "selectFilter": this.defaultFilter
+        });
+        this.form.valueChanges
+            .filter(data => this.form.valid)
+            .subscribe(data => {
+                this.updateFilter.emit(data.selectFilter);
+            });
     };
 };

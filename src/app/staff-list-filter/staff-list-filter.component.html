@@ -1,0 +1,10 @@
+<form [formGroup]="form">
+    <div class="margin-bottom-10 form-group">
+        <label for="staffFilter">Filter:</label>
+        <select class="form-control" formControlName="selectFilter">
+            <option *ngFor="let filter of filters" value="{{filter.action}}">
+                {{filter.friendly}}
+            </option>
+        </select>
+    </div>
+</form>

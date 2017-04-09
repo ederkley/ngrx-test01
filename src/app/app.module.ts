@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -21,20 +21,22 @@ import { PersonService } from './_services/person.service';
 import { AppComponent } from './app.component';
 import { StaffListComponent } from './staff-list/staff-list.component';
 import { StaffListFilterComponent } from './staff-list-filter/staff-list-filter.component';
-import { StaffEditComponent } from './staff-edit/staff-edit.component';
-import { StaffAssignmentComponent } from './staff-assignment/staff-assignment.component';
+import { StaffDetailComponent } from './staff-detail/staff-detail.component';
+import { AssignmentDetailComponent } from './assignment-detail/assignment-detail.component';
+import { AssignmentListComponent } from './assignment-list/assignment-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     StaffListComponent,
     StaffListFilterComponent,
-    StaffEditComponent,
-    StaffAssignmentComponent
+    StaffDetailComponent,
+    AssignmentDetailComponent,
+    AssignmentListComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     MaterialModule,
     FlexLayoutModule,

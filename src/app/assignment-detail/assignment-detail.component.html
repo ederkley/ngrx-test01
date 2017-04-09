@@ -1,0 +1,20 @@
+<form [formGroup]="form" (ngSubmit)="setAssignment()">
+    <div class="form-group">
+        <label for="selectedPosition">Position</label>    
+        <select class="form-control"
+            formControlName="position"
+            placeholder="Select position...">
+            <option *ngFor="let position of positions" [ngValue]="position">
+                {{position.title}}
+            </option>
+        </select>
+        <label for="dateStart">Date Start</label>    
+        <input class="form-control" formControlName="dateStart" type="date" />
+        <label for="dateEnd">Date End</label>    
+        <input class="form-control" formControlName="dateEnd" type="date" />
+        <label for="acting">Acting</label>    
+        <input class="form-control" formControlName="acting" type="checkbox" />
+    </div>
+  <button type="submit" [disabled]="!form.valid">OK</button>
+  <button type="button" (click)="updateAssignment.emit(undefined)">Cancel</button>
+</form>
