@@ -22,7 +22,7 @@ export const ActionTypes = {
  ];
 
 // remember to avoid mutation within reducers
-export const staffFilter = (state: StaffFilterState = member => member, action): StaffFilterState => {
+export const staffFilterState = (state: StaffFilterState = member => member, action): StaffFilterState => {
     switch (action.type) {
         case ActionTypes.SHOW_ALL:
             return member => member.person;
@@ -46,12 +46,12 @@ export const staffFilter = (state: StaffFilterState = member => member, action):
 
 export const getStaffListView = () => {
     return state => state
-        .map(([staffModel, staffFilterModel]) => {
-            const staffList = staffModel.staffList.filter(staffFilterModel);
+        .map(([staff, staffFilter]) => {
+            const staffList = staff.filter(staffFilter);
             return {
                 total: staffList.length,
-                staffList: staffList,
-                filter: staffFilterModel
+                staff: staffList,
+                filter: staffFilter
             };
         });
 };

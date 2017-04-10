@@ -1,7 +1,7 @@
 Assignments: <button (click)="changeSort()">{{ (sortAssignmentListAsc | async) ? 'Asc' : 'Desc' }}</button>
 <ul>
   <li *ngFor="let assignment of (sortedAssignments | async)" 
-    [ngClass]="{selected:(selectedAssignment | async)==assignment}"         
+    [ngClass]="{selected:(selectedAssignment | async)?.id == assignment.id}"
     (click)="selectAssignment(assignment)">
     <span>
       {{assignment?.position?.title}} - 

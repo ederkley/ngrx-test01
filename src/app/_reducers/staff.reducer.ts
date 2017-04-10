@@ -1,35 +1,30 @@
 import { Action } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import * as _ from 'lodash';
 
-import { Person, Assignment, Staff } from '../_models/person';
+import { Assignment, Staff } from '../_models/person';
 import { StaffActionTypes } from '../_actions';
 
 export type StaffState = {
-    staffList: Staff[],
-    sortAsc: boolean
+    staff: Staff[];    
+    selectedStaff: Staff;
+    sortAsc: boolean;
+    hasLoaded: boolean;
 };
 
 const initialState: StaffState = {
-    staffList: [],
-    sortAsc: true
-};
-
-export type SelectStaffState = {
-    staff: Staff
-};
-const initialSelectState: SelectStaffState = {
-    staff: undefined
+    staff: [],
+    selectedStaff: undefined,
+    sortAsc: true,
+    hasLoaded: false
 };
 
 // remember to avoid mutation within reducers
-export const staff = (state: StaffState = initialState, action: Action): StaffState => {
+export const staffState = (state: StaffState = initialState, action: Action): StaffState => {
     switch (action.type) {
         case StaffActionTypes.LOAD_STAFF:
-            const assignments = action.payload.assignments && action.payload.assignments.assignmentsList;
-            const people = action.payload.people && action.payload.people.peopleList;
+            const assignments = action.payload.assignments;
+            const people = action.payload.people;
             if (assignments && assignments.length > 0) {
-                return Object.assign({}, state, { staffList: [...people.map(person => {                
+                return Object.assign({}, state, { hasLoaded: true, staff: [...people.map(person => {                
                     let thisActualAssignment: Assignment;
                     let thisCurrentAssignment: Assignment;
                     let personsAssignments: Assignment[] = assignments.filter(assignment => assignment.personId == person.id);
@@ -50,6 +45,8 @@ export const staff = (state: StaffState = initialState, action: Action): StaffSt
                 })] });
             }; 
             return state;
+        case StaffActionTypes.SELECT_STAFF:
+            return Object.assign({}, state, { selectedStaff: Object.assign({}, action.payload) });
         case StaffActionTypes.TOGGLE_STAFF_SORT:
             return Object.assign({}, state, { sortAsc: !state.sortAsc });
         // always have default return of previous state when action is not relevant
@@ -58,41 +55,29 @@ export const staff = (state: StaffState = initialState, action: Action): StaffSt
     };
 };
 
-
-export const selectStaff = (state: SelectStaffState = initialSelectState, action: Action): SelectStaffState => {
-    switch (action.type) {
-        case StaffActionTypes.SELECT_STAFF:
-            return Object.assign({}, state, { staff: Object.assign({}, action.payload) });
-        // always have default return of previous state when action is not relevant
-        default:
-            return state;
-    };
-};
-
 // SELECTORS
 
-export const getStaffModel = () => {
-    console.log('getStaffModel');
-    return state => state
-        .map(state => {
-            return {
-                total: state.staffList.length,
-                staff: state.staffList
-            };
-        });
+export const getStaffModel = () => state => {
+    return state.map(s => {
+        return {
+            total: s.staff.length,
+            staff: s.staff
+        };
+    });
 };
 
-export const getStaffList = () => state => {
-    console.log('getStaffList');
-    return state.map(s => s.staffList);
+export const getStaff = () => state => {
+    return state.map(s => s.staff);
 };
 
 export const getSortAsc = () => state => {
-    console.log('getSortAsc');
     return state.map(s => s.sortAsc);
 };
 
-export const getSelectStaff = () => state => {
-    console.log('getSelectStaff');
-    return state.map(s => s.staff);
+export const hasLoaded = () => state => {
+    return state.map(s => s.hasLoaded);
+};
+
+export const getSelectedStaff = () => state => {
+    return state.map(s => s.selectedStaff);
 };

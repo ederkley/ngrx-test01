@@ -4,32 +4,41 @@ import * as _ from 'lodash';
 import { Position } from '../_models/person';
 import { PositionActionTypes } from '../_actions';
 
-export type PositionsState = Position[];
-const initialState: PositionsState = [];
+export type PositionState = {
+    positions: Position[];
+    selectedPosition: Position;
+    hasLoaded: boolean;
+};
+
+const initialState: PositionState = {
+    positions: [],
+    selectedPosition: undefined,
+    hasLoaded: false
+};
 
 // remember to avoid mutation within reducers
-export const positions = (state: PositionsState = initialState, action: Action): PositionsState => {
+export const positionState = (state: PositionState = initialState, action: Action): PositionState => {
     switch (action.type) {
         case PositionActionTypes.ADD_POSITION_SUCCESS: 
-            return [ ...state, action.payload ];
+            return Object.assign({}, state, { positions: [ ...state.positions, action.payload ] });
         case PositionActionTypes.SAVE_POSITION_SUCCESS: {
-            let index = _.findIndex(state, {id: action.payload.id});
+            let index = _.findIndex(state.positions, {id: action.payload.id});
             if (index >= 0) {
-                return [
-                    ...state.slice(0, index),
+                return Object.assign({}, state, { positions: [
+                    ...state.positions.slice(0, index),
                     action.payload,
-                    ...state.slice(index + 1)
-                ];
+                    ...state.positions.slice(index + 1)
+                ] });
             }
             return state;
         }
         case PositionActionTypes.DELETE_POSITION_SUCCESS: {
-            return state.filter(position => {
+            return Object.assign({}, state, { positions: state.positions.filter(position => {
                 return position.id !== action.payload.id;
-            });
+            }) });
         }
         case PositionActionTypes.LOAD_POSITIONS_SUCCESS:
-            return action.payload;
+            return Object.assign({}, state, { hasLoaded: true, positions: [... action.payload] });
         // always have default return of previous state when action is not relevant
         default:
             return state;
@@ -37,6 +46,15 @@ export const positions = (state: PositionsState = initialState, action: Action):
 };
 
 // SELECTORS
-export const getPosition = (state: PositionsState, positionId: number) => {
-    return state.filter(position => position.id==positionId)[0];
+
+export const getPositions = () => state => {
+    return state.map(s => s.positions);
+};
+
+export const hasLoaded = () => state =>  {
+    return state.map(s => s.hasLoaded);
+};
+
+export const getPosition = (state: PositionState, positionId: number) => {
+    return state.positions.filter(position => position.id == positionId)[0];
 };

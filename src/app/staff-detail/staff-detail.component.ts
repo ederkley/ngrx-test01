@@ -44,7 +44,7 @@ export class StaffDetailComponent implements OnInit, OnChanges {
       "dateExit": this.dateExit
     });
     // get selected Staff record whenever changes
-    this.selectedStaff = _store.select('selectStaff').let(staffReducer.getSelectStaff());
+    this.selectedStaff = _store.select('staffSupport').let(staffReducer.getSelectedStaff());
     // update selected Staff's assignments whenever assignments change
     //_store.select('assignments').subscribe(assignments => _store.dispatch(staffActions.updateAssignments(assignments)));
     // update form when selected Staff changed

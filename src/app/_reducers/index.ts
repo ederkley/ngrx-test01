@@ -3,6 +3,7 @@ import {compose} from '@ngrx/core/compose';
 import {storeLogger} from 'ngrx-store-logger';
 import {combineReducers} from '@ngrx/store';
 
+import { type } from '../util';
 import * as fromPeople from './people.reducer';
 import * as fromPositions from './positions.reducer';
 import * as fromAssignments from './assignments.reducer';
@@ -10,13 +11,19 @@ import * as fromStaffFilter from './staff-filter.reducer';
 import * as fromStaff from './staff.reducer';
 
 export interface AppState {
-    people: fromPeople.PeopleState;    
-    positions: fromPositions.PositionsState;
-    assignments: fromAssignments.AssignmentState;
-    selectAssignment: fromAssignments.SelectAssignmentState;
+    peopleState: fromPeople.PeopleState;    
+    positionState: fromPositions.PositionState;
+    assignmentState: fromAssignments.AssignmentState;
     staffFilter: fromStaffFilter.StaffFilterState;
-    staff: fromStaff.StaffState;
-    selectStaff: fromStaff.SelectStaffState;
+    staffState: fromStaff.StaffState;
+};
+
+export const stores = {
+   peopleState: type('peopleState'),
+   positionState: type('positionState'),
+   assignmentState: type('assignmentState'),
+   staffFilterState: type('staffFilterState'),
+   staffState: type('staffState')
 };
 
 //uncomment the storeLogger import and this line
@@ -26,11 +33,9 @@ export interface AppState {
 
 export default compose(storeLogger(), combineReducers)({
 //export default compose(combineReducers)({
-    people: fromPeople.people,
-    positions: fromPositions.positions,
-    assignments: fromAssignments.assignments,
-    selectAssignment: fromAssignments.selectAssignment,
-    staffFilter: fromStaffFilter.staffFilter,
-    staff: fromStaff.staff,
-    selectStaff: fromStaff.selectStaff
+    peopleState: fromPeople.peopleState,
+    positionState: fromPositions.positionState,
+    assignmentState: fromAssignments.assignmentState,
+    staffFilterState: fromStaffFilter.staffFilterState,
+    staffState: fromStaff.staffState
 });

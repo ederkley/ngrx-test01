@@ -18,7 +18,8 @@ export const AssignmentActionTypes = {
    LOAD_ASSIGNMENTS_SUCCESS: type('[Assignment] Load assignments success'),
    SELECT_ASSIGNMENT: type('[Assignment] Select assignment'),
    SET_POSITIONS: type('[Assignment] Set positions'),
-   TOGGLE_ASSIGNMENT_SORT: type('[Assignment] Toggle assignment list sort order')
+   TOGGLE_ASSIGNMENT_SORT: type('[Assignment] Toggle assignment list sort order'),
+   SET_HAS_LOADED: type('[Assignment] Set whether assignments have successfully loaded')
 };
 
 @Injectable()
@@ -108,5 +109,12 @@ export class AssignmentActions {
     
     toggleSortOrder(): Action {
         return { type: AssignmentActionTypes.TOGGLE_ASSIGNMENT_SORT };
+    };
+
+    setHasLoaded(hasLoaded: boolean): Action {
+        return {
+            type: AssignmentActionTypes.SET_HAS_LOADED,
+            payload: hasLoaded
+        };
     };
 };

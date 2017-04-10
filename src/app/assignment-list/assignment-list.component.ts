@@ -13,6 +13,7 @@ import * as assignmentsReducer from '../_reducers/assignments.reducer';
   templateUrl: './assignment-list.component.html'
 })
 export class AssignmentListComponent implements OnInit {
+  public selectedAssignment: Observable<Assignment>;
   public sortAssignmentListAsc: Observable<boolean>;
   public sortedAssignments: Observable<Assignment[]>;
 
@@ -21,13 +22,13 @@ export class AssignmentListComponent implements OnInit {
     private assignmentActions: AssignmentActions,
     private staffActions: StaffActions,
   ) { 
-    //this.selectedAssignment = _store.select('selectAssignment');
+    this.selectedAssignment = _store.select('assignmentSupport');
     // update assignment sort order whenever selectStaff changes
     this.sortedAssignments = Observable.combineLatest(
-      _store.select('selectStaff'),
+      _store.select('staffSupport'),
       _store.select('assignments')
     ).let(assignmentsReducer.getSortedAssignmentsList());
-    this.sortAssignmentListAsc = _store.select('selectStaff').let(assignmentsReducer.getSortAsc());
+    this.sortAssignmentListAsc = _store.select('assignmentSupport').let(assignmentsReducer.getSortAsc());
   };
 
   ngOnInit() {

@@ -2,9 +2,9 @@ import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
-import { AppState } from '../_reducers';
+import { AppState, stores } from '../_reducers';
 import { Staff } from '../_models/person';
-import * as peopleReducer from '../_reducers/people.reducer';
+import * as staffReducer from '../_reducers/staff.reducer';
 import * as staffFilterReducer from '../_reducers/staff-filter.reducer';
 
 @Component({
@@ -19,13 +19,15 @@ export class StaffListComponent implements OnChanges {
   @Input() filter;
   @Output() selectStaff : EventEmitter<Staff> = new EventEmitter<Staff>();
 
-  constructor(
-    private _store: Store<AppState>) {
-    this.selectedStaff = _store.select('selectStaff');
-  }
+  constructor (
+    private _store: Store<AppState>
+  ) {
+    //this.staff = _store.select(stores.staffFilterState).let(staffFilterReducer.getStaffListView());
+    this.selectedStaff = _store.select(stores.staffState).let(staffReducer.getSelectedStaff());
+  };
 
   ngOnChanges() {
-    this.showCurrentOnly = (this.filter !== staffFilterReducer.ActionTypes.SHOW_ACTUAL_POS);
-  }
+    this.showCurrentOnly = (this.filter != staffFilterReducer.ActionTypes.SHOW_ACTUAL_POS);
+  };
 
-}
+};
