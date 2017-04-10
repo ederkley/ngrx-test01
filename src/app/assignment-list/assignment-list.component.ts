@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/let';
 import {Store} from '@ngrx/store';
@@ -14,18 +14,17 @@ import * as staffReducer from '../_reducers/staff.reducer';
 })
 export class AssignmentListComponent implements OnInit {
   public sortAssignmentListAsc: Observable<boolean>;
-  public selectedAssignment: Observable<Assignment>;
+  public selectedAssignment: Assignment;
   public sortedAssignments: Observable<Assignment[]>;
-  private _selectAssignment = false;
-  private _addingAssignment = false;
   @Input() personId: number;
+  @Output() selectAssignment: EventEmitter<Assignment> = new EventEmitter<Assignment>();
 
   constructor(
     private _store: Store<AppState>,
     private assignmentActions: AssignmentActions,
     private staffActions: StaffActions,
   ) { 
-    this.selectedAssignment = _store.select('selectAssignment');
+    //this.selectedAssignment = _store.select('selectAssignment');
     // update assignment sort order whenever selectStaff changes
     this.sortedAssignments = _store.select('selectStaff').let(staffReducer.getSortedAssignments());
     this.sortAssignmentListAsc = _store.select('selectStaff').let(staffReducer.getSortAssignmentListAsc());
@@ -33,27 +32,6 @@ export class AssignmentListComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  selectAssignment(assignment: Assignment) {
-    this._selectAssignment = true;
-    this._store.dispatch(this.assignmentActions.selectAssignment(assignment));
-  };
-
-  addAssignment() {
-    this._addingAssignment = true;
-    this._store.dispatch(this.assignmentActions.selectAssignment(undefined));
-  };
-
-  updateAssignment(assignment) {
-    if (assignment) {
-      assignment = Object.assign({}, assignment, { personId: this.personId });
-      this._store.dispatch(this.assignmentActions.addAssignment(assignment));
-    } else {
-      this._store.dispatch(this.assignmentActions.selectAssignment(undefined));
-    }
-    this._addingAssignment = false;
-    this._selectAssignment = false;
-  };
 
   changeSort() {
     this._store.dispatch(this.staffActions.toggleSortAssignmentListOrder());

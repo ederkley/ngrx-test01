@@ -51,6 +51,11 @@ export class AppComponent implements OnInit {
     // update staff model whenever staff changes
     this.staffModel = _store.select('staff')
       .let(staffReducer.getStaffModel());
+    // deselect staff whenever staffFilter changes
+    _store.select('staffFilter').subscribe(staffFilter => {
+      this._selectedStaff = false;
+      _store.dispatch(staffActions.selectStaff(undefined));
+    });
     this.selectedStaff = _store.select('selectStaff');
   };
 
@@ -64,6 +69,7 @@ export class AppComponent implements OnInit {
 
   addNewPerson() {
     this._addingPerson = true;
+    this._store.dispatch(this.staffActions.selectStaff(undefined));
   };
 
   selectStaff(staff: Staff) {
