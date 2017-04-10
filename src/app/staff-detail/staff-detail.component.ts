@@ -25,8 +25,9 @@ export class StaffDetailComponent implements OnInit, OnChanges {
   public dateExit = new FormControl("");
   private _addingAssignment = false;
   private _selectAssignment = false;
+  public selectedStaff: Observable<Staff>;
   @Input() addingNew = false;
-  @Input() staff: Staff;
+  //@Input() staff: Staff;
   @Output() updateStaff: EventEmitter<Staff> = new EventEmitter<Staff>();
 
   constructor(
@@ -36,13 +37,27 @@ export class StaffDetailComponent implements OnInit, OnChanges {
     private assignmentActions: AssignmentActions,
     private fb: FormBuilder
   ) {
-    // update selected Staff assignments whenever assignments change
-    _store.select('assignments').subscribe(assignments => _store.dispatch(staffActions.updateAssignments(assignments)));
+    // prepare form
     this.form = this.fb.group({
       "name": this.name,
       "dateCommenced": this.dateCommenced,
       "dateExit": this.dateExit
     });
+    // get selected Staff record whenever changes
+    this.selectedStaff = _store.select('selectStaff').let(staffReducer.getSelectStaff());
+    // update selected Staff's assignments whenever assignments change
+    //_store.select('assignments').subscribe(assignments => _store.dispatch(staffActions.updateAssignments(assignments)));
+    // update form when selected Staff changed
+    this.selectedStaff.subscribe(selectStaff => {
+      console.dir(selectStaff);
+      if (selectStaff && selectStaff.person) {
+        this.form.patchValue({
+            name: selectStaff.person.name,
+            dateCommenced: new Date(selectStaff.person.commenceDate).toISOString().substring(0, 10),
+            dateExit: selectStaff.person.exitDate && new Date(selectStaff.person.exitDate).toISOString().substring(0, 10)
+          });
+      }
+    })
   }
 
   ngOnInit() {
@@ -52,11 +67,6 @@ export class StaffDetailComponent implements OnInit, OnChanges {
   };
 
   ngOnChanges() {
-    this.form.patchValue({
-        name: this.staff.person && this.staff.person.name,
-        dateCommenced: this.staff.person && new Date(this.staff.person.commenceDate).toISOString().substring(0, 10),
-        dateExit: this.staff.person && this.staff.person.exitDate && new Date(this.staff.person.exitDate).toISOString().substring(0, 10)
-      });
   };
 
   updatePerson() {
@@ -74,6 +84,7 @@ export class StaffDetailComponent implements OnInit, OnChanges {
   };
 
   updateAssignment(assignment) {
+    /*
     if (assignment) {
       assignment = Object.assign({}, assignment, { personId: this.staff.person.id });
       this._store.dispatch(this.assignmentActions.addAssignment(assignment));
@@ -82,6 +93,7 @@ export class StaffDetailComponent implements OnInit, OnChanges {
     }
     this._addingAssignment = false;
     this._selectAssignment = false;
+    */
   };
 
 };

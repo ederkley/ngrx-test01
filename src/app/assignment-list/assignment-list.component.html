@@ -2,12 +2,12 @@ Assignments: <button (click)="changeSort()">{{ (sortAssignmentListAsc | async) ?
 <ul>
   <li *ngFor="let assignment of (sortedAssignments | async)" 
     [ngClass]="{selected:(selectedAssignment | async)==assignment}"         
-    (click)="selectAssignment.emit(assignment)">
+    (click)="selectAssignment(assignment)">
     <span>
-    {{assignment?.position?.title}} - 
-    from {{assignment?.startDate | date:'d MMM yyyy'}} 
-    to {{assignment.endDate ? (assignment.endDate | date:'d MMM yyyy') : 'current' }}
-    {{assignment.acting ? '(acting)' : ''}}
+      {{assignment?.position?.title}} - 
+      from {{assignment?.startDate | date:'d MMM yyyy'}} 
+      to {{assignment.endDate ? (assignment.endDate | date:'d MMM yyyy') : 'current' }}
+      {{assignment.acting ? '(acting)' : ''}}
     </span>
   </li>
 </ul>

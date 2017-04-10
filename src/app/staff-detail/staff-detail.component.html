@@ -17,7 +17,7 @@
   </div>
   <div class="form-group">
     <label for="name">Date Exited</label>
-    <input type="text"
+    <input type="date"
            class="form-control"
            formControlName="dateExit"
            placeholder="Date exited">
@@ -27,12 +27,10 @@
   <button type="button" (click)="addAssignment()">New Assignment</button>
   Current Position: {{staff?.currentAssignment?.position?.title}}
   <app-assignment-list
-    [personId]="staff.person.id"
     (selectAssignment)="selectAssignment($event)">
   </app-assignment-list>
 </div>
 <app-assignment-detail *ngIf="_addingAssignment || _selectAssignment || addingNew"
-  [assignment]="selectedAssignment | async"
   [addingNew]="_addingAssignment"
   (updateAssignment)="updateAssignment($event)">
 </app-assignment-detail>

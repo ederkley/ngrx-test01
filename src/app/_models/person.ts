@@ -36,15 +36,13 @@ export class Assignment {
   }
 }
 
-export class Staff {  
-  assignments: Assignment[] = [];
+export class Staff {
   currentAssignment: Assignment;
   actualAssignment: Assignment;
   constructor(
     public person: Person,
     public assignment: Assignment 
   ) {
-    this.assignments.push(assignment);
     this.currentAssignment = assignment;
     this.actualAssignment = assignment;
   }

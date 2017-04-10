@@ -7,6 +7,7 @@ import {Store, provideStore} from '@ngrx/store';
 import { AppState } from './_reducers';
 import { StaffActions, PersonActions, AssignmentActions, PositionActions } from './_actions';
 import { Person, Position, Assignment, Staff } from './_models/person';
+import * as assignmentsReducer from './_reducers/assignments.reducer';
 import * as staffReducer from './_reducers/staff.reducer';
 import * as staffFilterReducer from './_reducers/staff-filter.reducer';
 
@@ -20,7 +21,7 @@ export class AppComponent implements OnInit {
   public staffListView: Observable<Staff[]>;
   public filter : string;
   public defaultFilter = staffFilterReducer.ActionTypes.SHOW_EXECUTIVE;
-  public selectedStaff: Observable<Staff>;
+  //public selectedStaff: Observable<Staff>;
   private _addingPerson = false;
   private _selectedStaff = false;
   errorMessage: string;
@@ -56,7 +57,7 @@ export class AppComponent implements OnInit {
       this._selectedStaff = false;
       _store.dispatch(staffActions.selectStaff(undefined));
     });
-    this.selectedStaff = _store.select('selectStaff');
+    //this.selectedStaff = _store.select('selectStaff');
   };
 
   ngOnInit() {

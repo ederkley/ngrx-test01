@@ -47,10 +47,10 @@ export const staffFilter = (state: StaffFilterState = member => member, action):
 export const getStaffListView = () => {
     return state => state
         .map(([staffModel, staffFilterModel]) => {
-            const staffList = staffModel.filter(staffFilterModel);
+            const staffList = staffModel.staffList.filter(staffFilterModel);
             return {
                 total: staffList.length,
-                staff: staffList,
+                staffList: staffList,
                 filter: staffFilterModel
             };
         });

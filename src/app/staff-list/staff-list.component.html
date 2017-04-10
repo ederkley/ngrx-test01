@@ -1,5 +1,5 @@
 <ul>
-  <li *ngFor="let member of staff" [ngClass]="{selected:(selectedStaff | async)?.staff?.id===member.id}" (click)="selectStaff.emit(member)">
+  <li *ngFor="let member of staff" [ngClass]="{selected:(selectedStaff | async)?.staff?.id===member?.person?.id}" (click)="selectStaff.emit(member)">
     <span>
       {{member.person.name}} 
       (Commence date: {{member.person.commenceDate | date:'d MMM yyyy'}}) 
