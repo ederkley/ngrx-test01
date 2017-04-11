@@ -18,14 +18,6 @@ export interface AppState {
     staffState: fromStaff.StaffState;
 };
 
-export const stores = {
-   peopleState: type('peopleState'),
-   positionState: type('positionState'),
-   assignmentState: type('assignmentState'),
-   staffFilterState: type('staffFilterState'),
-   staffState: type('staffState')
-};
-
 //uncomment the storeLogger import and this line
 //and comment out the other export default line to turn on
 //the store logger to see the actions as they flow through the store

@@ -44,11 +44,14 @@ export const assignmentState = (state: AssignmentState = initialState, action: A
         case AssignmentActionTypes.LOAD_ASSIGNMENTS_SUCCESS:            
             return Object.assign({}, state, { hasLoaded: true, assignments: [... action.payload] });
         case AssignmentActionTypes.SET_POSITIONS: {
-            const positions = action.payload;
-            return Object.assign({}, state, { hasSetPositions: true, assignments: state.assignments.map(assignment => {
-                let newPosition: Position = positions.filter(position => position.id == assignment.positionId)[0]
-                return Object.assign({}, assignment, { position: newPosition } );
-            }) });
+            const assignments = action.payload.assignments;
+            const positions = action.payload.positions;
+            return Object.assign({}, state, { 
+                hasSetPositions: true, 
+                assignments: assignments.map(assignment => {
+                    let newPosition: Position = positions.filter(position => position.id == assignment.positionId)[0]
+                    return Object.assign({}, assignment, { position: newPosition } ); 
+                }) });
         };
         case AssignmentActionTypes.SELECT_ASSIGNMENT:
             return Object.assign({}, state, { selectedAssignment: action.payload } );

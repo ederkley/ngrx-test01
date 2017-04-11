@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/from';
 import { Store } from '@ngrx/store';
 
 import { Global } from '../global';
@@ -141,7 +142,6 @@ export class PersonService {
                 .map(this.extractData)
                 .catch(this.handleError);
   };
-
 
   // ERROR-HANDLER
 

@@ -2,9 +2,10 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/let';
+import 'rxjs/add/operator/skipUntil';
 import {Store, provideStore} from '@ngrx/store';
 
-import { AppState, stores } from './_reducers';
+import { AppState } from './_reducers';
 import { StaffActions, PersonActions, AssignmentActions, PositionActions } from './_actions';
 import { Person, Position, Assignment, Staff } from './_models/person';
 import * as assignmentReducer from './_reducers/assignments.reducer';
@@ -26,7 +27,7 @@ export class AppComponent implements OnInit {
   //public selectedStaff: Observable<Staff>;
   private _addingPerson = false;
   private _selectedStaff = false;
-  public hasLoaded: Observable<any>;
+  public hasLoaded = false;
   errorMessage: string;
 
   constructor(
@@ -41,40 +42,47 @@ export class AppComponent implements OnInit {
     this._store.dispatch(this.assignmentActions.loadAssignments());
     this._store.dispatch(this.positionActions.loadPositions());
     // set hasLoaded flag when people, assignments and positions finished loading
-    this.hasLoaded = Observable.combineLatest(
-      _store.select(stores.peopleState).let(peopleReducer.hasLoaded()),
-      _store.select(stores.assignmentState).let(assignmentReducer.hasLoaded()),
-      _store.select(stores.positionState).let(positionReducer.hasLoaded()));
+    Observable.combineLatest(
+      _store.select(state => state.peopleState).let(peopleReducer.hasLoaded()),
+      _store.select(state => state.assignmentState).let(assignmentReducer.hasLoaded()),
+      _store.select(state => state.positionState).let(positionReducer.hasLoaded())
+    ).subscribe(([peopleHasLoaded, assignmentsHasLoaded, positionsHasLoaded]) => {
+      this.hasLoaded = (!!peopleHasLoaded && !!assignmentsHasLoaded && !!positionsHasLoaded);
+    });
     // set position on all assignments whenever positions change and after positions have been loaded
     Observable.combineLatest(
-      _store.select(stores.positionState).let(positionReducer.getPositions()),
-      _store.select(stores.positionState).let(positionReducer.hasLoaded())
-    ).subscribe(([positions, positionsLoaded]) => {
-      if (!!positionsLoaded) { 
-        _store.dispatch(assignmentActions.setPositions(positions));
+      _store.select(state => state.positionState).let(positionReducer.getPositions()),
+      _store.select(state => state.positionState).let(positionReducer.hasLoaded()),
+      _store.select(state => state.assignmentState).let(assignmentReducer.hasSetPositions()),
+      _store.select(state => state.assignmentState).let(assignmentReducer.getAssignments())
+    ).subscribe(([positions, positionsLoaded, hasSetPositions, assignments]) => {
+      if (!!positionsLoaded && !hasSetPositions) { 
+        _store.dispatch(assignmentActions.setPositions(assignments, positions));
       };
     });
     // load staff when all loaded and positions set
     Observable.combineLatest(
-      this.hasLoaded,
-      _store.select(stores.assignmentState).let(assignmentReducer.hasSetPositions()),
-      _store.select(stores.peopleState).let(peopleReducer.getPeople()),
-      _store.select(stores.assignmentState).let(assignmentReducer.getAssignments())
-    ).subscribe(([hasLoaded, positionsSet, people, assignments]) => {
-      if ((!!hasLoaded && !!positionsSet)) {
-        _store.dispatch(staffActions.loadStaff(people, assignments));
-      };
+      _store.select(state => state.peopleState).let(peopleReducer.hasLoaded()),
+      _store.select(state => state.assignmentState).let(assignmentReducer.hasLoaded()),
+      _store.select(state => state.positionState).let(positionReducer.hasLoaded()),
+      _store.select(state => state.assignmentState).let(assignmentReducer.hasSetPositions()),
+      _store.select(state => state.peopleState).let(peopleReducer.getPeople()),
+      _store.select(state => state.assignmentState).let(assignmentReducer.getAssignments())
+    ).filter(([peopleHasLoaded, assignmentsHasLoaded, positionsHasLoaded, hasSetPositions, people, assignments]) => {
+      return !!peopleHasLoaded && !!assignmentsHasLoaded && !!positionsHasLoaded && !!hasSetPositions
+    }).subscribe(([peopleHasLoaded, assignmentsHasLoaded, positionsHasLoaded, positionsSet, people, assignments]) => {
+      _store.dispatch(staffActions.loadStaff(people, assignments));
     });
     // update staff list whenever staff or filter changes
     this.staffListView = Observable.combineLatest(
-      _store.select(stores.staffState).let(staffReducer.getStaff()),
-      _store.select(stores.staffFilterState)
+      _store.select(state => state.staffState).let(staffReducer.getStaff()),
+      _store.select(state => state.staffFilter)
     ).let(staffFilterReducer.getStaffListView());
     // update staff model whenever staff changes
-    this.staffModel = _store.select(stores.staffState)
+    this.staffModel = _store.select(state => state.staffState)
       .let(staffReducer.getStaffModel());
     // deselect staff whenever staffFilter changes
-    _store.select(stores.staffFilterState).subscribe(staffFilter => {
+    _store.select(state => state.staffFilter).subscribe(staffFilter => {
       this._selectedStaff = false;
       _store.dispatch(staffActions.selectStaff(undefined));
     });

@@ -100,10 +100,13 @@ export class AssignmentActions {
         };
     };
 
-    setPositions(positions): Action {
+    setPositions(assignments, positions): Action {
         return {
             type: AssignmentActionTypes.SET_POSITIONS,
-            payload: positions
+            payload: {
+                assignments: assignments,
+                positions: positions
+            }
         };
     };
     

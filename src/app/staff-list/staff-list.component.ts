@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
-import { AppState, stores } from '../_reducers';
+import { AppState } from '../_reducers';
 import { Staff } from '../_models/person';
 import * as staffReducer from '../_reducers/staff.reducer';
 import * as staffFilterReducer from '../_reducers/staff-filter.reducer';
@@ -23,7 +23,7 @@ export class StaffListComponent implements OnChanges {
     private _store: Store<AppState>
   ) {
     //this.staff = _store.select(stores.staffFilterState).let(staffFilterReducer.getStaffListView());
-    this.selectedStaff = _store.select(stores.staffState).let(staffReducer.getSelectedStaff());
+    this.selectedStaff = _store.select(state => state.staffState).let(staffReducer.getSelectedStaff());
   };
 
   ngOnChanges() {

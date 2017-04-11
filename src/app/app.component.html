@@ -1,25 +1,24 @@
-<div *ngIf="(hasLoaded | async)[0] && (hasLoaded | async)[1] && (hasLoaded | async)[2]">
-    <app-staff-list-filter 
-        (updateFilter)="updateFilter($event)" 
-        [defaultFilter]="defaultFilter">
-    </app-staff-list-filter>
-
-    Total: {{(staffListView | async)?.total}} of {{(staffModel | async)?.total}}
-    <button (click)="addNewPerson()">Add new</button>
-
-    <app-staff-list
-        [staff]="(staffListView | async)?.staff"
-        [filter]="filter"
-        (selectStaff)="selectStaff($event)">
-    </app-staff-list>
-    <!--[staff]="(selectedStaff | async)?.staff"-->
-    <app-staff-detail *ngIf="_selectedStaff || _addingPerson"
-        
-        [addingNew]="_addingPerson"
-        (updateStaff)="updateStaff($event)">
-    </app-staff-detail>
+<div *ngIf="!hasLoaded">
+    Loading...
 </div>
-<div *ngIf="!(hasLoaded | async)[0] && !(hasLoaded | async)[1] && !(hasLoaded | async)[2]">
-    loading...
-</div>
+<app-staff-list-filter 
+    (updateFilter)="updateFilter($event)" 
+    [defaultFilter]="defaultFilter">
+</app-staff-list-filter>
+
+Total: {{(staffListView | async)?.total}} of {{(staffModel | async)?.total}}
+<button (click)="addNewPerson()">Add new</button>
+
+<app-staff-list
+    [staff]="(staffListView | async)?.staff"
+    [filter]="filter"
+    (selectStaff)="selectStaff($event)">
+</app-staff-list>
+<!--[staff]="(selectedStaff | async)?.staff"-->
+<app-staff-detail *ngIf="_selectedStaff || _addingPerson"
+    
+    [addingNew]="_addingPerson"
+    (updateStaff)="updateStaff($event)">
+</app-staff-detail>
+
 {{errorMessage}}
