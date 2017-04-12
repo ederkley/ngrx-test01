@@ -42,7 +42,7 @@ export class AssignmentDetailComponent implements OnInit {
 
   ngOnChanges() {    
     this.form.patchValue({
-        position: this.assignment.position,
+        position: this.assignment.positionId,
         dateStart: new Date(this.assignment.startDate).toISOString().substring(0, 10),
         dateEnd: this.assignment.endDate && new Date(this.assignment.endDate).toISOString().substring(0, 10),
         acting: this.assignment.acting
@@ -54,8 +54,7 @@ export class AssignmentDetailComponent implements OnInit {
       this.form.controls['position'].value.id,
       this.form.controls['acting'].value,
       this.form.controls['dateStart'].value,
-      this.form.controls['dateEnd'].value,
-      this.form.controls['position'].value);
+      this.form.controls['dateEnd'].value);
     this.updateAssignment.emit(assignment);
   };
 

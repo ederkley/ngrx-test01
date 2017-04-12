@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 
 import { Person } from '../_models/person';
@@ -6,11 +7,13 @@ import { PersonActionTypes } from '../_actions';
 
 export type PeopleState = {
     people: Person[];
+    selectedPerson: Person;
     hasLoaded: boolean;
 };
 
 const initialState: PeopleState = {
     people: [],
+    selectedPerson: undefined,
     hasLoaded: false
 };
 
@@ -49,6 +52,10 @@ export const getPeople = () => state => {
     return state.map(s => s.people);
 };
 
-export const hasLoaded = () => state =>  {
+export const getHasLoaded = () => state =>  {
     return state.map(s => s.hasLoaded);
+};
+
+export const getSelectedPerson = () => state =>  {
+    return state.map(s => s.selectedPerson);
 };

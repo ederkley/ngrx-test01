@@ -6,16 +6,16 @@ import 'rxjs/add/operator/let';
 import {Store} from '@ngrx/store';
 
 import { AppState } from '../_reducers';
-import { Person, Staff } from '../_models/person';
-import { PersonActions, StaffActions, AssignmentActions } from '../_actions';
-import * as staffReducer from '../_reducers/staff.reducer';
+import { Person } from '../_models/person';
+import { PersonActions, AssignmentActions } from '../_actions';
+import * as peopleReducer from '../_reducers/people.reducer';
 
 @Component({
-  selector: 'app-staff-detail',
-  templateUrl: './staff-detail.component.html',
+  selector: 'app-person-detail',
+  templateUrl: './person-detail.component.html',
   styles: ['li.selected span { background-color: blue; color: white } ']
 })
-export class StaffDetailComponent implements OnInit, OnChanges {
+export class PersonDetailComponent implements OnInit, OnChanges {
   form: FormGroup;
   public name = new FormControl("", Validators.required);
   public email = new FormControl("", [
@@ -25,14 +25,13 @@ export class StaffDetailComponent implements OnInit, OnChanges {
   public dateExit = new FormControl("");
   private _addingAssignment = false;
   private _selectAssignment = false;
-  public selectedStaff: Observable<Staff>;
+  public selectedStaff$: Observable<Person>;
   @Input() addingNew = false;
   //@Input() staff: Staff;
-  @Output() updateStaff: EventEmitter<Staff> = new EventEmitter<Staff>();
+  @Output() updatePerson: EventEmitter<Person> = new EventEmitter<Person>();
 
   constructor(
     private _store: Store<AppState>,
-    private staffActions: StaffActions,
     private personActions: PersonActions,
     private assignmentActions: AssignmentActions,
     private fb: FormBuilder
@@ -44,11 +43,12 @@ export class StaffDetailComponent implements OnInit, OnChanges {
       "dateExit": this.dateExit
     });
     // get selected Staff record whenever changes
-    this.selectedStaff = _store.select(state => state.staffState).let(staffReducer.getSelectedStaff());
+    this.selectedStaff$ = _store.select(state => state.peopleState).let(peopleReducer.getSelectedPerson());
     // update selected Staff's assignments whenever assignments change
     //_store.select('assignments').subscribe(assignments => _store.dispatch(staffActions.updateAssignments(assignments)));
     // update form when selected Staff changed
-    this.selectedStaff.subscribe(selectStaff => {
+    /*
+    this.selectedStaff$.subscribe(selectStaff => {
       if (selectStaff && selectStaff.person) {
         this.form.patchValue({
             name: selectStaff.person.name,
@@ -57,6 +57,7 @@ export class StaffDetailComponent implements OnInit, OnChanges {
           });
       };
     });
+      */
   };
 
   ngOnInit() {
@@ -68,8 +69,8 @@ export class StaffDetailComponent implements OnInit, OnChanges {
   ngOnChanges() {
   };
 
-  updatePerson() {
-      let person: Person = new Person(this.form.controls['name'].value, new Date(this.form.controls['dateCommenced'].value), new Date(this.form.controls['dateExit'].value));
+  onUpdatePerson() {
+      let person: Person = new Person(this.form.controls['name'].value, new Date(this.form.controls['dateCommenced'].value));
       if (this.addingNew) {
         this._store.dispatch(this.personActions.addPerson(person));
       } else {

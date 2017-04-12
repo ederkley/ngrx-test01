@@ -8,14 +8,14 @@ import * as fromPeople from './people.reducer';
 import * as fromPositions from './positions.reducer';
 import * as fromAssignments from './assignments.reducer';
 import * as fromStaffFilter from './staff-filter.reducer';
-import * as fromStaff from './staff.reducer';
+//import * as fromStaff from './staff.reducer';
 
 export interface AppState {
     peopleState: fromPeople.PeopleState;    
     positionState: fromPositions.PositionState;
     assignmentState: fromAssignments.AssignmentState;
     staffFilterState: fromStaffFilter.StaffFilterState;
-    staffState: fromStaff.StaffState;
+    //staffState: fromStaff.StaffState;
 };
 
 //uncomment the storeLogger import and this line
@@ -29,5 +29,5 @@ export default compose(storeLogger(), combineReducers)({
     positionState: fromPositions.positionState,
     assignmentState: fromAssignments.assignmentState,
     staffFilterState: fromStaffFilter.staffFilterState,
-    staffState: fromStaff.staffState
+    //staffState: fromStaff.staffState
 });

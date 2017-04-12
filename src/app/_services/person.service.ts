@@ -8,7 +8,7 @@ import 'rxjs/add/observable/from';
 import { Store } from '@ngrx/store';
 
 import { Global } from '../global';
-import { Person, Position, Assignment, Staff } from '../_models/person';
+import { Person, Position, Assignment } from '../_models/person';
 import { AppState } from '../_reducers';
 
 

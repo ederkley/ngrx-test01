@@ -9,51 +9,42 @@ export type AssignmentState = {
     selectedAssignment: Assignment;
     sortAsc: boolean;
     hasLoaded: boolean;
-    hasSetPositions: boolean;
 };
 
 const initialState: AssignmentState = {
     assignments: [],
     selectedAssignment: undefined,
     sortAsc: true,
-    hasLoaded: false,
-    hasSetPositions: false
+    hasLoaded: false
 };
 
-// remember to avoid mutation within reducers
+// remember to avoid mutation within reducers; no use of Date.now or Math.random
 
-function assignments(state: Assignment[] = [], action: Action): Assignment[] {
+function assignments(s: Assignment[] = [], action: Action): Assignment[] {
+    const state = s;
     switch (action.type) {
-        case AssignmentActionTypes.ADD_ASSIGNMENT_SUCCESS:
-            return Object.assign({}, state, { assignments: [...state.assignments, action.payload] });
+        case AssignmentActionTypes.ADD_ASSIGNMENT_SUCCESS: {
+            state.push(action.payload); //[...state, action.payload];
+            return state;
+        };
         case AssignmentActionTypes.SAVE_ASSIGNMENT_SUCCESS: {
-            let index = _.findIndex(state.assignments, {id: action.payload.id});
+            let index = _.findIndex(state, {id: action.payload.id});
             if (index >= 0) {
                 return Object.assign({}, state, [
-                    ...state.assignments.slice(0, index),
+                    ...state.slice(0, index),
                     action.payload,
-                    ...state.assignments.slice(index + 1)
+                    ...state.slice(index + 1)
                 ]);
             };
             return state;
         };
         case AssignmentActionTypes.DELETE_ASSIGNMENT_SUCCESS: {
-            return Object.assign({}, state, { assignments: state.assignments.filter(assignment => {
+            return state.filter(assignment => {
                 return assignment.id != action.payload.id;
-            }) });
+            });
         };
         case AssignmentActionTypes.LOAD_ASSIGNMENTS_SUCCESS:            
-            return Object.assign({}, state, { hasLoaded: true, assignments: [... action.payload] });
-        case AssignmentActionTypes.SET_POSITIONS: {
-            const assignments = action.payload.assignments;
-            const positions = action.payload.positions;
-            return Object.assign({}, state, { 
-                hasSetPositions: true, 
-                assignments: assignments.map(assignment => {
-                    let newPosition: Position = positions.filter(position => position.id == assignment.positionId)[0]
-                    return Object.assign({}, assignment, { position: newPosition } ); 
-                }) });
-        };
+            return [... action.payload];
         // always have default return of previous state when action is not relevant
         default:
             return state;
@@ -106,8 +97,7 @@ export const assignmentState = combineReducers({
     selectedAssignment,
     assignments,
     sortAsc,
-    hasLoaded,
-    hasSetPositions
+    hasLoaded
 })
 
 /*(state: AssignmentState = initialState, action: Action): AssignmentState => {
@@ -122,32 +112,20 @@ export const assignmentState = combineReducers({
 
 // SELECTORS
 
-export const getAssignments = () => state => {
-    return state.map(s => s.assignments);
-};
+export const getAssignments = () => state => state.map(s => s.assignments);
 
-export const getHasLoaded = () => state =>  {
-    return state.map(s => s.hasLoaded);
-};
+export const getHasLoaded = () => state => state.map(s => s.hasLoaded);
 
-export const getSelectedAssignment = () => state =>  {
-    return state.map(s => s.selectedAssignment);
-};
+export const getSelectedAssignment = () => state => state.map(s => s.selectedAssignment);
 
-export const getHasSetPositions = () => state =>  {
-    return state.map(s => s.hasSetPositions);
-};
-
-export const getSortAsc = () => state =>  {
-    return state.map(s => s.sortAsc);
-};
+export const getSortAsc = () => state => state.map(s => s.sortAsc);
 
 export const getSortedAssignmentsList = () => state => {
     console.log('getSortedAssignmentsList');
-    return state.map(([selectedStaff, assignments, sortAsc]) => {
-        if (assignments && selectedStaff && selectedStaff.person) {
+    return state.map(([selectedPerson, assignments, sortAsc]) => {
+        if (assignments && selectedPerson) {
             return assignments
-                .filter(assignment => assignment.personId == selectedStaff.person.id)
+                .filter(assignment => assignment.personId == selectedPerson.id)
                 .sort((a, b) => {
                     return sortAsc ? 
                     new Date(b.startDate).getTime() - new Date(a.startDate).getTime() :

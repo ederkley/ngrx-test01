@@ -12,7 +12,7 @@ export class Person {
   id: number;
   name: string;
   commenceDate: Date;
-  exitDate?: Date;
+  DOB?: Date;
 }
 
 export class Assignment {

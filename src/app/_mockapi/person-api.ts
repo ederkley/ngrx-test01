@@ -5,15 +5,15 @@ export class PersonData implements InMemoryDbService {
   createDb() {    
 
     const people: Person[] = [
-        {id: 100, name: 'Frank Smith', commenceDate: new Date('18 Sep 1998Z') },
-        {id: 101, name: 'Jessica Jones', commenceDate: new Date('18 Sep 2005Z')},
-        {id: 102, name: 'Luke Cage', commenceDate: new Date('18 Sep 2008Z')},
+        {id: 100, name: 'Frank Smith', commenceDate: new Date('18 Sep 1998Z'), DOB: new Date('3 Aug 1970Z') },
+        {id: 101, name: 'Jessica Jones', commenceDate: new Date('18 Sep 2005Z'), DOB: new Date('7 May 1973Z')},
+        {id: 102, name: 'Luke Cage', commenceDate: new Date('18 Sep 2008Z'), DOB: new Date('1 Jan 1960Z')},
         {id: 103, name: 'Iron Fist', commenceDate: new Date('18 Oct 1998Z')},
         {id: 104, name: 'Captain America', commenceDate: new Date('18 Sep 2005Z')},
         {id: 105, name: 'Wolverine', commenceDate: new Date('18 Sep 2010Z')},
         {id: 106, name: 'Wanda Maximoff', commenceDate: new Date('18 Sep 1990Z')},
         {id: 107, name: 'Black Panther', commenceDate: new Date('18 Jan 2006Z')},
-        {id: 108, name: 'Jackie Smith', commenceDate: new Date('18 Sep 1990Z'), exitDate: new Date('1 Jan 2006Z')}
+        {id: 108, name: 'Jackie Smith', commenceDate: new Date('18 Sep 1990Z'), DOB: new Date('1 Jan 1980Z')}
     ];
 
     const positions: Position[] = [

@@ -6,20 +6,18 @@
     [defaultFilter]="defaultFilter">
 </app-staff-list-filter>
 
-Total: {{(staffListView | async)?.total}} of {{(staffModel | async)?.total}}
+Total: {{(peopleView$ | async)?.total}} of {{(people$ | async)?.length}}
 <button (click)="addNewPerson()">Add new</button>
 
-<app-staff-list
-    [staff]="(staffListView | async)?.staff"
+<app-person-list
+    [people]="(peopleView$ | async)?.people"
     [filter]="filter"
-    [selectedStaff]="selectedStaff | async"
-    (selectStaff)="selectStaff($event)">
-</app-staff-list>
-<!--[staff]="(selectedStaff | async)?.staff"-->
-<app-staff-detail *ngIf="_selectedStaff || _addingPerson"
-    
+    (selectPerson)="selectPerson($event)">
+</app-person-list>
+
+<app-person-detail *ngIf="_selectedPerson || _addingPerson"    
     [addingNew]="_addingPerson"
-    (updateStaff)="updateStaff($event)">
-</app-staff-detail>
+    (updatePerson)="updatePerson($event)">
+</app-person-detail>
 
 {{errorMessage}}

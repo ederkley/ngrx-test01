@@ -51,7 +51,7 @@ export const getPositions = () => state => {
     return state.map(s => s.positions);
 };
 
-export const hasLoaded = () => state =>  {
+export const getHasLoaded = () => state =>  {
     return state.map(s => s.hasLoaded);
 };
 

@@ -3,22 +3,24 @@ export class Position {
   title: string;
   level: string;
   sectionId?: number;
-  section?: Section;
   branchId?: number;
-  branch?: Branch;
   notes?: string;
   supervisorId?: number;
-  supervisor: Staff;
 }
 
 export class Person {
   id: number;
+  currentAssignmentId?: number;
+  actualAssignmentId?: number;
   constructor (
     public name: string,
     public commenceDate: Date,
-    public exitDate?: Date
+    public assignmentId?: number,
+    public DOB?: Date
   ) {
     this.id = 0;
+    this.currentAssignmentId = assignmentId;
+    this.actualAssignmentId = assignmentId;
   };
 }
 
@@ -29,22 +31,9 @@ export class Assignment {
     public positionId: number,
     public acting: boolean,
     public startDate: Date,
-    public endDate?: Date,
-    public position?: Position
+    public endDate?: Date
   ) {
     this.id = 0;
-  }
-}
-
-export class Staff {
-  currentAssignment: Assignment;
-  actualAssignment: Assignment;
-  constructor(
-    public person: Person,
-    public assignment: Assignment 
-  ) {
-    this.currentAssignment = assignment;
-    this.actualAssignment = assignment;
   }
 }
 
@@ -54,7 +43,6 @@ export class Branch {
   abbrev: string;
   order: number;
   branchHeadId?: number;
-  branchHead?: Staff;
 }
 
 export class Section {
@@ -62,8 +50,6 @@ export class Section {
   name: string;
   abbrev: string;
   branchId: number;
-  branch?: Branch;
   order: number;
   sectionHeadId?: number;
-  sectionHead?: Staff;
 }

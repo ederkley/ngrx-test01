@@ -3,22 +3,22 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { AppState } from '../_reducers';
-import { Staff } from '../_models/person';
-import * as staffReducer from '../_reducers/staff.reducer';
+import { Person } from '../_models/person';
+//import * as staffReducer from '../_reducers/staff.reducer';
 import * as staffFilterReducer from '../_reducers/staff-filter.reducer';
 
 @Component({
-  selector: 'app-staff-list',
-  templateUrl: './staff-list.component.html',
+  selector: 'app-person-list',
+  templateUrl: './person-list.component.html',
   styles: ['li.selected span { background-color: blue; color: white } ']
 })
-export class StaffListComponent implements OnChanges {
+export class PersonListComponent implements OnChanges {
   public showCurrentOnly : boolean;
+  public selectedPerson: Person;
   //public selectedStaff: Observable<Staff>;
-  @Input() staff: Staff[];
-  @Input() selectedStaff: Staff;
+  @Input() people: Person[];
   @Input() filter;
-  @Output() selectStaff : EventEmitter<Staff> = new EventEmitter<Staff>();
+  @Output() selectPerson : EventEmitter<Person> = new EventEmitter<Person>();
 
   constructor (
     private _store: Store<AppState>
@@ -29,6 +29,11 @@ export class StaffListComponent implements OnChanges {
 
   ngOnChanges() {
     this.showCurrentOnly = (this.filter != staffFilterReducer.ActionTypes.SHOW_ACTUAL_POS);
+  };
+
+  onSelectPerson(person: Person) {
+    this.selectedPerson = person;
+    this.selectPerson.emit(person);
   };
 
 };
