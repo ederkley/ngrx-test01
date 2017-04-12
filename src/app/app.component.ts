@@ -24,11 +24,12 @@ export class AppComponent implements OnInit {
   public staffListView: Observable<Staff[]>;
   public filter : string;
   public defaultFilter = staffFilterReducer.ActionTypes.SHOW_EXECUTIVE;
-  //public selectedStaff: Observable<Staff>;
+  public selectedStaff: Observable<Staff>;
   private _addingPerson = false;
   private _selectedStaff = false;
   public hasLoaded = false;
   errorMessage: string;
+  public people;
 
   constructor(
     private _store: Store<AppState>,
@@ -37,6 +38,7 @@ export class AppComponent implements OnInit {
     private positionActions: PositionActions,
     private staffActions: StaffActions
   ) {
+    this.people = _store.select(state => state.peopleState).let(peopleReducer.getPeople());
     // load people, assignments and positions
     this._store.dispatch(this.personActions.loadPeople());
     this._store.dispatch(this.assignmentActions.loadAssignments());
@@ -55,11 +57,12 @@ export class AppComponent implements OnInit {
       _store.select(state => state.positionState).let(positionReducer.hasLoaded()),
       _store.select(state => state.assignmentState).let(assignmentReducer.hasSetPositions()),
       _store.select(state => state.assignmentState).let(assignmentReducer.getAssignments())
-    ).subscribe(([positions, positionsLoaded, hasSetPositions, assignments]) => {
-      if (!!positionsLoaded && !hasSetPositions) { 
-        _store.dispatch(assignmentActions.setPositions(assignments, positions));
-      };
+    ).filter(([positions, positionsLoaded, hasSetPositions, assignments]) => !!positionsLoaded && !hasSetPositions)
+    .subscribe(([positions, positionsLoaded, hasSetPositions, assignments]) => {
+      console.log('setPositions');
+      _store.dispatch(assignmentActions.setPositions(assignments, positions));
     });
+    
     // load staff when all loaded and positions set
     Observable.combineLatest(
       _store.select(state => state.peopleState).let(peopleReducer.hasLoaded()),
@@ -68,24 +71,28 @@ export class AppComponent implements OnInit {
       _store.select(state => state.assignmentState).let(assignmentReducer.hasSetPositions()),
       _store.select(state => state.peopleState).let(peopleReducer.getPeople()),
       _store.select(state => state.assignmentState).let(assignmentReducer.getAssignments())
-    ).filter(([peopleHasLoaded, assignmentsHasLoaded, positionsHasLoaded, hasSetPositions, people, assignments]) => {
-      return !!peopleHasLoaded && !!assignmentsHasLoaded && !!positionsHasLoaded && !!hasSetPositions
-    }).subscribe(([peopleHasLoaded, assignmentsHasLoaded, positionsHasLoaded, positionsSet, people, assignments]) => {
+    ).filter(([peopleHasLoaded, assignmentsHasLoaded, positionsHasLoaded, hasSetPositions, people, assignments]) => 
+      !!peopleHasLoaded && !!assignmentsHasLoaded && !!positionsHasLoaded && !!hasSetPositions
+    ).subscribe(([peopleHasLoaded, assignmentsHasLoaded, positionsHasLoaded, positionsSet, people, assignments]) => {
+      console.log('loadStaff');
       _store.dispatch(staffActions.loadStaff(people, assignments));
     });
     // update staff list whenever staff or filter changes
     this.staffListView = Observable.combineLatest(
       _store.select(state => state.staffState).let(staffReducer.getStaff()),
-      _store.select(state => state.staffFilter)
-    ).let(staffFilterReducer.getStaffListView());
+      _store.select(state => state.staffFilterState),
+      _store.select(state => state.staffState).let(staffReducer.hasLoaded())
+    ).filter(([staff, staffFilter, staffHasLoaded]) => !!staffHasLoaded)
+    .let(staffFilterReducer.getStaffListView());
     // update staff model whenever staff changes
     this.staffModel = _store.select(state => state.staffState)
       .let(staffReducer.getStaffModel());
     // deselect staff whenever staffFilter changes
-    _store.select(state => state.staffFilter).subscribe(staffFilter => {
+    _store.select(state => state.staffFilterState).subscribe(staffFilter => {
       this._selectedStaff = false;
       _store.dispatch(staffActions.selectStaff(undefined));
     });
+    this.selectedStaff = _store.select(state => state.staffState).let(staffReducer.getSelectedStaff());
   };
 
   ngOnInit() {

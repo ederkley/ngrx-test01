@@ -12,6 +12,7 @@ Total: {{(staffListView | async)?.total}} of {{(staffModel | async)?.total}}
 <app-staff-list
     [staff]="(staffListView | async)?.staff"
     [filter]="filter"
+    [selectedStaff]="selectedStaff | async"
     (selectStaff)="selectStaff($event)">
 </app-staff-list>
 <!--[staff]="(selectedStaff | async)?.staff"-->

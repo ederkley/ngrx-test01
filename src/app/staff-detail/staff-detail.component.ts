@@ -44,21 +44,20 @@ export class StaffDetailComponent implements OnInit, OnChanges {
       "dateExit": this.dateExit
     });
     // get selected Staff record whenever changes
-    this.selectedStaff = _store.select('staffSupport').let(staffReducer.getSelectedStaff());
+    this.selectedStaff = _store.select(state => state.staffState).let(staffReducer.getSelectedStaff());
     // update selected Staff's assignments whenever assignments change
     //_store.select('assignments').subscribe(assignments => _store.dispatch(staffActions.updateAssignments(assignments)));
     // update form when selected Staff changed
     this.selectedStaff.subscribe(selectStaff => {
-      console.dir(selectStaff);
       if (selectStaff && selectStaff.person) {
         this.form.patchValue({
             name: selectStaff.person.name,
             dateCommenced: new Date(selectStaff.person.commenceDate).toISOString().substring(0, 10),
             dateExit: selectStaff.person.exitDate && new Date(selectStaff.person.exitDate).toISOString().substring(0, 10)
           });
-      }
-    })
-  }
+      };
+    });
+  };
 
   ngOnInit() {
     this.form.valueChanges

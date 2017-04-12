@@ -13,7 +13,7 @@ import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { PersonData } from './_mockapi/person-api';
 
 import reducer from './_reducers';
-import { PersonEffects, AssignmentEffects, PositionEffects } from './_effects';
+import { PersonEffects, AssignmentEffects, AssignmentEffects2, PositionEffects } from './_effects';
 import { PersonActions, AssignmentActions, PositionActions, StaffActions } from './_actions';
 
 import { PersonService } from './_services/person.service';
@@ -43,6 +43,7 @@ import { AssignmentListComponent } from './assignment-list/assignment-list.compo
     StoreModule.provideStore(reducer),
     EffectsModule.run(PersonEffects),
     EffectsModule.run(AssignmentEffects),
+    EffectsModule.run(AssignmentEffects2),
     EffectsModule.run(PositionEffects),
     InMemoryWebApiModule.forRoot(PersonData)
   ],

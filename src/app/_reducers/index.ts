@@ -14,7 +14,7 @@ export interface AppState {
     peopleState: fromPeople.PeopleState;    
     positionState: fromPositions.PositionState;
     assignmentState: fromAssignments.AssignmentState;
-    staffFilter: fromStaffFilter.StaffFilterState;
+    staffFilterState: fromStaffFilter.StaffFilterState;
     staffState: fromStaff.StaffState;
 };
 

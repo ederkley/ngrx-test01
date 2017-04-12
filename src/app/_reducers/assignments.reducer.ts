@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { Action, combineReducers } from '@ngrx/store';
 import * as _ from 'lodash';
 
 import { Assignment } from '../_models/person';
@@ -21,7 +21,8 @@ const initialState: AssignmentState = {
 };
 
 // remember to avoid mutation within reducers
-export const assignmentState = (state: AssignmentState = initialState, action: Action): AssignmentState => {
+
+function assignments(state: Assignment[] = [], action: Action): Assignment[] {
     switch (action.type) {
         case AssignmentActionTypes.ADD_ASSIGNMENT_SUCCESS:
             return Object.assign({}, state, { assignments: [...state.assignments, action.payload] });
@@ -53,10 +54,34 @@ export const assignmentState = (state: AssignmentState = initialState, action: A
                     return Object.assign({}, assignment, { position: newPosition } ); 
                 }) });
         };
+        // always have default return of previous state when action is not relevant
+        default:
+            return state;
+    };
+};
+
+function selectedAssignment(state: Assignment = undefined, action: Action): Assignment {
+    switch (action.type) {
         case AssignmentActionTypes.SELECT_ASSIGNMENT:
             return Object.assign({}, state, { selectedAssignment: action.payload } );
+        // always have default return of previous state when action is not relevant
+        default:
+            return state;
+    };
+};
+
+function sortAsc(state, action: Action) {
+    switch (action.type) {
         case AssignmentActionTypes.TOGGLE_ASSIGNMENT_SORT:
             return Object.assign({}, state, { sortAsc: !state.sortAsc } );
+        // always have default return of previous state when action is not relevant
+        default:
+            return state;
+    };
+};
+
+function hasLoaded(state, action: Action) {
+    switch (action.type) {
         case AssignmentActionTypes.SET_HAS_LOADED:
             return Object.assign({}, state, { hasLoaded: [... action.payload] } );
         // always have default return of previous state when action is not relevant
@@ -65,17 +90,51 @@ export const assignmentState = (state: AssignmentState = initialState, action: A
     };
 };
 
+function hasSetPositions(state, action: Action) {
+    switch (action.type) {
+        case AssignmentActionTypes.SET_HAS_LOADED:
+            return Object.assign({}, state, { hasLoaded: [... action.payload] } );
+        // always have default return of previous state when action is not relevant
+        default:
+            return state;
+    };
+};
+
+
+
+export const assignmentState = combineReducers({
+    selectedAssignment,
+    assignments,
+    sortAsc,
+    hasLoaded,
+    hasSetPositions
+})
+
+/*(state: AssignmentState = initialState, action: Action): AssignmentState => {
+    return {
+        hasLoaded: hasLoaded(state.hasLoaded, action),
+        assignments: assignments(state.assignments, action),
+        selectedAssignment: selectedAssignment(state.selectedAssignment, action),
+        sortAsc: sortAsc(state.sortAsc, action),
+        hasSetPositions: hasSetPositions(state.hasSetPositions, action)
+    }
+};*/
+
 // SELECTORS
 
 export const getAssignments = () => state => {
     return state.map(s => s.assignments);
 };
 
-export const hasLoaded = () => state =>  {
+export const getHasLoaded = () => state =>  {
     return state.map(s => s.hasLoaded);
 };
 
-export const hasSetPositions = () => state =>  {
+export const getSelectedAssignment = () => state =>  {
+    return state.map(s => s.selectedAssignment);
+};
+
+export const getHasSetPositions = () => state =>  {
     return state.map(s => s.hasSetPositions);
 };
 
@@ -85,12 +144,12 @@ export const getSortAsc = () => state =>  {
 
 export const getSortedAssignmentsList = () => state => {
     console.log('getSortedAssignmentsList');
-    return state.map(([selectedStaff, assignmentState]) => {
-        if (assignmentState.hasLoaded && selectedStaff && selectedStaff.person) {
-            return assignmentState.assignments
+    return state.map(([selectedStaff, assignments, sortAsc]) => {
+        if (assignments && selectedStaff && selectedStaff.person) {
+            return assignments
                 .filter(assignment => assignment.personId == selectedStaff.person.id)
                 .sort((a, b) => {
-                    return assignmentState.sortAsc ? 
+                    return sortAsc ? 
                     new Date(b.startDate).getTime() - new Date(a.startDate).getTime() :
                     new Date(a.startDate).getTime() - new Date(b.startDate).getTime() 
                     });

@@ -1,11 +1,11 @@
 import { PersonEffects } from './person';
-import { AssignmentEffects } from './assignment';
+import { AssignmentEffects, AssignmentEffects2 } from './assignment';
 import { PositionEffects } from './position';
 
 export {
-    PersonEffects, AssignmentEffects, PositionEffects
+    PersonEffects, AssignmentEffects, AssignmentEffects2, PositionEffects
 };
 
 export default [
-    PersonEffects, AssignmentEffects, PositionEffects
+    PersonEffects, AssignmentEffects, AssignmentEffects2, PositionEffects
 ];

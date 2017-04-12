@@ -79,5 +79,7 @@ export const hasLoaded = () => state => {
 };
 
 export const getSelectedStaff = () => state => {
-    return state.map(s => s.selectedStaff);
+    return state.map(s => {
+        return s.selectedStaff;
+    });
 };
