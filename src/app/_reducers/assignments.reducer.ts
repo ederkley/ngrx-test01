@@ -18,97 +18,34 @@ const initialState: AssignmentState = {
     hasLoaded: false
 };
 
-// remember to avoid mutation within reducers; no use of Date.now or Math.random
-
-function assignments(s: Assignment[] = [], action: Action): Assignment[] {
-    const state = s;
+// remember to avoid mutation within reducers
+export const assignmentState = (state: AssignmentState = initialState, action: Action): AssignmentState => {
     switch (action.type) {
-        case AssignmentActionTypes.ADD_ASSIGNMENT_SUCCESS: {
-            state.push(action.payload); //[...state, action.payload];
-            return state;
-        };
+        case AssignmentActionTypes.ADD_ASSIGNMENT_SUCCESS: 
+            return {...state, ...{ assignments: [ ...state.assignments, action.payload ] } };
         case AssignmentActionTypes.SAVE_ASSIGNMENT_SUCCESS: {
-            let index = _.findIndex(state, {id: action.payload.id});
+            let index = _.findIndex(state.assignments, {id: action.payload.id});
             if (index >= 0) {
-                return Object.assign({}, state, [
-                    ...state.slice(0, index),
+                return Object.assign({}, state, { assignments: [
+                    ...state.assignments.slice(0, index),
                     action.payload,
-                    ...state.slice(index + 1)
-                ]);
+                    ...state.assignments.slice(index + 1)
+                ]});
             };
             return state;
         };
         case AssignmentActionTypes.DELETE_ASSIGNMENT_SUCCESS: {
-            return state.filter(assignment => {
-                return assignment.id != action.payload.id;
-            });
+            return Object.assign({}, state, { assignments: state.assignments.filter(person => {
+                return person.id != action.payload.id;
+            }) });
         };
-        case AssignmentActionTypes.LOAD_ASSIGNMENTS_SUCCESS:            
-            return [... action.payload];
+        case AssignmentActionTypes.LOAD_ASSIGNMENTS_SUCCESS:
+            return Object.assign({}, state, { hasLoaded: true, assignments: [... action.payload] });
         // always have default return of previous state when action is not relevant
         default:
             return state;
     };
 };
-
-function selectedAssignment(state: Assignment = undefined, action: Action): Assignment {
-    switch (action.type) {
-        case AssignmentActionTypes.SELECT_ASSIGNMENT:
-            return Object.assign({}, state, { selectedAssignment: action.payload } );
-        // always have default return of previous state when action is not relevant
-        default:
-            return state;
-    };
-};
-
-function sortAsc(state, action: Action) {
-    switch (action.type) {
-        case AssignmentActionTypes.TOGGLE_ASSIGNMENT_SORT:
-            return Object.assign({}, state, { sortAsc: !state.sortAsc } );
-        // always have default return of previous state when action is not relevant
-        default:
-            return state;
-    };
-};
-
-function hasLoaded(state, action: Action) {
-    switch (action.type) {
-        case AssignmentActionTypes.SET_HAS_LOADED:
-            return Object.assign({}, state, { hasLoaded: [... action.payload] } );
-        // always have default return of previous state when action is not relevant
-        default:
-            return state;
-    };
-};
-
-function hasSetPositions(state, action: Action) {
-    switch (action.type) {
-        case AssignmentActionTypes.SET_HAS_LOADED:
-            return Object.assign({}, state, { hasLoaded: [... action.payload] } );
-        // always have default return of previous state when action is not relevant
-        default:
-            return state;
-    };
-};
-
-
-
-export const assignmentState = combineReducers({
-    selectedAssignment,
-    assignments,
-    sortAsc,
-    hasLoaded
-})
-
-/*(state: AssignmentState = initialState, action: Action): AssignmentState => {
-    return {
-        hasLoaded: hasLoaded(state.hasLoaded, action),
-        assignments: assignments(state.assignments, action),
-        selectedAssignment: selectedAssignment(state.selectedAssignment, action),
-        sortAsc: sortAsc(state.sortAsc, action),
-        hasSetPositions: hasSetPositions(state.hasSetPositions, action)
-    }
-};*/
 
 // SELECTORS
 

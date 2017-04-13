@@ -9,10 +9,11 @@ import { AppState } from './_reducers';
 import { PersonActions, AssignmentActions, PositionActions } from './_actions';
 import { Person, Position, Assignment } from './_models/person';
 import * as assignmentReducer from './_reducers/assignments.reducer';
-//import * as staffReducer from './_reducers/staff.reducer';
+import * as staffReducer from './_reducers/staff.reducer';
 import * as positionReducer from './_reducers/positions.reducer';
 import * as peopleReducer from './_reducers/people.reducer';
 import * as staffFilterReducer from './_reducers/staff-filter.reducer';
+import { StaffFilterActionTypes } from './_actions/staff-filter.actions';
 
 @Component({
     selector: 'app-ngrx',
@@ -21,16 +22,18 @@ import * as staffFilterReducer from './_reducers/staff-filter.reducer';
 })
 export class AppComponent implements OnInit {
   public people$: Observable<Person[]>;
-  public peopleView$: Observable<Person[]>;
+  public people: Person[] = [];
+  public peopleView$: Observable<any>;
+  public stateModel$: Observable<any>;
   public filter : string;
-  public defaultFilter = staffFilterReducer.ActionTypes.SHOW_EXECUTIVE;
+  public defaultFilter = StaffFilterActionTypes.SHOW_EXSTAFF;
   public selectedPerson$: Observable<Person>;
   private _addingPerson = false;
   private _selectedPerson = false;
-  public hasLoaded = false;
+  public hasLoaded$: Observable<boolean>;
   errorMessage: string;
-  public people;
-
+  public total: number = 0;
+e
   constructor(
     private _store: Store<AppState>,
     private personActions: PersonActions,
@@ -38,29 +41,25 @@ export class AppComponent implements OnInit {
     private positionActions: PositionActions
     //private staffActions: StaffActions
   ) {
-    this.people = _store.select(state => state.peopleState).let(peopleReducer.getPeople());
+    //this.people = _store.select(state => state.appState.staffState.peopleState).let(peopleReducer.getPeople());
     // load people, assignments and positions
+          // update staff list whenever people, assignments, positions or filter changes and all finished loading
+          
+    this.hasLoaded$ = _store.select(state => state.appState.staffState).let(staffReducer.getHasLoaded())
+    this.peopleView$ = Observable.combineLatest(
+        _store.select(state => state.appState.staffState.peopleState),
+        _store.select(state => state.appState.staffState.staffFilterState),        
+    ).let(staffFilterReducer.getStaffListView());
+    this.people$ = _store.select(state => state.appState.staffState.peopleState).let(peopleReducer.getPeople());
+    this.people$.subscribe(state => this.people = state);
+    
+    // set hasLoaded flag when people, assignments and positions finished loading
+    // update observable of all people whenever peopleState changes
+    this.selectedPerson$ = _store.select(state => state.appState.staffState.peopleState).let(peopleReducer.getSelectedPerson());
+    
     this._store.dispatch(this.personActions.loadPeople());
     this._store.dispatch(this.assignmentActions.loadAssignments());
     this._store.dispatch(this.positionActions.loadPositions());
-    // set hasLoaded flag when people, assignments and positions finished loading
-    Observable.combineLatest(
-      _store.select(state => state.peopleState).let(peopleReducer.getHasLoaded()),
-      _store.select(state => state.assignmentState).let(assignmentReducer.getHasLoaded()),
-      _store.select(state => state.positionState).let(positionReducer.getHasLoaded())
-    ).subscribe(([peopleHasLoaded, assignmentsHasLoaded, positionsHasLoaded]) => {
-      this.hasLoaded = (!!peopleHasLoaded && !!assignmentsHasLoaded && !!positionsHasLoaded);
-    });
-    // update staff list whenever staff or filter changes
-    this.peopleView$ = Observable.combineLatest(
-      _store.select(state => state.peopleState).let(peopleReducer.getPeople()),
-      _store.select(state => state.assignmentState).let(assignmentReducer.getAssignments()),
-      _store.select(state => state.positionState).let(positionReducer.getPositions()),
-      _store.select(state => state.staffFilterState)
-    ).let(staffFilterReducer.getStaffListView());
-    // update staff model whenever staff changes
-    this.people$ = _store.select(state => state.peopleState).let(peopleReducer.getPeople());
-    this.selectedPerson$ = _store.select(state => state.peopleState).let(peopleReducer.getSelectedPerson());
   };
 
   ngOnInit() {
@@ -90,5 +89,12 @@ export class AppComponent implements OnInit {
       //this._store.dispatch(this.staffActions.selectStaff(undefined));
     };
   };
+
+  deleteLastPerson() {
+      this._store.dispatch(this.personActions.deletePerson(this.people[0]));
+
+  }
+
+
 
 }

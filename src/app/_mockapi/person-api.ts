@@ -46,7 +46,7 @@ export class PersonData implements InMemoryDbService {
         {id: 112, personId: 104, positionId: 2, startDate: new Date('18 Sep 2005Z'), acting: false },
         {id: 113, personId: 105, positionId: 1, startDate: new Date('18 Sep 2010Z'), acting: false },
         {id: 114, personId: 106, positionId: 30, startDate: new Date('18 Sep 1990Z'), acting: false },
-        {id: 115, personId: 107, positionId: 3, startDate: new Date('18 Sep 2006Z'), acting: false },
+        {id: 115, personId: 107, positionId: 3, startDate: new Date('18 Sep 2006Z'), endDate: new Date('31 Dec 2016'), acting: false },
         {id: 108, personId: 100, positionId: 29, startDate: new Date('22 Mar 2017Z'), acting: true },
         {id: 109, personId: 100, positionId: 29, startDate: new Date('1 Jun 2016Z'), endDate: new Date('30 Jun 2016Z'), acting: true },
         {id: 110, personId: 102, positionId: 5, startDate: new Date('22 Mar 2017Z'), acting: true }

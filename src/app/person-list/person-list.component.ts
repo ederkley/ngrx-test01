@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../_reducers';
 import { Person } from '../_models/person';
 //import * as staffReducer from '../_reducers/staff.reducer';
-import * as staffFilterReducer from '../_reducers/staff-filter.reducer';
+import { StaffFilterActionTypes } from '../_actions/staff-filter.actions';
 
 @Component({
   selector: 'app-person-list',
@@ -28,7 +28,7 @@ export class PersonListComponent implements OnChanges {
   };
 
   ngOnChanges() {
-    this.showCurrentOnly = (this.filter != staffFilterReducer.ActionTypes.SHOW_ACTUAL_POS);
+    this.showCurrentOnly = (this.filter != StaffFilterActionTypes.SHOW_ACTUAL_POS);
   };
 
   onSelectPerson(person: Person) {

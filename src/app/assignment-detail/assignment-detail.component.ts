@@ -25,7 +25,7 @@ export class AssignmentDetailComponent implements OnInit {
       private _store: Store<any>,
       private fb: FormBuilder
   ) {
-    _store.select('positions').subscribe(positions => this.positions = positions);
+    //_store.select('positions').subscribe(positions => this.positions = positions);
     this.form = this.fb.group({
       "position": this.selectedPosition,
       "dateStart": this.dateStart,

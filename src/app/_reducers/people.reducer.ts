@@ -21,7 +21,7 @@ const initialState: PeopleState = {
 export const peopleState = (state: PeopleState = initialState, action: Action): PeopleState => {
     switch (action.type) {
         case PersonActionTypes.ADD_PERSON_SUCCESS: 
-            return Object.assign({}, state, { people: [ ...state.people, action.payload ] });
+            return {...state, ...{ people: [ ...state.people, action.payload ] } };
         case PersonActionTypes.SAVE_PERSON_SUCCESS: {
             let index = _.findIndex(state.people, {id: action.payload.id});
             if (index >= 0) {
@@ -53,7 +53,10 @@ export const getPeople = () => state => {
 };
 
 export const getHasLoaded = () => state =>  {
-    return state.map(s => s.hasLoaded);
+    return state.map(s => {
+        console.dir(s);
+        s.hasLoaded
+    });
 };
 
 export const getSelectedPerson = () => state =>  {

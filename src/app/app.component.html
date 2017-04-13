@@ -1,4 +1,4 @@
-<div *ngIf="!hasLoaded">
+<div *ngIf="!(hasLoaded$ | async)">
     Loading...
 </div>
 <app-staff-list-filter 
@@ -8,8 +8,9 @@
 
 Total: {{(peopleView$ | async)?.total}} of {{(people$ | async)?.length}}
 <button (click)="addNewPerson()">Add new</button>
+<button (click)="deleteLastPerson()">Delete</button>
 
-<app-person-list
+<app-person-list *ngIf="(hasLoaded$ | async)"
     [people]="(peopleView$ | async)?.people"
     [filter]="filter"
     (selectPerson)="selectPerson($event)">

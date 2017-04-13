@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { AppState } from '../_reducers';
-import { AssignmentActions, AssignmentActionTypes } from '../_actions/assignment-actions';
+import { AssignmentActions, AssignmentActionTypes } from '../_actions/assignment.actions';
 import { PersonService } from '../_services/person.service';
 
     /*

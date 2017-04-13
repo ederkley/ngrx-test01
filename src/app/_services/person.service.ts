@@ -36,8 +36,8 @@ export class PersonService {
     this.people$ = _store.select('people');    
   }
 
-  private extractData(res: Response) {
-    const body = res.json();
+  private extractData(res: Response, inp?) {
+    const body = res.json() || inp;
     return body.data || { };
   }
 
@@ -71,7 +71,7 @@ export class PersonService {
   
   deletePerson(person: Person): Observable<Person> {
     return this._http.delete(this.peopleUrl + person.id, Global.HEADER)
-                .map(this.extractData)
+                .map(resp => this.extractData(resp, person))
                 .catch(this.handleError);
   }
 
@@ -105,7 +105,7 @@ export class PersonService {
   
   deletePosition(position: Position): Observable<Position> {
     return this._http.delete(this.positionsUrl + position.id, Global.HEADER)
-                .map(this.extractData)
+                .map(resp => this.extractData(resp, position))
                 .catch(this.handleError);
   }
 
@@ -139,7 +139,7 @@ export class PersonService {
   
   deleteAssignment(assignment: Assignment): Observable<Assignment> {
     return this._http.delete(this.assignmentsUrl + assignment.id, Global.HEADER)
-                .map(this.extractData)
+                .map(resp => this.extractData(resp, assignment))
                 .catch(this.handleError);
   };
 

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Effect, Actions } from '@ngrx/effects';
+import { Effect, Actions, toPayload } from '@ngrx/effects';
+import 'rxjs/add/operator/mergeMap';
 
 import { AppState } from '../_reducers';
-import { PersonActionTypes, PersonActions } from '../_actions/person-actions';
+import { PersonActionTypes, PersonActions } from '../_actions/person.actions';
 import { PersonService } from '../_services/person.service';
 
 
@@ -40,7 +41,9 @@ export class PersonEffects {
     @Effect() deletePerson$ = this.update$
         .ofType(PersonActionTypes.DELETE_PERSON)
         .map(action => action.payload)
-        .switchMap(person => this.svc.deletePerson(person))
-        .map(person => this.personActions.deletePersonSuccess(person));
+        .switchMap(person => {
+            return this.svc.deletePerson(person)
+                .map(result => this.personActions.deletePersonSuccess(person))
+        });
         
 };

@@ -14,7 +14,7 @@ import { PersonData } from './_mockapi/person-api'; // remove mock
 
 import reducer from './_reducers';
 import { PersonEffects, AssignmentEffects, PositionEffects } from './_effects';
-import { PersonActions, AssignmentActions, PositionActions } from './_actions';
+import { PersonActions, AssignmentActions, PositionActions, StaffFilterActions } from './_actions';
 
 import { PersonService } from './_services/person.service';
 
@@ -46,7 +46,7 @@ import { AssignmentListComponent } from './assignment-list/assignment-list.compo
     EffectsModule.run(PositionEffects),
     InMemoryWebApiModule.forRoot(PersonData) // remove mock
   ],
-  providers: [PersonService, PersonActions, AssignmentActions, PositionActions],
+  providers: [PersonService, PersonActions, AssignmentActions, PositionActions, StaffFilterActions],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

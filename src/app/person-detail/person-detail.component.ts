@@ -43,7 +43,7 @@ export class PersonDetailComponent implements OnInit, OnChanges {
       "dateExit": this.dateExit
     });
     // get selected Staff record whenever changes
-    this.selectedStaff$ = _store.select(state => state.peopleState).let(peopleReducer.getSelectedPerson());
+    this.selectedStaff$ = _store.select(state => state.appState.staffState.peopleState).let(peopleReducer.getSelectedPerson());
     // update selected Staff's assignments whenever assignments change
     //_store.select('assignments').subscribe(assignments => _store.dispatch(staffActions.updateAssignments(assignments)));
     // update form when selected Staff changed
