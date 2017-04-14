@@ -19,7 +19,6 @@ export class StaffListFilterComponent implements OnInit {
     };
 
     ngOnInit() {
-        this.updateFilter.emit(this.defaultFilter);
         this.form = this.fb.group({
             "selectFilter": this.defaultFilter
         });

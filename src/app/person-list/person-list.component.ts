@@ -1,6 +1,4 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
 
 import { AppState } from '../_reducers';
 import { Person } from '../_models/person';
@@ -14,18 +12,10 @@ import { StaffFilterActionTypes } from '../_actions/staff-filter.actions';
 })
 export class PersonListComponent implements OnChanges {
   public showCurrentOnly : boolean;
-  public selectedPerson: Person;
-  //public selectedStaff: Observable<Staff>;
   @Input() people: Person[];
   @Input() filter;
+  @Input() selectedPerson: Person;
   @Output() selectPerson : EventEmitter<Person> = new EventEmitter<Person>();
-
-  constructor (
-    private _store: Store<AppState>
-  ) {
-    //this.staff = _store.select(stores.staffFilterState).let(staffFilterReducer.getStaffListView());
-    //this.selectedStaff = _store.select(state => state.staffState).let(staffReducer.getSelectedStaff());
-  };
 
   ngOnChanges() {
     this.showCurrentOnly = (this.filter != StaffFilterActionTypes.SHOW_ACTUAL_POS);

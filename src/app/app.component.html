@@ -1,6 +1,7 @@
 <div *ngIf="!(hasLoaded$ | async)">
     Loading...
 </div>
+
 <app-staff-list-filter 
     (updateFilter)="updateFilter($event)" 
     [defaultFilter]="defaultFilter">
@@ -13,12 +14,13 @@ Total: {{(peopleView$ | async)?.total}} of {{(people$ | async)?.length}}
 <app-person-list *ngIf="(hasLoaded$ | async)"
     [people]="(peopleView$ | async)?.people"
     [filter]="filter"
+    [selectedPerson]="(selectedPerson$ | async)"
     (selectPerson)="selectPerson($event)">
 </app-person-list>
 
 <app-person-detail *ngIf="_selectedPerson || _addingPerson"    
+    [person]="(selectedPerson$ | async)"
     [addingNew]="_addingPerson"
     (updatePerson)="updatePerson($event)">
 </app-person-detail>
-
 {{errorMessage}}

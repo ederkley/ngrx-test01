@@ -1,4 +1,5 @@
 import { Action, combineReducers } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 
 import { Assignment } from '../_models/person';
@@ -49,15 +50,17 @@ export const assignmentState = (state: AssignmentState = initialState, action: A
 
 // SELECTORS
 
-export const getAssignments = () => state => state.map(s => s.assignments);
+export const getAssignments = state => state.assignments;
 
-export const getHasLoaded = () => state => state.map(s => s.hasLoaded);
+export const getAssignments$ = () => state => state.map(s => s.assignments);
 
-export const getSelectedAssignment = () => state => state.map(s => s.selectedAssignment);
+export const getHasLoaded$ = () => state => state.map(s => s.hasLoaded);
 
-export const getSortAsc = () => state => state.map(s => s.sortAsc);
+export const getSelectedAssignment$ = () => state => state.map(s => s.selectedAssignment);
 
-export const getSortedAssignmentsList = () => state => {
+export const getSortAsc$ = () => state => state.map(s => s.sortAsc);
+
+export const getSortedAssignmentsList$ = () => state => {
     console.log('getSortedAssignmentsList');
     return state.map(([selectedPerson, assignments, sortAsc]) => {
         if (assignments && selectedPerson) {

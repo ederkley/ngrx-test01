@@ -40,6 +40,8 @@ export const peopleState = (state: PeopleState = initialState, action: Action): 
         };
         case PersonActionTypes.LOAD_PEOPLE_SUCCESS:
             return Object.assign({}, state, { hasLoaded: true, people: [... action.payload] });
+        case PersonActionTypes.SELECT_PERSON:
+            return Object.assign({}, state, { selectedPerson: action.payload });
         // always have default return of previous state when action is not relevant
         default:
             return state;
@@ -48,17 +50,8 @@ export const peopleState = (state: PeopleState = initialState, action: Action): 
 
 // SELECTORS
 
-export const getPeople = () => state => {
-    return state.map(s => s.people);
-};
+export const getPeople$ = () => state => state.map(s => s.people);
 
-export const getHasLoaded = () => state =>  {
-    return state.map(s => {
-        console.dir(s);
-        s.hasLoaded
-    });
-};
+export const getHasLoaded$ = () => state => state.map(s => s.hasLoaded);
 
-export const getSelectedPerson = () => state =>  {
-    return state.map(s => s.selectedPerson);
-};
+export const getSelectedPerson$ = () => state => state.map(s => s.selectedPerson);

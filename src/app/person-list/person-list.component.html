@@ -2,17 +2,17 @@
   <li *ngFor="let person of people" [ngClass]="{selected:selectedPerson?.id == person?.id}" (click)="onSelectPerson(person)">
     <span>
       {{person.name}} 
-      (Commence date: {{person.commenceDate | date:'d MMM yyyy'}}) 
-      <span *ngIf="!showCurrentOnly && person.currentAssignmentId && person.actualAssignmentId && person.actualAssignment.positionId && person.currentAssignment.positionId != person.actualAssignment.positionId">
-        Actual: {{person.actualAssignmentId}}
-        &nbsp;({{person.actualAssignmentId}})
+      (Commence date: {{person.commenceDate | date:'d MMM yyyy'}}) <br/>
+      <span *ngIf="!showCurrentOnly && person.currentAssignment && person.actualAssignment && person.currentAssignment.positionId != person.actualAssignment.positionId">
+        Actual: {{person.actualPosition?.title}}<br/>
       </span>
-      <span *ngIf="person.currentAssignment && person.currentAssignment.position; else nonCurrent">
-        Current: {{person.currentAssignmentId}}
-        <!--&nbsp;({{person.currentAssignment.position.level}}{{person.currentAssignment.acting ? ', acting' : ''}})-->
+      <span *ngIf="person.currentAssignment && person.currentPosition; else nonCurrent">
+        Current: {{person.currentPosition?.title}}
+        &nbsp;({{person.currentPosition?.level}}{{person.currentAssignment.acting ? ', acting' : ''}})
       </span>
-      <ng-template #nonCurrent>(Last assignment date:)</ng-template>
-      </span>
+      <ng-template #nonCurrent>
+        (Last assignment date:)
+      </ng-template>
+    </span>
   </li>
 </ul>
-

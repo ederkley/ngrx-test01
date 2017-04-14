@@ -1,6 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="updatePerson()">
   <button type="submit" [disabled]="!form.valid">OK</button>
-  <button type="button" (click)="updateStaff.emit(undefined)">Cancel</button>
+  <button type="button" (click)="updatePerson.emit(undefined)">Cancel</button>
   <div class="form-group">
     <label for="name">Name</label>
     <input type="text"
@@ -16,11 +16,11 @@
            placeholder="Date of commencement">
   </div>
   <div class="form-group">
-    <label for="name">Date Exited</label>
+    <label for="name">Date of Birth</label>
     <input type="date"
            class="form-control"
-           formControlName="dateExit"
-           placeholder="Date exited">
+           formControlName="dateDOB"
+           placeholder="Date of birth">
   </div>
 </form>
 <div class="form-group" *ngIf="!addingNew">

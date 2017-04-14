@@ -10,8 +10,6 @@ export class Position {
 
 export class Person {
   id: number;
-  currentAssignmentId?: number;
-  actualAssignmentId?: number;
   constructor (
     public name: string,
     public commenceDate: Date,
@@ -19,8 +17,6 @@ export class Person {
     public DOB?: Date
   ) {
     this.id = 0;
-    this.currentAssignmentId = assignmentId;
-    this.actualAssignmentId = assignmentId;
   };
 }
 

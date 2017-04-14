@@ -1,8 +1,7 @@
 import { Store, Action } from '@ngrx/store';
 
-import { Person, Assignment, Position } from '../_models/person';
 import { type } from '../util';
-import * as assignmentsReducer from './assignments.reducer';
+import { Person, Assignment, Position } from '../_models/person';
 import { StaffFilterActionTypes } from '../_actions';
 
 export type StaffFilterState = any;
@@ -17,15 +16,56 @@ export const staffFilterSelect = [
 ];
 
 // remember to avoid mutation within reducers
-export const staffFilterState = (state: StaffFilterState = person => person, action): StaffFilterState => {
+export const staffFilterState = (state: StaffFilterState = person => undefined, action): StaffFilterState => {
     switch (action.type) {           
         case StaffFilterActionTypes.SHOW_ALL:
-            return person => true;
-            /*
-            return member => member.person && !member.person.exitDate && member.currentAssignment && member.currentAssignment.position && 
-                (member.currentAssignment.position.level === 'EL1' || member.currentAssignment.position.level === 'EL2' || 
-                member.currentAssignment.position.level === 'SES1' || member.currentAssignment.position.level === 'SES2');
-                */
+            return function (rest?) { 
+                return function (person: Person): boolean {
+                    return true;
+                }
+            };
+        case StaffFilterActionTypes.SHOW_CURRENT:
+        case StaffFilterActionTypes.SHOW_ACTUAL_POS:
+            return function (assignments?: Assignment[], rest?) { 
+                return function (person: Person): boolean {
+                    if (!assignments) { return false; }
+                    let personsAssignments = assignments.filter(assignment => assignment.personId == person.id);
+                    if (personsAssignments.length > 0) {
+                        let currentAssignment = personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b);
+                        return !currentAssignment.endDate || new Date(currentAssignment.endDate) >= new Date();
+                    };
+                    return false;
+                } 
+            };
+        case StaffFilterActionTypes.SHOW_EXSTAFF:   
+            return function (assignments?: Assignment[], rest?) { 
+                return function (person: Person): boolean {
+                    if (!assignments) { return false; }
+                    let personsAssignments = assignments.filter(assignment => assignment.personId == person.id);
+                    if (personsAssignments.length > 0) {
+                        let lastAssignment = personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b);
+                        return lastAssignment.endDate && new Date(lastAssignment.endDate) < new Date();
+                    };
+                    return true;
+                    }
+            };
+        case StaffFilterActionTypes.SHOW_EXECUTIVE: 
+            return function (assignments?: Assignment[], positions?: Position[]) { 
+                return function (person: Person): boolean {
+                    if (!assignments || !positions) { return false; }
+                    let personsAssignments = assignments.filter(assignment => assignment.personId == person.id);
+                    if (personsAssignments.length > 0) {
+                        let currentAssignment = personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b);
+                        if (!currentAssignment.endDate || new Date(currentAssignment.endDate) > new Date()) {
+                            let currentPositions: Position[] = positions.filter(position => position.id == currentAssignment.positionId);
+                            let currentPosition: Position = (currentPositions.length > 0) ? currentPositions[0] : undefined;
+                            return (currentPosition && (currentPosition.level === 'EL1' || 
+                                currentPosition.level === 'EL2' || currentPosition.level === 'SES1' || currentPosition.level === 'SES2'));
+                        };
+                    };
+                    return false;
+                } 
+            } 
         // always have default return of previous state when action is not relevant
         default:
             return state;
@@ -35,14 +75,46 @@ export const staffFilterState = (state: StaffFilterState = person => person, act
 
 // SELECTORS
 
-export const getStaffListView = () => state => state.map(([peopleState, staffFilterState]) => {
-    console.log('getStaffListView');
+/// returns combined view of person with latest assignment and position info for current and actual assignments
+export const getStaffListView = () => state => state.map(([peopleState, staffFilterState, assignmentsState, positionsState ]) => {
     let peopleList: Person[] = peopleState.people;
-    let filter = staffFilterState;
-    peopleList = (filter ? peopleList.filter(filter) : peopleList);
-    return {
-        total: peopleList.length,
+    let filter = staffFilterState(assignmentsState.assignments, positionsState.positions);
+    peopleList = (staffFilterState ? peopleList.filter(filter) : []);
+    let staffList = peopleList.map(person => {
+        let personsAssignments: Assignment[] = [];
+        let currentAssignment: Assignment = undefined;
+        let actualAssignment: Assignment = undefined;
+        let currentPosition: Position = undefined;
+        let actualPosition: Position = undefined;
+        if (assignmentsState.assignments.length > 0) {
+            personsAssignments = assignmentsState.assignments.filter(assignment => assignment.personId == person.id);
+        };
+        if (personsAssignments.length > 0) {
+            currentAssignment = personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b);
+            let actualAssignments: Assignment[] = personsAssignments.filter(assignment => !assignment.acting);
+            if (actualAssignments.length > 0) { 
+                actualAssignment = actualAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b);
+            };
+            if (positionsState.positions.length > 0) {
+                if (currentAssignment) { 
+                    currentPosition = positionsState.positions.filter(position => position.id == currentAssignment.positionId)[0];
+                };
+                if (actualAssignment) {
+                    actualPosition = positionsState.positions.filter(position => position.id == actualAssignment.positionId)[0];
+                }
+            };
+        };
+        return Object.assign(person, {
+            personsAssignments: personsAssignments,
+            currentAssignment: currentAssignment, 
+            actualAssignment: actualAssignment,
+            currentPosition: currentPosition,
+            actualPosition: actualPosition
+        });
+    });
+    return { 
         people: peopleList,
-        filter: filter
+        total: peopleList.length,
+        filter: staffFilterState
     };
 });

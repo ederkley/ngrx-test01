@@ -15,7 +15,8 @@ export const PersonActionTypes = {
    DELETE_PERSON: type('[Person] Delete person'),
    DELETE_PERSON_SUCCESS: type('[Person] Delete person success'),
    LOAD_PEOPLE: type('[Person] Load people'),
-   LOAD_PEOPLE_SUCCESS: type('[Person] Load people success')
+   LOAD_PEOPLE_SUCCESS: type('[Person] Load people success'),
+   SELECT_PERSON: type('[Person] Select person')
 };
 
 @Injectable()
@@ -85,6 +86,13 @@ export class PersonActions {
     deletePersonSuccess(person: Person): Action {
         return {
             type: PersonActionTypes.DELETE_PERSON_SUCCESS,
+            payload: person
+        };
+    }
+
+    selectPerson(person: Person): Action {
+        return {
+            type: PersonActionTypes.SELECT_PERSON,
             payload: person
         };
     }
