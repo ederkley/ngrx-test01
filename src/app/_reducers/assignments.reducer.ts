@@ -50,17 +50,17 @@ export const assignmentState = (state: AssignmentState = initialState, action: A
 
 // SELECTORS
 
-export const getAssignments = state => state.assignments;
+export const getAssignments = (state: AssignmentState): Assignment[] => state.assignments;
 
-export const getAssignments$ = () => state => state.map(s => s.assignments);
+export const getAssignments$ = () => (state): Observable<Assignment[]> => state.map(s => s.assignments);
 
-export const getHasLoaded$ = () => state => state.map(s => s.hasLoaded);
+export const getHasLoaded$ = () => (state): Observable<boolean> => state.map(s => s.hasLoaded);
 
-export const getSelectedAssignment$ = () => state => state.map(s => s.selectedAssignment);
+export const getSelectedAssignment$ = () => (state): Observable<Assignment> => state.map(s => s.selectedAssignment);
 
-export const getSortAsc$ = () => state => state.map(s => s.sortAsc);
+export const getSortAsc$ = () => (state): Observable<Assignment[]> => state.map(s => s.sortAsc);
 
-export const getSortedAssignmentsList$ = () => state => {
+export const getSortedAssignmentsView$ = () => state => {
     console.log('getSortedAssignmentsList');
     return state.map(([selectedPerson, assignments, sortAsc]) => {
         if (assignments && selectedPerson) {

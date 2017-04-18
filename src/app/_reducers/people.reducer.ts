@@ -50,8 +50,8 @@ export const peopleState = (state: PeopleState = initialState, action: Action): 
 
 // SELECTORS
 
-export const getPeople$ = () => state => state.map(s => s.people);
+export const getPeople = () => (state: PeopleState) => state.people;
 
-export const getHasLoaded$ = () => state => state.map(s => s.hasLoaded);
+export const getHasLoaded = () => (state: PeopleState) => state.hasLoaded;
 
-export const getSelectedPerson$ = () => state => state.map(s => s.selectedPerson);
+export const getSelectedPerson = () => (state: PeopleState) => state.selectedPerson;

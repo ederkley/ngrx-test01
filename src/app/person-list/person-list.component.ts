@@ -1,8 +1,11 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import {Store} from '@ngrx/store';
 
 import { AppState } from '../_reducers';
 import { Person } from '../_models/person';
-//import * as staffReducer from '../_reducers/staff.reducer';
+import { PersonActions } from '../_actions';
+import * as peopleReducer from '../_reducers/people.reducer';
 import { StaffFilterActionTypes } from '../_actions/staff-filter.actions';
 
 @Component({
@@ -12,18 +15,24 @@ import { StaffFilterActionTypes } from '../_actions/staff-filter.actions';
 })
 export class PersonListComponent implements OnChanges {
   public showCurrentOnly : boolean;
-  @Input() people: Person[];
+  public selectedPerson$: Observable<Person>;
+  @Input() staff;
   @Input() filter;
-  @Input() selectedPerson: Person;
-  @Output() selectPerson : EventEmitter<Person> = new EventEmitter<Person>();
 
+  constructor(
+    private _store: Store<AppState>,
+    private personActions: PersonActions
+  ) { 
+    // update observable of selected person when it changes
+    this.selectedPerson$ = _store.select(state => state.peopleState).let(peopleReducer.getSelectedPerson$());
+  };
+  
   ngOnChanges() {
     this.showCurrentOnly = (this.filter != StaffFilterActionTypes.SHOW_ACTUAL_POS);
   };
 
-  onSelectPerson(person: Person) {
-    this.selectedPerson = person;
-    this.selectPerson.emit(person);
+  onSelectPerson(person) {
+    this._store.dispatch(this.personActions.selectPerson(person));
   };
 
 };

@@ -1,9 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import {Store} from '@ngrx/store';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
 
 import { AppState } from '../_reducers';
-import { Person } from '../_models/person';
+import { Person, Assignment } from '../_models/person';
 import { PersonActions, AssignmentActions } from '../_actions';
 import * as peopleReducer from '../_reducers/people.reducer';
 
@@ -20,10 +21,11 @@ export class PersonDetailComponent implements OnInit, OnChanges {
   ]);
   public dateCommenced = new FormControl("", Validators.required);
   public dateDOB = new FormControl("");
+
   private _addingAssignment = false;
   private _selectAssignment = false;
+  public selectedPerson$: Observable<Person>;
   @Input() addingNew = false;
-  @Input() person: Person;
   @Output() updatePerson: EventEmitter<Person> = new EventEmitter<Person>();
 
   constructor(
@@ -38,6 +40,15 @@ export class PersonDetailComponent implements OnInit, OnChanges {
       "dateCommenced": this.dateCommenced,
       "dateDOB": this.dateDOB
     });
+    // update observable of selected person when it changes
+    this.selectedPerson$ = _store.select(state => state.peopleState).let(peopleReducer.getSelectedPerson$());
+    this.selectedPerson$.subscribe(person => {
+      this.form.patchValue({
+          name: person.name,
+          dateCommenced: new Date(person.commenceDate).toISOString().substring(0, 10),
+          dateDOB: person.DOB && new Date(person.DOB).toISOString().substring(0, 10)
+        });
+    });
   };
 
   ngOnInit() {
@@ -47,11 +58,6 @@ export class PersonDetailComponent implements OnInit, OnChanges {
   };
 
   ngOnChanges() {
-      this.form.patchValue({
-          name: this.person.name,
-          dateCommenced: new Date(this.person.commenceDate).toISOString().substring(0, 10),
-          dateDOB: this.person.DOB && new Date(this.person.DOB).toISOString().substring(0, 10)
-        });
   };
 
   onUpdatePerson() {

@@ -21,8 +21,7 @@ import { StaffFilterActionTypes } from './_actions/staff-filter.actions';
 })
 export class AppComponent implements OnInit {
   public people$: Observable<Person[]>;
-  public peopleView$: Observable<any>;
-  public stateModel$: Observable<any>;
+  public staffView$: Observable<any>;
   public filter : string;
   public defaultFilter = StaffFilterActionTypes.SHOW_EXECUTIVE;
   public selectedPerson$: Observable<Person>;
@@ -45,23 +44,23 @@ export class AppComponent implements OnInit {
     ).map(([peopleHasLoaded, assignmentsHasLoaded, positionsHasLoaded]) => !!peopleHasLoaded && !!assignmentsHasLoaded && !!positionsHasLoaded);    
 
     // update staff list whenever people, assignments, positions or filter changes
-    this.peopleView$ = Observable.combineLatest(
+    this.staffView$ = Observable.combineLatest(
         _store.select(state => state.peopleState),
         _store.select(state => state.staffFilterState),
         _store.select(state => state.assignmentState),
         _store.select(state => state.positionState)
-    ).let(staffFilterReducer.getStaffListView());
+    ).let(staffFilterReducer.getStaffListView$());
 
     // update total people whenever people changes
     this.people$ = _store.select(state => state.peopleState).let(peopleReducer.getPeople$());
-    
-    // update observable of all people whenever peopleState changes
-    this.selectedPerson$ = _store.select(state => state.peopleState).let(peopleReducer.getSelectedPerson$());
     
     // load people, assignments and positions
     this._store.dispatch(this.personActions.loadPeople());
     this._store.dispatch(this.assignmentActions.loadAssignments());
     this._store.dispatch(this.positionActions.loadPositions());
+
+    // update observable of selected person when it changes
+    _store.select(state => state.peopleState).let(peopleReducer.getSelectedPerson$()).subscribe(person => this._selectedPerson = !!person);
 
     // set default filter
     this.updateFilter(this.defaultFilter);
@@ -72,7 +71,6 @@ export class AppComponent implements OnInit {
 
   updateFilter(newFilter : string) {
     this.filter = newFilter;
-    this._selectedPerson = false;
     this._store.dispatch({type: newFilter});
     this._store.dispatch(this.personActions.selectPerson(undefined));
   };
@@ -81,27 +79,5 @@ export class AppComponent implements OnInit {
     this._addingPerson = true;
     //this._store.dispatch(this.staffActions.selectStaff(undefined));
   };
-
-  selectPerson(person: Person) {
-    this._selectedPerson = true;
-    this._store.dispatch(this.personActions.selectPerson(person));
-  };
-
-  updatePerson(person: Person) {
-    if (person) {
-      // save change
-    } else {
-      this._addingPerson = false;
-      this._selectedPerson = false;
-      this._store.dispatch(this.personActions.selectPerson(undefined));
-    };
-  };
-
-  deleteLastPerson() {
-      //this._store.dispatch(this.personActions.deletePerson(this.people[0]));
-
-  }
-
-
 
 }
