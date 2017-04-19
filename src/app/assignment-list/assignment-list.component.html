@@ -1,13 +1,15 @@
-Assignments: <button (click)="changeSort()">{{ (sortAssignmentListAsc | async) ? 'Asc' : 'Desc' }}</button>
-<ul>
-  <li *ngFor="let assignment of (sortedAssignments | async)" 
-    [ngClass]="{selected:(selectedAssignment | async)?.id == assignment.id}"
-    (click)="selectAssignment(assignment)">
-    <span>
-      {{assignment?.position?.title}} - 
-      from {{assignment?.startDate | date:'d MMM yyyy'}} 
-      to {{assignment.endDate ? (assignment.endDate | date:'d MMM yyyy') : 'current' }}
-      {{assignment.acting ? '(acting)' : ''}}
-    </span>
-  </li>
-</ul>
+<div>
+  Assignments: <button type="button" (click)="changeSort()">{{ (sortAssignmentSortOrderAsc$ | async) ? 'Asc' : 'Desc' }}</button>
+  <ul>
+    <li *ngFor="let assignment of (sortedAssignments$ | async)" 
+      [ngClass]="{selected:(selectedAssignment$ | async)?.id == assignment.id}"
+      (click)="onSelectAssignment(assignment)">
+      <span>
+        {{assignment?.position?.title}} - 
+        from {{assignment?.startDate | date:'d MMM yyyy'}} 
+        to {{assignment.endDate ? (assignment.endDate | date:'d MMM yyyy') : 'current' }}
+        {{assignment.acting ? '(acting)' : ''}}
+      </span>
+    </li>
+  </ul>
+</div>

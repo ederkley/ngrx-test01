@@ -31,6 +31,10 @@ export const getAssignmentState = (state: AppState) => state.assignmentState;
 export const getPositionState = (state: AppState) => state.positionState;
 export const getStaffFilterState = (state: AppState) => state.staffFilterState;
 
+// POSITION REDUCERS
+export const getPositionsList$ = createSelector(getPositionState, fromPositions.getPositions$);
+export const getPositionsHaveLoaded$ = createSelector(getPositionState, fromPositions.getHasLoaded$);
+
 // PEOPLE REDUCERS
 export const getPeopleList$ = createSelector(getPersonState, fromPeople.getPeople$);
 export const getPeopleHaveLoaded$ = createSelector(getPersonState, fromPeople.getHasLoaded$);
@@ -40,12 +44,9 @@ export const getPersonSelected$ = createSelector(getPersonState, fromPeople.getS
 export const getAssignmentList$ = createSelector(getAssignmentState, fromAssignments.getAssignments$);
 export const getAssignmentsHaveLoaded$ = createSelector(getAssignmentState, fromAssignments.getHasLoaded$);
 export const getAssignmentSelected$ = createSelector(getAssignmentState, fromAssignments.getSelectedAssignment$);;
-export const getAssignmentSortOrder$ = createSelector(getAssignmentState, fromAssignments.getSortAsc$);;
-export const getAssignmentSortedView$ = createSelector(getAssignmentState, fromAssignments.getSortedAssignmentsView$);
+export const getAssignmentSortOrderAsc$ = createSelector(getAssignmentState, fromAssignments.getSortAsc$);
+export const getAssignmentSortedView$ = createSelector([getPersonSelected$, getAssignmentList$, getPositionsList$, getAssignmentSortOrderAsc$], fromAssignments.getSortedAssignmentsView$);
 
-// POSITION REDUCERS
-export const getPositionsList$ = createSelector(getPositionState, fromPositions.getPositions$);
-export const getPositionsHaveLoaded$ = createSelector(getPositionState, fromPositions.getHasLoaded$);
 
 // STAFF-FILTER REDUCERS
-export const getStaffListView$ = createSelector([getPersonState, getStaffFilterState, getAssignmentState, getPositionState], fromStaffFilter.getStaffListView$);
+export const getStaffListView$ = createSelector([getPeopleList$, getStaffFilterState, getAssignmentList$, getPositionsList$], fromStaffFilter.getStaffListView$);

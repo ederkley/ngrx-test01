@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { AppState } from '../_reducers';
 import { Person, Assignment } from '../_models/person';
 import { PersonActions, AssignmentActions } from '../_actions';
-import * as reducers from '../_reducers';
+import * as fromRoot from '../_reducers';
 
 @Component({
   selector: 'app-person-detail',
@@ -22,10 +22,11 @@ export class PersonDetailComponent implements OnInit, OnChanges {
   public dateCommenced = new FormControl("", Validators.required);
   public dateDOB = new FormControl("");
 
-  private _addingAssignment = false;
+  private _addingNewAssignment = false;
   private _selectAssignment = false;
-  public selectedPerson$;
-  @Input() addingNew = false;
+  private selectedAssignment$: Observable<Assignment>;
+  @Input() person: Person;
+  @Input() addingNewPerson = false;
   @Output() updatePerson: EventEmitter<Person> = new EventEmitter<Person>();
 
   constructor(
@@ -34,20 +35,16 @@ export class PersonDetailComponent implements OnInit, OnChanges {
     private assignmentActions: AssignmentActions,
     private fb: FormBuilder
   ) {
+    this.selectedAssignment$ = _store.select(fromRoot.getAssignmentSelected$);
+    this.selectedAssignment$.subscribe(assignment => {
+      console.log(assignment);
+      this._selectAssignment = !!assignment
+    });
     // prepare form
     this.form = this.fb.group({
       "name": this.name,
       "dateCommenced": this.dateCommenced,
       "dateDOB": this.dateDOB
-    });
-    // update observable of selected person when it changes
-    this.selectedPerson$ = _store.select(reducers.getPersonSelected$);
-    this.selectedPerson$.subscribe(person => {
-      this.form.patchValue({
-          name: person.name,
-          dateCommenced: person.commenceDate && new Date(person.commenceDate).toISOString().substring(0, 10),
-          dateDOB: person.DOB && new Date(person.DOB).toISOString().substring(0, 10)
-        });
     });
   };
 
@@ -58,33 +55,34 @@ export class PersonDetailComponent implements OnInit, OnChanges {
   };
 
   ngOnChanges() {
+    // update observable of selected person when it changes
+    if (this.person) {
+      this.form.patchValue({
+          name: this.person.name,
+          dateCommenced: this.person.commenceDate && new Date(this.person.commenceDate).toISOString().substring(0, 10),
+          dateDOB: this.person.DOB && new Date(this.person.DOB).toISOString().substring(0, 10)
+        });
+    } else {
+      this.form.patchValue({
+          name: undefined,
+          dateCommenced: new Date().toISOString().substring(0, 10),
+          dateDOB: undefined
+        });
+    };
   };
 
   onUpdatePerson() {
-      let person: Person = new Person(this.form.controls['name'].value, new Date(this.form.controls['dateCommenced'].value));
-      if (this.addingNew) {
-        this._store.dispatch(this.personActions.addPerson(person));
-      } else {
-        this._store.dispatch(this.personActions.savePerson(person));
-      }
   }
 
-  addAssignment() {
-    this._addingAssignment = true;
-    this._store.dispatch(this.assignmentActions.selectAssignment(undefined));
-  };
-
-  updateAssignment(assignment) {
-    /*
+  onUpdateAssignment(assignment: Assignment) {
     if (assignment) {
-      assignment = Object.assign({}, assignment, { personId: this.staff.person.id });
+      assignment = Object.assign({}, assignment, { personId: this.person.id });
       this._store.dispatch(this.assignmentActions.addAssignment(assignment));
     } else {
       this._store.dispatch(this.assignmentActions.selectAssignment(undefined));
     }
-    this._addingAssignment = false;
+    this._addingNewAssignment = false;
     this._selectAssignment = false;
-    */
   };
 
 };

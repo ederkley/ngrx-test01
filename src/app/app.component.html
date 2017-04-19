@@ -16,6 +16,8 @@ Total: {{(staffView$ | async)?.total}} of {{(people$ | async)?.length}}
 </app-person-list>
 
 <app-person-detail *ngIf="_selectedPerson || _addingPerson"
-    [addingNew]="_addingPerson">
+    [person]="(selectedPerson$ | async)"
+    [addingNewPerson]="_addingPerson"
+    (updatePerson)="updatePerson($event)">
 </app-person-detail>
 {{errorMessage}}

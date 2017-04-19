@@ -42,6 +42,10 @@ export const assignmentState = (state: AssignmentState = initialState, action: A
         };
         case AssignmentActionTypes.LOAD_ASSIGNMENTS_SUCCESS:
             return Object.assign({}, state, { hasLoaded: true, assignments: [... action.payload] });
+        case AssignmentActionTypes.TOGGLE_ASSIGNMENT_SORT:
+            return Object.assign({}, state, { sortAsc: !state.sortAsc });
+        case AssignmentActionTypes.SELECT_ASSIGNMENT:
+            return Object.assign({}, state, { selectedAssignment: action.payload });
         // always have default return of previous state when action is not relevant
         default:
             return state;
@@ -57,41 +61,27 @@ export const getSelectedAssignment$ = (state: AssignmentState) => state.selected
 
 export const getSortAsc$ = (state: AssignmentState) => state.sortAsc;
 
-export const getSortedAssignmentsView$ = state => {
+export const getSortedAssignmentsView$ = (selectedPerson, assignments, positions, sortAsc) => {
     console.log('getSortedAssignmentsList');
-    return state.map(([selectedPerson, assignments, sortAsc]) => {
-        if (assignments && selectedPerson) {
-            return assignments
-                .filter(assignment => assignment.personId == selectedPerson.id)
+    if (assignments && positions && selectedPerson) {
+        let personsAssignments: Assignment[] = assignments.filter(assignment => assignment.personId == selectedPerson.id);
+        if (personsAssignments.length > 0) {
+            return personsAssignments
+                .map(assignment => {
+                    const assignmentPositions: Position[] = positions.filter(position => position.id == assignment.positionId);
+                    if (assignmentPositions.length === 1) {
+                        return Object.assign(assignment, { position: assignmentPositions[0] });
+                    } else {
+                        return assignment;
+                    };
+                })
                 .sort((a, b) => {
                     return sortAsc ? 
                     new Date(b.startDate).getTime() - new Date(a.startDate).getTime() :
                     new Date(a.startDate).getTime() - new Date(b.startDate).getTime() 
-                    });
-        } else {
-            return [];
-        }
-    });
+                });
+        };
+    } else {
+        return [];
+    };
 };
-
-const getAssignmentsForSelectedPerson$ = (state: AssignmentState) => 
-  (selectedPerson, assignments) => {
-    return assignments.filter(assignment => assignment.personId == selectedPerson.id);
-  };
-
-export const getCurrentAssignmentForSelectedPerson$ = (state: AssignmentState) => 
-  (personsAssignments) => {
-    return personsAssignments.length > 0 ? personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b) : undefined;
-  }
-
-export const getActualAssignmentForSelectedPerson$ = (state: AssignmentState) => 
-    (personsAssignments) => {
-        personsAssignments = personsAssignments.filter(assignment => !assignment.acting);
-        return personsAssignments.length > 0 ? personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b) : undefined;
-  }
-
-export const getCurrentPositionForSelectedPerson$ = (state: AssignmentState) => 
-    (personsAssignments) => {
-        personsAssignments = personsAssignments.filter(assignment => !assignment.acting);
-        return personsAssignments.length > 0 ? personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b) : undefined;
-  }

@@ -79,11 +79,9 @@ export const staffFilterState = (state: StaffFilterState = person => undefined, 
 // SELECTORS
 
 /// returns combined view of person with latest assignment and position info for current and actual assignments
-export const getStaffListView$ = (peopleState, staffFilterState, assignmentsState, positionsState) => {
+export const getStaffListView$ = (peopleList, staffFilterState, assignmentsList, positionsList) => {
     console.log('getStaffListView');
-    console.dir(peopleState);
-    let peopleList: Person[] = peopleState.people;
-    let filter = staffFilterState(assignmentsState.assignments, positionsState.positions);
+    let filter = staffFilterState(assignmentsList, positionsList);
     peopleList = (staffFilterState ? peopleList.filter(filter) : []);
     let staffList = peopleList.map(person => {
         let personsAssignments: Assignment[] = [];
@@ -91,8 +89,8 @@ export const getStaffListView$ = (peopleState, staffFilterState, assignmentsStat
         let actualAssignment: Assignment = undefined;
         let currentPosition: Position = undefined;
         let actualPosition: Position = undefined;
-        if (assignmentsState.assignments.length > 0) {
-            personsAssignments = assignmentsState.assignments.filter(assignment => assignment.personId == person.id);
+        if (assignmentsList.length > 0) {
+            personsAssignments = assignmentsList.filter(assignment => assignment.personId == person.id);
         };
         if (personsAssignments.length > 0) {
             currentAssignment = personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b);
@@ -100,12 +98,12 @@ export const getStaffListView$ = (peopleState, staffFilterState, assignmentsStat
             if (actualAssignments.length > 0) { 
                 actualAssignment = actualAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b);
             };
-            if (positionsState.positions.length > 0) {
+            if (positionsList.length > 0) {
                 if (currentAssignment) { 
-                    currentPosition = positionsState.positions.filter(position => position.id == currentAssignment.positionId)[0];
+                    currentPosition = positionsList.filter(position => position.id == currentAssignment.positionId)[0];
                 };
                 if (actualAssignment) {
-                    actualPosition = positionsState.positions.filter(position => position.id == actualAssignment.positionId)[0];
+                    actualPosition = positionsList.filter(position => position.id == actualAssignment.positionId)[0];
                 }
             };
         };

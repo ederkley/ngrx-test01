@@ -7,7 +7,7 @@ import {Store, provideStore} from '@ngrx/store';
 
 import { PersonActions, AssignmentActions, PositionActions } from './_actions';
 import { Person, Position, Assignment } from './_models/person';
-import * as reducers from './_reducers';
+import * as fromRoot from './_reducers';
 import { StaffFilterActionTypes } from './_actions/staff-filter.actions';
 
 @Component({
@@ -27,23 +27,23 @@ export class AppComponent implements OnInit {
   errorMessage: string;
 
   constructor(
-    private _store: Store<reducers.AppState>,
+    private _store: Store<fromRoot.AppState>,
     private personActions: PersonActions,
     private assignmentActions: AssignmentActions,
     private positionActions: PositionActions
   ) {
     // set hasLoaded flag when people, assignments and positions finished loading
     this.hasLoaded$ = Observable.combineLatest(
-      _store.select(reducers.getPeopleHaveLoaded$),
-      _store.select(reducers.getAssignmentsHaveLoaded$),
-      _store.select(reducers.getPositionsHaveLoaded$)
+      _store.select(fromRoot.getPeopleHaveLoaded$),
+      _store.select(fromRoot.getAssignmentsHaveLoaded$),
+      _store.select(fromRoot.getPositionsHaveLoaded$)
     ).map(([peopleHasLoaded, assignmentsHasLoaded, positionsHasLoaded]) => !!peopleHasLoaded && !!assignmentsHasLoaded && !!positionsHasLoaded);    
 
     // update staff list whenever people, assignments, positions or filter changes
-    this.staffView$ = _store.select(reducers.getStaffListView$);
+    this.staffView$ = _store.select(fromRoot.getStaffListView$);
 
     // update total people whenever people changes
-    this.people$ = _store.select(reducers.getPeopleList$);
+    this.people$ = _store.select(fromRoot.getPeopleList$);
     
     // load people, assignments and positions
     this._store.dispatch(this.personActions.loadPeople());
@@ -51,8 +51,8 @@ export class AppComponent implements OnInit {
     this._store.dispatch(this.positionActions.loadPositions());
 
     // update observable of selected person when it changes
-    _store.select(reducers.getPersonSelected$).subscribe(person => {
-      console.dir(person);
+    this.selectedPerson$ = _store.select(fromRoot.getPersonSelected$);
+    this.selectedPerson$.subscribe(person => {
       this._selectedPerson = !!person;
     });
 
@@ -66,12 +66,24 @@ export class AppComponent implements OnInit {
   updateFilter(newFilter : string) {
     this.filter = newFilter;
     this._store.dispatch({type: newFilter});
-    this._store.dispatch(this.personActions.selectPerson(undefined));
   };
 
   addNewPerson() {
     this._addingPerson = true;
-    //this._store.dispatch(this.staffActions.selectStaff(undefined));
+    this._store.dispatch(this.personActions.selectPerson(undefined));
+  };
+
+  updatePerson(person) {
+    if (person) {
+      if (this._addingPerson) {
+        this._store.dispatch(this.personActions.addPerson(person));
+      } else {
+        this._store.dispatch(this.personActions.savePerson(person));
+      };
+    } else {
+      this._store.dispatch(this.personActions.selectPerson(undefined));
+    };
+    this._addingPerson = false;
   };
 
 }
