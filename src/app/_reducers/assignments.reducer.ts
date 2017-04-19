@@ -49,18 +49,15 @@ export const assignmentState = (state: AssignmentState = initialState, action: A
 };
 
 // SELECTORS
+export const getAssignments$ = (state: AssignmentState) => state.assignments;
 
-export const getAssignments = (state: AssignmentState): Assignment[] => state.assignments;
+export const getHasLoaded$ = (state: AssignmentState) => state.hasLoaded;
 
-export const getAssignments$ = () => (state): Observable<Assignment[]> => state.map(s => s.assignments);
+export const getSelectedAssignment$ = (state: AssignmentState) => state.selectedAssignment;
 
-export const getHasLoaded$ = () => (state): Observable<boolean> => state.map(s => s.hasLoaded);
+export const getSortAsc$ = (state: AssignmentState) => state.sortAsc;
 
-export const getSelectedAssignment$ = () => (state): Observable<Assignment> => state.map(s => s.selectedAssignment);
-
-export const getSortAsc$ = () => (state): Observable<Assignment[]> => state.map(s => s.sortAsc);
-
-export const getSortedAssignmentsView$ = () => state => {
+export const getSortedAssignmentsView$ = state => {
     console.log('getSortedAssignmentsList');
     return state.map(([selectedPerson, assignments, sortAsc]) => {
         if (assignments && selectedPerson) {
@@ -76,3 +73,25 @@ export const getSortedAssignmentsView$ = () => state => {
         }
     });
 };
+
+const getAssignmentsForSelectedPerson$ = (state: AssignmentState) => 
+  (selectedPerson, assignments) => {
+    return assignments.filter(assignment => assignment.personId == selectedPerson.id);
+  };
+
+export const getCurrentAssignmentForSelectedPerson$ = (state: AssignmentState) => 
+  (personsAssignments) => {
+    return personsAssignments.length > 0 ? personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b) : undefined;
+  }
+
+export const getActualAssignmentForSelectedPerson$ = (state: AssignmentState) => 
+    (personsAssignments) => {
+        personsAssignments = personsAssignments.filter(assignment => !assignment.acting);
+        return personsAssignments.length > 0 ? personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b) : undefined;
+  }
+
+export const getCurrentPositionForSelectedPerson$ = (state: AssignmentState) => 
+    (personsAssignments) => {
+        personsAssignments = personsAssignments.filter(assignment => !assignment.acting);
+        return personsAssignments.length > 0 ? personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b) : undefined;
+  }

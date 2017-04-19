@@ -10,6 +10,7 @@ export class Position {
 
 export class Person {
   id: number;
+  assignments: number[];
   constructor (
     public name: string,
     public commenceDate: Date,
@@ -17,6 +18,8 @@ export class Person {
     public DOB?: Date
   ) {
     this.id = 0;
+    this.assignments = [];
+    if (assignmentId) { this.assignments.push(assignmentId); }
   };
 }
 

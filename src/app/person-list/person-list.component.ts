@@ -5,7 +5,7 @@ import {Store} from '@ngrx/store';
 import { AppState } from '../_reducers';
 import { Person } from '../_models/person';
 import { PersonActions } from '../_actions';
-import * as peopleReducer from '../_reducers/people.reducer';
+import * as reducers from '../_reducers';
 import { StaffFilterActionTypes } from '../_actions/staff-filter.actions';
 
 @Component({
@@ -15,7 +15,7 @@ import { StaffFilterActionTypes } from '../_actions/staff-filter.actions';
 })
 export class PersonListComponent implements OnChanges {
   public showCurrentOnly : boolean;
-  public selectedPerson$: Observable<Person>;
+  public selectedPerson$;
   @Input() staff;
   @Input() filter;
 
@@ -24,7 +24,7 @@ export class PersonListComponent implements OnChanges {
     private personActions: PersonActions
   ) { 
     // update observable of selected person when it changes
-    this.selectedPerson$ = _store.select(state => state.peopleState).let(peopleReducer.getSelectedPerson$());
+    this.selectedPerson$ = _store.select(reducers.getPersonSelected$);
   };
   
   ngOnChanges() {

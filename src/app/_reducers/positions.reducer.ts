@@ -47,10 +47,6 @@ export const positionState = (state: PositionState = initialState, action: Actio
 
 // SELECTORS
 
-export const getPositions$ = () => state => state.map(s => s.positions);
+export const getPositions$ = (state: PositionState) => state.positions;
 
-export const getHasLoaded$ = () => state => state.map(s => s.hasLoaded);
-
-export const getPosition$ = (state: PositionState, positionId: number) => {
-    return state.positions.filter(position => position.id == positionId)[0];
-};
+export const getHasLoaded$ = (state: PositionState) => state.hasLoaded;

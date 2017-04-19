@@ -2,7 +2,7 @@ import '@ngrx/core/add/operator/select';
 import { compose } from '@ngrx/core/compose';
 import { storeLogger } from 'ngrx-store-logger';
 import { combineReducers } from '@ngrx/store';
-import { createSelector } from 'reselect'
+import { createSelector } from 'reselect';
 
 import { type } from '../util';
 import * as fromPeople from './people.reducer';
@@ -25,13 +25,27 @@ export default compose(storeLogger(),combineReducers)({
     staffFilterState: fromStaffFilter.staffFilterState,
 });
 
-
+// STATE SLICES
 export const getPersonState = (state: AppState) => state.peopleState;
+export const getAssignmentState = (state: AppState) => state.assignmentState;
+export const getPositionState = (state: AppState) => state.positionState;
+export const getStaffFilterState = (state: AppState) => state.staffFilterState;
 
-export const getPersonList = createSelector(getPersonState, fromPeople.getPeople);
+// PEOPLE REDUCERS
+export const getPeopleList$ = createSelector(getPersonState, fromPeople.getPeople$);
+export const getPeopleHaveLoaded$ = createSelector(getPersonState, fromPeople.getHasLoaded$);
+export const getPersonSelected$ = createSelector(getPersonState, fromPeople.getSelectedPerson$);
 
-export const getPeople = () => (state: PeopleState) => state.people;
+// ASSIGNMENT REDUCERS
+export const getAssignmentList$ = createSelector(getAssignmentState, fromAssignments.getAssignments$);
+export const getAssignmentsHaveLoaded$ = createSelector(getAssignmentState, fromAssignments.getHasLoaded$);
+export const getAssignmentSelected$ = createSelector(getAssignmentState, fromAssignments.getSelectedAssignment$);;
+export const getAssignmentSortOrder$ = createSelector(getAssignmentState, fromAssignments.getSortAsc$);;
+export const getAssignmentSortedView$ = createSelector(getAssignmentState, fromAssignments.getSortedAssignmentsView$);
 
-export const getHasLoaded = () => (state: PeopleState) => state.hasLoaded;
+// POSITION REDUCERS
+export const getPositionsList$ = createSelector(getPositionState, fromPositions.getPositions$);
+export const getPositionsHaveLoaded$ = createSelector(getPositionState, fromPositions.getHasLoaded$);
 
-export const getSelectedPerson = () => (state: PeopleState) => state.selectedPerson;
+// STAFF-FILTER REDUCERS
+export const getStaffListView$ = createSelector([getPersonState, getStaffFilterState, getAssignmentState, getPositionState], fromStaffFilter.getStaffListView$);

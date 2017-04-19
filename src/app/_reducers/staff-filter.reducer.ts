@@ -78,47 +78,15 @@ export const staffFilterState = (state: StaffFilterState = person => undefined, 
 
 // SELECTORS
 
-const getSelectedPerson = (state: AppState) => state.peopleState.selectedPerson;
-const getAssignments = (state) => state.assignmentsState.assignments;
-const getPositions = (state) => state.positionsState.positions;
-
-export const getAssignmentsForSelectedPerson = createSelector(
-  [ getSelectedPerson, getAssignments ],
-  (selectedPerson, assignments) => {
-    return assignments.filter(assignment => assignment.personId == selectedPerson.id);
-  }
-);
-
-export const getCurrentAssignmentForSelectedPerson = createSelector(
-  [ getAssignmentsForSelectedPerson ],
-  (personsAssignments) => {
-    return personsAssignments.length > 0 ? personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b) : undefined;
-  }
-);
-
-export const getActualAssignmentForSelectedPerson = createSelector(
-    [ getAssignmentsForSelectedPerson ],
-    (personsAssignments) => {
-        personsAssignments = personsAssignments.filter(assignment => !assignment.acting);
-        return personsAssignments.length > 0 ? personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b) : undefined;
-  }
-);
-
-export const getCurrentPositionForSelectedPerson = createSelector(
-    [ getAssignmentsForSelectedPerson ],
-    (personsAssignments) => {
-        personsAssignments = personsAssignments.filter(assignment => !assignment.acting);
-        return personsAssignments.length > 0 ? personsAssignments.reduce((a,b) => new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? a : b) : undefined;
-  }
-);
-
 /// returns combined view of person with latest assignment and position info for current and actual assignments
-export const getStaffListView$ = () => state => state.map(([peopleState, staffFilterState, assignmentsState, positionsState]) => {
+export const getStaffListView$ = (peopleState, staffFilterState, assignmentsState, positionsState) => {
+    console.log('getStaffListView');
+    console.dir(peopleState);
     let peopleList: Person[] = peopleState.people;
     let filter = staffFilterState(assignmentsState.assignments, positionsState.positions);
     peopleList = (staffFilterState ? peopleList.filter(filter) : []);
     let staffList = peopleList.map(person => {
-        let personsAssignments = Observable.combineLatest(peopleState, assignmentsState).let(getAssignmentsForSelectedPerson());
+        let personsAssignments: Assignment[] = [];
         let currentAssignment: Assignment = undefined;
         let actualAssignment: Assignment = undefined;
         let currentPosition: Position = undefined;
@@ -154,4 +122,4 @@ export const getStaffListView$ = () => state => state.map(([peopleState, staffFi
         total: staffList.length,
         filter: staffFilterState
     };
-});
+}

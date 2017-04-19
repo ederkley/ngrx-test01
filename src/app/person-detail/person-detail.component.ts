@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { AppState } from '../_reducers';
 import { Person, Assignment } from '../_models/person';
 import { PersonActions, AssignmentActions } from '../_actions';
-import * as peopleReducer from '../_reducers/people.reducer';
+import * as reducers from '../_reducers';
 
 @Component({
   selector: 'app-person-detail',
@@ -24,7 +24,7 @@ export class PersonDetailComponent implements OnInit, OnChanges {
 
   private _addingAssignment = false;
   private _selectAssignment = false;
-  public selectedPerson$: Observable<Person>;
+  public selectedPerson$;
   @Input() addingNew = false;
   @Output() updatePerson: EventEmitter<Person> = new EventEmitter<Person>();
 
@@ -41,11 +41,11 @@ export class PersonDetailComponent implements OnInit, OnChanges {
       "dateDOB": this.dateDOB
     });
     // update observable of selected person when it changes
-    this.selectedPerson$ = _store.select(state => state.peopleState).let(peopleReducer.getSelectedPerson$());
+    this.selectedPerson$ = _store.select(reducers.getPersonSelected$);
     this.selectedPerson$.subscribe(person => {
       this.form.patchValue({
           name: person.name,
-          dateCommenced: new Date(person.commenceDate).toISOString().substring(0, 10),
+          dateCommenced: person.commenceDate && new Date(person.commenceDate).toISOString().substring(0, 10),
           dateDOB: person.DOB && new Date(person.DOB).toISOString().substring(0, 10)
         });
     });

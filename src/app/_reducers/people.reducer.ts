@@ -38,7 +38,7 @@ export const peopleState = (state: PeopleState = initialState, action: Action): 
                 return person.id != action.payload.id;
             }) });
         };
-        case PersonActionTypes.LOAD_PEOPLE_SUCCESS:
+        case PersonActionTypes.LOAD_PEOPLE_SUCCESS: 
             return Object.assign({}, state, { hasLoaded: true, people: [... action.payload] });
         case PersonActionTypes.SELECT_PERSON:
             return Object.assign({}, state, { selectedPerson: action.payload });
@@ -50,8 +50,8 @@ export const peopleState = (state: PeopleState = initialState, action: Action): 
 
 // SELECTORS
 
-export const getPeople = () => (state: PeopleState) => state.people;
+export const getPeople$ = (state: PeopleState) => state.people;
 
-export const getHasLoaded = () => (state: PeopleState) => state.hasLoaded;
+export const getHasLoaded$ = (state: PeopleState) => state.hasLoaded;
 
-export const getSelectedPerson = () => (state: PeopleState) => state.selectedPerson;
+export const getSelectedPerson$ = (state: PeopleState) => state.selectedPerson;

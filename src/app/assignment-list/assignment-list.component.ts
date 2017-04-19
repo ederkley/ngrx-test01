@@ -6,9 +6,7 @@ import {Store} from '@ngrx/store';
 import { AppState } from '../_reducers';
 import { Person, Assignment } from '../_models/person';
 import { AssignmentActions } from '../_actions';
-//import * as staffReducer from '../_reducers/staff.reducer';
-import * as assignmentsReducer from '../_reducers/assignments.reducer';
-import * as peopleReducer from '../_reducers/people.reducer';
+import * as reducers from '../_reducers';
 
 @Component({
   selector: 'app-assignment-list',
@@ -25,18 +23,19 @@ export class AssignmentListComponent implements OnInit {
     private assignmentActions: AssignmentActions
     //private staffActions: StaffActions,
   ) { 
-    this.selectedPerson$ = _store.select(state => state.peopleState).let(peopleReducer.getSelectedPerson$());
-    this.selectedAssignment$ = _store.select(state => state.assignmentState).let(assignmentsReducer.getSelectedAssignment$());
+    //this.selectedPerson$ = _store.select(reducers.getPersonSelected$());
+    //this.selectedAssignment$ = _store.select(state => state.assignmentState).let(assignmentsReducer.getSelectedAssignment$());
     // update assignment sort order whenever selectStaff changes
+    /*
     this.sortedAssignments = Observable.combineLatest(
       this.selectedPerson$,
       _store.select(state => state.assignmentState).let(assignmentsReducer.getAssignments$()),
       _store.select(state => state.assignmentState).let(assignmentsReducer.getSortAsc$())
     ).let(assignmentsReducer.getSortedAssignmentsView$());
-    
+    */
     // clear selected Assignment if sorted Assignment List changes
     this.selectedAssignment$.subscribe(state => this._store.dispatch(this.assignmentActions.selectAssignment(undefined)));
-    this.sortAssignmentListAsc = _store.select(state => state.assignmentState).let(assignmentsReducer.getSortAsc$());    
+    //this.sortAssignmentListAsc = _store.select(state => state.assignmentState).let(assignmentsReducer.getSortAsc$());    
   };
 
   ngOnInit() {
