@@ -4,8 +4,8 @@ import {Store} from '@ngrx/store';
 
 import { AppState } from '../_reducers';
 import { Person } from '../_models/person';
-import { PersonActions } from '../_actions';
-import * as reducers from '../_reducers';
+import { PersonActions, AssignmentActions } from '../_actions';
+import * as fromRoot from '../_reducers';
 import { StaffFilterActionTypes } from '../_actions/staff-filter.actions';
 
 @Component({
@@ -21,10 +21,11 @@ export class PersonListComponent implements OnChanges {
 
   constructor(
     private _store: Store<AppState>,
-    private personActions: PersonActions
+    private personActions: PersonActions,
+    private assignmentActions: AssignmentActions
   ) { 
     // update observable of selected person when it changes
-    this.selectedPerson$ = _store.select(reducers.getPersonSelected$);
+    this.selectedPerson$ = _store.select(fromRoot.getPersonSelected$);
   };
   
   ngOnChanges() {
@@ -33,6 +34,7 @@ export class PersonListComponent implements OnChanges {
 
   onSelectPerson(person) {
     this._store.dispatch(this.personActions.selectPerson(person));
+    this._store.dispatch(this.assignmentActions.selectAssignment(undefined));
   };
 
 };

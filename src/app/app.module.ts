@@ -24,6 +24,7 @@ import { PersonListComponent } from './person-list/person-list.component';
 import { PersonDetailComponent } from './person-detail/person-detail.component';
 import { AssignmentDetailComponent } from './assignment-detail/assignment-detail.component';
 import { AssignmentListComponent } from './assignment-list/assignment-list.component';
+import { AssignmentFormComponent } from './assignment-form/assignment-form.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { AssignmentListComponent } from './assignment-list/assignment-list.compo
     StaffListFilterComponent,
     PersonDetailComponent,
     AssignmentDetailComponent,
-    AssignmentListComponent
+    AssignmentListComponent,
+    AssignmentFormComponent
   ],
   imports: [
     BrowserModule,

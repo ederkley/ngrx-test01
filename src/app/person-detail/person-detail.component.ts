@@ -14,14 +14,7 @@ import * as fromRoot from '../_reducers';
   styles: ['li.selected span { background-color: blue; color: white } ']
 })
 export class PersonDetailComponent implements OnInit, OnChanges {
-  form: FormGroup;
-  public name = new FormControl("", Validators.required);
-  public email = new FormControl("", [
-    Validators.pattern("[^ @]*@[^ @]*")
-  ]);
-  public dateCommenced = new FormControl("", Validators.required);
-  public dateDOB = new FormControl("");
-
+  private _form: FormGroup;
   private _addingNewAssignment = false;
   private _selectAssignment = false;
   private selectedAssignment$: Observable<Assignment>;
@@ -31,39 +24,42 @@ export class PersonDetailComponent implements OnInit, OnChanges {
 
   constructor(
     private _store: Store<AppState>,
-    private personActions: PersonActions,
-    private assignmentActions: AssignmentActions,
-    private fb: FormBuilder
+    private _personActions: PersonActions,
+    private _assignmentActions: AssignmentActions,
+    private _fb: FormBuilder
   ) {
     this.selectedAssignment$ = _store.select(fromRoot.getAssignmentSelected$);
-    this.selectedAssignment$.subscribe(assignment => {
-      console.log(assignment);
-      this._selectAssignment = !!assignment
-    });
+    this.selectedAssignment$.subscribe(assignment => this._selectAssignment = !!assignment);
     // prepare form
-    this.form = this.fb.group({
-      "name": this.name,
-      "dateCommenced": this.dateCommenced,
-      "dateDOB": this.dateDOB
+    this._form = this._fb.group({
+      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(60)]],
+      dateCommenced: ['', [Validators.required]],
+      dateDOB: [''],
+      initialPosition: [this._fb.group({
+        position: ['',[Validators.required]],
+        dateStart: ['',[Validators.required]],
+        dateEnd: [''],
+        acting: ['']
+      }), [Validators.required]]
     });
   };
 
   ngOnInit() {
-    this.form.valueChanges
-        .filter(data => this.form.valid)
+    this._form.valueChanges
+        .filter(data => this._form.valid)
         .subscribe(data => console.log(JSON.stringify(data)));
   };
 
   ngOnChanges() {
     // update observable of selected person when it changes
     if (this.person) {
-      this.form.patchValue({
+      this._form.patchValue({
           name: this.person.name,
           dateCommenced: this.person.commenceDate && new Date(this.person.commenceDate).toISOString().substring(0, 10),
           dateDOB: this.person.DOB && new Date(this.person.DOB).toISOString().substring(0, 10)
         });
     } else {
-      this.form.patchValue({
+      this._form.patchValue({
           name: undefined,
           dateCommenced: new Date().toISOString().substring(0, 10),
           dateDOB: undefined
@@ -72,14 +68,21 @@ export class PersonDetailComponent implements OnInit, OnChanges {
   };
 
   onUpdatePerson() {
-  }
+    let person: Person = new Person(
+      this._form.controls['name'].value,
+      this._form.controls['dateCommenced'].value,
+      0,
+      this._form.controls['dateDOB'].value
+    );
+    this.updatePerson.emit(person);
+  };
 
   onUpdateAssignment(assignment: Assignment) {
     if (assignment) {
       assignment = Object.assign({}, assignment, { personId: this.person.id });
-      this._store.dispatch(this.assignmentActions.addAssignment(assignment));
+      this._store.dispatch(this._assignmentActions.addAssignment(assignment));
     } else {
-      this._store.dispatch(this.assignmentActions.selectAssignment(undefined));
+      this._store.dispatch(this._assignmentActions.selectAssignment(undefined));
     }
     this._addingNewAssignment = false;
     this._selectAssignment = false;

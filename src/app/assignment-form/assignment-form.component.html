@@ -1,0 +1,8 @@
+<form [formGroup]="_form" (ngSubmit)="onUpdateAssignment()">
+  <app-assignment-detail
+      [parentForm]="_form"
+      [assignment]="assignment">
+    </app-assignment-detail>
+  <button type="submit" [disabled]="!_form.valid">OK</button>
+  <button type="button" (click)="updateAssignment.emit(undefined)">Cancel</button>
+</form>

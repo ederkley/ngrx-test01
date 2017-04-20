@@ -1,5 +1,5 @@
-<form [formGroup]="form" (ngSubmit)="updatePerson()">
-  <button type="submit" [disabled]="!form.valid">OK</button>
+<form [formGroup]="_form" (ngSubmit)="onUpdatePerson()">
+  <button type="submit" [disabled]="!_form.valid">OK</button>
   <button type="button" (click)="updatePerson.emit(undefined)">Cancel</button>
 
   <div class="form-group">
@@ -28,8 +28,7 @@
 
   <div *ngIf="addingNewPerson" class="form-group">
     <app-assignment-detail
-      [addingNewPerson]="true"
-      [addingNewAssignment]="true">
+      [parentForm]="_form">
     </app-assignment-detail>
   </div>
 
@@ -39,10 +38,10 @@
     <app-assignment-list>
     </app-assignment-list>
 
-    <app-assignment-detail *ngIf="_addingAssignment || _selectAssignment"
+    <app-assignment-form *ngIf="_addingAssignment || _selectAssignment"
       [assignment]="(selectedAssignment$ | async)"
       (updateAssignment)="onUpdateAssignment(assignment)">
-    </app-assignment-detail>
+    </app-assignment-form>
   </div>
 
 </form>

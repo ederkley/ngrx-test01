@@ -1,5 +1,5 @@
 <div>
-  Assignments: <button type="button" (click)="changeSort()">{{ (sortAssignmentSortOrderAsc$ | async) ? 'Asc' : 'Desc' }}</button>
+  Assignments: <button type="button" (click)="changeSort()">{{ (sortedAssignmentAsc$ | async) ? 'Asc' : 'Desc' }}</button>
   <ul>
     <li *ngFor="let assignment of (sortedAssignments$ | async)" 
       [ngClass]="{selected:(selectedAssignment$ | async)?.id == assignment.id}"

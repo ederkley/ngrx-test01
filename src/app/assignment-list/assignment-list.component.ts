@@ -10,19 +10,21 @@ import * as fromRoot from '../_reducers';
 
 @Component({
   selector: 'app-assignment-list',
-  templateUrl: './assignment-list.component.html'
+  templateUrl: './assignment-list.component.html',
+  styles: ['li.selected span { background-color: blue; color: white } ']
 })
 export class AssignmentListComponent implements OnInit {
-  @Output() selectAssignment: EventEmitter<Assignment> = new EventEmitter<Assignment>();
-  public sortAssignmentSortOrderAsc$: Observable<boolean>;
+  public sortedAssignmentAsc$: Observable<boolean>;
   public sortedAssignments$: Observable<Assignment[]>;
+  private selectedAssignment$: Observable<Assignment>;
 
   constructor(
     private _store: Store<AppState>,
     private assignmentActions: AssignmentActions
   ) {
     this.sortedAssignments$ = _store.select(fromRoot.getAssignmentSortedView$);
-    this.sortAssignmentSortOrderAsc$ = _store.select(fromRoot.getAssignmentSortOrderAsc$);
+    this.sortedAssignmentAsc$ = _store.select(fromRoot.getAssignmentSortOrderAsc$);
+    this.selectedAssignment$ = _store.select(fromRoot.getAssignmentSelected$);
   };
 
   ngOnInit() {

@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="saveAssignment()">
+
     <div class="form-group">
         <label for="selectedPosition">Position</label>    
         <select class="form-control"
@@ -12,11 +12,9 @@
         <input class="form-control" formControlName="dateStart" type="date" />
         <label for="dateEnd">Date End</label>    
         <input class="form-control" formControlName="dateEnd" type="date" />
-        <label for="acting">Acting</label>    
-        <input class="form-control" formControlName="acting" type="checkbox" />
     </div>
     <div *ngIf="!addingNewPerson">
-        <button type="submit" [disabled]="!form.valid">OK</button>
-        <button type="button" (click)="updateAssignment.emit(undefined)">Cancel</button>
+        <label for="acting">Acting</label>    
+        <input class="form-control" formControlName="acting" type="checkbox" />
+
     </div>
-</form>
