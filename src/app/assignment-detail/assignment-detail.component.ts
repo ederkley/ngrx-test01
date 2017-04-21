@@ -5,6 +5,7 @@ import {Store} from '@ngrx/store';
 
 import * as fromRoot from '../_reducers';
 import { Assignment, Position } from '../_models/person';
+import { dateToField, todayToField } from '../util';
 
 @Component({
   selector: 'app-assignment-detail',
@@ -36,13 +37,13 @@ export class AssignmentDetailComponent implements OnInit {
     if (this.assignment) {
       this.childForm.patchValue({
           position: this.assignment.position,
-          dateStart: new Date(this.assignment.startDate).toISOString().substring(0, 10),
-          dateEnd: this.assignment.endDate && new Date(this.assignment.endDate).toISOString().substring(0, 10)
+          dateStart: dateToField(this.assignment.startDate),
+          dateEnd: dateToField(this.assignment.endDate)
         });
     } else {
       this.childForm.patchValue({
           position: undefined,
-          dateStart: new Date().toISOString().substring(0, 10),
+          dateStart: todayToField(),
           dateEnd: ""
         });
     };

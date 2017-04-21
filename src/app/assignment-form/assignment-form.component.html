@@ -1,10 +1,10 @@
-<form [formGroup]="parentForm" (ngSubmit)="onUpdateAssignment()">
+<form [formGroup]="parentForm">
   <app-assignment-detail
     [parentForm]="parentForm"
     [assignment]="assignment">
   </app-assignment-detail>
   <label for="acting">Acting</label>    
   <input class="form-control" formControlName="acting" type="checkbox" />
-  <button type="submit" [disabled]="!parentForm.valid">OK</button>
+  <button type="button" [disabled]="!parentForm.valid" (click)="onUpdateAssignment()">OK</button>
   <button type="button" (click)="updateAssignment.emit(undefined)">Cancel</button>
 </form>

@@ -37,8 +37,8 @@ export class PersonService {
   }
 
   private extractData(res: Response, inp?) {
-    const body = res.json() || inp;
-    return body.data || { };
+    const body = res.json();
+    return body && body.data || inp;
   }
 
   // PEOPLE API CALLS
@@ -57,14 +57,14 @@ export class PersonService {
 
   savePerson(person: Person): Observable<Person> {
     if (person.id == 0) {
-      // remove when no longer mocking
+      // TODO:remove when no longer mocking
       person.id = this.newId();
       return this._http.post(this.peopleUrl, person, Global.HEADER)
                   .map(this.extractData)
                   .catch(this.handleError);
     } else {
       return this._http.put(this.peopleUrl + person.id, person, Global.HEADER)
-                  .map(this.extractData)
+                  .map(resp => this.extractData(resp, person))
                   .catch(this.handleError);
     }
   };
@@ -91,14 +91,14 @@ export class PersonService {
 
   savePosition(position: Position): Observable<Position> {
     if (position.id == 0) {
-      // remove when no longer mocking
+      // TODO:remove when no longer mocking
       position.id = this.newId();
       return this._http.post(this.positionsUrl, position, Global.HEADER)
                   .map(this.extractData)
                   .catch(this.handleError);
     } else {
       return this._http.put(this.positionsUrl + position.id, position, Global.HEADER)
-                  .map(this.extractData)
+                  .map(resp => this.extractData(resp, position))
                   .catch(this.handleError);
     }
   };
@@ -125,14 +125,14 @@ export class PersonService {
 
   saveAssignment(assignment: Assignment): Observable<Assignment> {
     if (assignment.id == 0) {
-      // remove when no longer mocking
+      // TODO:remove when no longer mocking
       assignment.id = this.newId();
       return this._http.post(this.assignmentsUrl, assignment, Global.HEADER)
                   .map(this.extractData)
                   .catch(this.handleError);
     } else {
       return this._http.put(this.assignmentsUrl + assignment.id, assignment, Global.HEADER)
-                  .map(this.extractData)
+                  .map(resp => this.extractData(resp, assignment))
                   .catch(this.handleError);
     };
   };
@@ -146,7 +146,7 @@ export class PersonService {
   // ERROR-HANDLER
 
   private handleError(error: Response | any) {
-    // In a real world app, we might use a remote logging infrastructure
+    // TODO:remote logging infrastructure
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';

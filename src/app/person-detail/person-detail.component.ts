@@ -3,10 +3,10 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
-import { AppState } from '../_reducers';
 import { Person, Assignment } from '../_models/person';
 import { PersonActions, AssignmentActions } from '../_actions';
 import * as fromRoot from '../_reducers';
+import { dateToField, todayToField } from '../util';
 
 @Component({
   selector: 'app-person-detail',
@@ -23,7 +23,7 @@ export class PersonDetailComponent implements OnInit, OnChanges {
   @Output() updatePerson: EventEmitter<Person> = new EventEmitter<Person>();
 
   constructor(
-    private _store: Store<AppState>,
+    private _store: Store<fromRoot.AppState>,
     private _personActions: PersonActions,
     private _assignmentActions: AssignmentActions,
     private _fb: FormBuilder
@@ -33,7 +33,7 @@ export class PersonDetailComponent implements OnInit, OnChanges {
     // prepare form
     this.parentForm = _fb.group({
       name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(60)]],
-      dateCommenced: ['', [Validators.required]],
+      commenceDate: ['', [Validators.required]],
       dateDOB: ['']
     });
   };
@@ -49,38 +49,55 @@ export class PersonDetailComponent implements OnInit, OnChanges {
     if (this.person) {
       this.parentForm.patchValue({
           name: this.person.name,
-          dateCommenced: this.person.commenceDate && new Date(this.person.commenceDate).toISOString().substring(0, 10),
-          dateDOB: this.person.DOB && new Date(this.person.DOB).toISOString().substring(0, 10)
+          commenceDate: dateToField(this.person.commenceDate),
+          dateDOB: dateToField(this.person.DOB)
         });
     } else {
       this.parentForm.patchValue({
           name: undefined,
-          dateCommenced: new Date().toISOString().substring(0, 10),
+          commenceDate: todayToField(),
           dateDOB: undefined
         });
     };
   };
 
-  onUpdatePerson(formValues) {
-    let assignmentForm = this.parentForm.controls['assignment'].value;
-    let assignment: Assignment = new Assignment(0,
-      assignmentForm.position.id,
-      assignmentForm.acting,
-      assignmentForm.dateStart,
-      assignmentForm.dateEnd,
-      assignmentForm.position);
-    let person: Person = new Person(
-      this.parentForm.controls['name'].value,
-      this.parentForm.controls['dateCommenced'].value,
-      this.parentForm.controls['dateDOB'].value,
-      assignment);
+  onUpdatePerson() {
+    let person: Person;
+    if (this.addingNewPerson) {
+      // include initial assignment from assignment-detail component
+      let assignmentForm = this.parentForm.controls['assignment'].value;      
+      let assignment: Assignment = new Assignment(0,
+          assignmentForm.position.id,
+          assignmentForm.acting,
+          assignmentForm.dateStart,
+          assignmentForm.dateEnd,
+          assignmentForm.position
+        );
+        person = new Person(
+          this.parentForm.controls['name'].value,
+          this.parentForm.controls['commenceDate'].value,
+          this.parentForm.controls['dateDOB'].value,
+          assignment
+        );
+    } else {
+      person = Object.assign(this.person, {
+        name: this.parentForm.controls['name'].value,
+        commenceDate: this.parentForm.controls['commenceDate'].value,
+        DOBdate: this.parentForm.controls['dateDOB'].value
+      });
+    };
     this.updatePerson.emit(person);
   };
 
   onUpdateAssignment(assignment: Assignment) {
     if (assignment) {
-      assignment = Object.assign({}, assignment, { personId: this.person.id });
-      this._store.dispatch(this._assignmentActions.addAssignment(assignment));
+      assignment.personId = this.person.id;
+      console.log(assignment);
+      if (assignment.id == 0) {
+        this._store.dispatch(this._assignmentActions.addAssignment(assignment));
+      } else {
+        this._store.dispatch(this._assignmentActions.saveAssignment(assignment));
+      };
     } else {
       this._store.dispatch(this._assignmentActions.selectAssignment(undefined));
     }

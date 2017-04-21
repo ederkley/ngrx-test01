@@ -5,25 +5,6 @@ import { AppState } from '../_reducers';
 import { AssignmentActions, AssignmentActionTypes } from '../_actions/assignment.actions';
 import { PersonService } from '../_services/person.service';
 
-    /*
-  search$: Observable<Action> = this.actions$
-    .ofType(book.AssignmentActionTypes.SEARCH)
-    .debounceTime(300)
-    .map(toPayload)
-    .switchMap(query => {
-      if (query === '') {
-        return empty();
-      }
-
-      const nextSearch$ = this.actions$.ofType(book.AssignmentActionTypes.SEARCH).skip(1);
-
-      return this.googleBooks.searchBooks(query)
-        .takeUntil(nextSearch$)
-        .map(books => new book.SearchCompleteAction(books))
-        .catch(() => of(new book.SearchCompleteAction([])));
-    });*/
-
-
 @Injectable()
 export class AssignmentEffects {
     constructor (
@@ -47,7 +28,9 @@ export class AssignmentEffects {
         .ofType(AssignmentActionTypes.SAVE_ASSIGNMENT)
         .map(action => action.payload)
         .switchMap(assignment => this.svc.saveAssignment(assignment))
-        .map(assignment => this.assignmentActions.saveAssignmentSuccess(assignment));
+        .map(assignment => {
+            return this.assignmentActions.saveAssignmentSuccess(assignment)
+        });
 
     @Effect() addAssignment$ = this.update$
         .ofType(AssignmentActionTypes.ADD_ASSIGNMENT)

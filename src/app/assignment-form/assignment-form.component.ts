@@ -32,23 +32,27 @@ export class AssignmentFormComponent implements OnInit {
   ngOnChanges() {
     if (this.assignment) {
       this.parentForm.patchValue({
-          acting: this.assignment.acting
-        });
+        acting: this.assignment.acting
+      });
     } else {
       this.parentForm.patchValue({
-          acting: false
-        });
+        acting: false
+      });
     };
   };
 
   onUpdateAssignment() {
-    let assignment: Assignment = new Assignment(0, 
+    console.log('onUpdateAssignment')
+    let assignmentForm = this.parentForm.controls['assignment'].value;
+    let savedAssignment: Assignment = new Assignment(0,
+      assignmentForm.position.id,
       this.parentForm.controls['acting'].value,
-      this.parentForm.controls['assignment'].value.controls['position'].value.id,
-      this.parentForm.controls['dateStart'].value,
-      this.parentForm.controls['dateEnd'].value);
-    console.dir(assignment);
-    this.updateAssignment.emit(assignment);
+      assignmentForm.dateStart,
+      assignmentForm.dateEnd,
+      assignmentForm.position);
+    savedAssignment.id = (this.assignment && this.assignment.id) || 0;
+    console.log(savedAssignment);
+    this.updateAssignment.emit(savedAssignment);
   };
 
 };
