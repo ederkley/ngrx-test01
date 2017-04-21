@@ -3,12 +3,12 @@
     <span>
       {{member.name}} 
       (Commence date: {{member.commenceDate | date:'d MMM yyyy'}}) <br/>
-      <span *ngIf="!showCurrentOnly && member.currentAssignment && member.actualAssignment && member.currentAssignment.positionId != member.actualAssignment.positionId">
-        Actual: {{member.actualPosition?.title}}<br/>
+      <span *ngIf="!_showCurrentOnly && member.currentAssignment && member.actualAssignment && member.currentAssignment.positionId != member.actualAssignment.positionId">
+        Actual: {{member.actualAssignment?.position?.title}}<br/>
       </span>
-      <span *ngIf="member.currentAssignment && member.currentPosition; else nonCurrent">
-        Current: {{member.currentPosition?.title}}
-        &nbsp;({{member.currentPosition?.level}}{{member.currentAssignment.acting ? ', acting' : ''}})
+      <span *ngIf="member.currentAssignment; else nonCurrent">
+        {{_showLastAssignment ? 'Last' : 'Current'}}: {{member.currentAssignment?.position?.title}}
+        &nbsp;({{member.currentAssignment?.position?.level}}{{member.currentAssignment.acting ? ', acting' : ''}})
       </span>
       <ng-template #nonCurrent>
         (Last assignment date:)

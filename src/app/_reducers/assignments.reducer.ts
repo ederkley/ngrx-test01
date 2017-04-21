@@ -55,31 +55,35 @@ export const assignmentState = (state: AssignmentState = initialState, action: A
 // SELECTORS
 export const getAssignments$ = (state: AssignmentState) => state.assignments;
 
+// returns assignment with associated position object
+export const getAssignmentsView$ = (assignments, positions) => {
+    return assignments.map(assignment => {
+        const assignmentPositions: Position[] = positions.filter(position => position.id == assignment.positionId);
+        if (assignmentPositions.length === 1) {
+            return Object.assign(assignment, { position: assignmentPositions[0] });
+        } else {
+            return assignment;
+        };
+    });
+};
+
 export const getHasLoaded$ = (state: AssignmentState) => state.hasLoaded;
 
 export const getSelectedAssignment$ = (state: AssignmentState) => state.selectedAssignment;
 
 export const getSortAsc$ = (state: AssignmentState) => state.sortAsc;
 
-export const getSortedAssignmentsView$ = (selectedPerson, assignments, positions, sortAsc) => {
-    console.log('getSortedAssignmentsList');
-    if (assignments && positions && selectedPerson) {
+// returns assignments filtered for selected person and sorted
+export const getAssignmentsSortedView$ = (selectedPerson, assignments, sortAsc) => {
+    console.log('getAssignmentsSortedView');
+    if (assignments && selectedPerson) {
         let personsAssignments: Assignment[] = assignments.filter(assignment => assignment.personId == selectedPerson.id);
         if (personsAssignments.length > 0) {
-            return personsAssignments
-                .map(assignment => {
-                    const assignmentPositions: Position[] = positions.filter(position => position.id == assignment.positionId);
-                    if (assignmentPositions.length === 1) {
-                        return Object.assign(assignment, { position: assignmentPositions[0] });
-                    } else {
-                        return assignment;
-                    };
-                })
-                .sort((a, b) => {
-                    return sortAsc ? 
-                    new Date(b.startDate).getTime() - new Date(a.startDate).getTime() :
-                    new Date(a.startDate).getTime() - new Date(b.startDate).getTime() 
-                });
+            return personsAssignments.sort((a, b) => {
+                return sortAsc ? 
+                new Date(b.startDate).getTime() - new Date(a.startDate).getTime() :
+                new Date(a.startDate).getTime() - new Date(b.startDate).getTime() 
+            });
         };
     } else {
         return [];

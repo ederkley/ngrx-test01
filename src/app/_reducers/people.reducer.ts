@@ -20,8 +20,9 @@ const initialState: PeopleState = {
 // remember to avoid mutation within reducers
 export const peopleState = (state: PeopleState = initialState, action: Action): PeopleState => {
     switch (action.type) {
-        case PersonActionTypes.ADD_PERSON_SUCCESS: 
-            return {...state, ...{ people: [ ...state.people, action.payload ] } };
+        case PersonActionTypes.ADD_PERSON_SUCCESS: {
+            return Object.assign({}, state, { people: [ ...state.people, action.payload ] } );
+        };
         case PersonActionTypes.SAVE_PERSON_SUCCESS: {
             let index = _.findIndex(state.people, {id: action.payload.id});
             if (index >= 0) {

@@ -1,5 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import {Store} from '@ngrx/store';
 
 import * as fromRoot from '../_reducers';
 import { Assignment, Position } from '../_models/person';
@@ -9,15 +11,25 @@ import { Assignment, Position } from '../_models/person';
   templateUrl: './assignment-detail.component.html'
 })
 export class AssignmentDetailComponent implements OnInit {
-  public childForm: FormGroup;
   @Input() parentForm: FormGroup;
   @Input() assignment: Assignment;
+  public childForm: FormGroup;
+  public positions$: Observable<any>;
 
   constructor(
+    private _store: Store<any>,
+    private _fb: FormBuilder
   ) {
+    this.positions$ = _store.select(fromRoot.getPositionsList$);
+    this.childForm = _fb.group({
+        position: ['',[Validators.required]],
+        dateStart: ['',[Validators.required]],
+        dateEnd: ['']
+      });
   };
 
   ngOnInit() {
+    this.parentForm.addControl('assignment', this.childForm);
   };
 
   ngOnChanges() {
@@ -25,26 +37,15 @@ export class AssignmentDetailComponent implements OnInit {
       this.childForm.patchValue({
           position: this.assignment.position,
           dateStart: new Date(this.assignment.startDate).toISOString().substring(0, 10),
-          dateEnd: this.assignment.endDate && new Date(this.assignment.endDate).toISOString().substring(0, 10),
-          acting: this.assignment.acting
+          dateEnd: this.assignment.endDate && new Date(this.assignment.endDate).toISOString().substring(0, 10)
         });
     } else {
       this.childForm.patchValue({
           position: undefined,
           dateStart: new Date().toISOString().substring(0, 10),
-          dateEnd: undefined,
-          acting: false
+          dateEnd: ""
         });
     };
-  };
-
-  onUpdateAssignment() {
-    let assignment: Assignment = new Assignment(0, 
-      this.childForm.controls['position'].value.id,
-      this.childForm.controls['acting'].value,
-      this.childForm.controls['dateStart'].value,
-      this.childForm.controls['dateEnd'].value);
-    //this.updateAssignment.emit(assignment);
   };
 
 };

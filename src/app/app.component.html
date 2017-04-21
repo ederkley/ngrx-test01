@@ -8,7 +8,7 @@
 </app-staff-list-filter>
 
 Total: {{(staffView$ | async)?.total}} of {{(people$ | async)?.length}}
-<button (click)="addNewPerson()">Add new</button>
+<button *ngIf="!_selectedPerson" (click)="addNewPerson()">Add new</button>
 
 <app-person-list *ngIf="(hasLoaded$ | async)"
     [staff]="(staffView$ | async)?.staff"

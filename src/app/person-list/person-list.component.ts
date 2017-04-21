@@ -14,7 +14,8 @@ import { StaffFilterActionTypes } from '../_actions/staff-filter.actions';
   styles: ['li.selected span { background-color: blue; color: white } ']
 })
 export class PersonListComponent implements OnChanges {
-  public showCurrentOnly : boolean;
+  private _showCurrentOnly : boolean;
+  private _showLastAssignment: boolean;
   public selectedPerson$;
   @Input() staff;
   @Input() filter;
@@ -29,7 +30,8 @@ export class PersonListComponent implements OnChanges {
   };
   
   ngOnChanges() {
-    this.showCurrentOnly = (this.filter != StaffFilterActionTypes.SHOW_ACTUAL_POS);
+    this._showCurrentOnly = (this.filter != StaffFilterActionTypes.SHOW_ACTUAL_POS);
+    this._showLastAssignment = (this.filter == StaffFilterActionTypes.SHOW_EXSTAFF);
   };
 
   onSelectPerson(person) {

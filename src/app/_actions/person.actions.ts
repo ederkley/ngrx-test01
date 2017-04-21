@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 
 import { type } from '../util';
-import { Person } from '../_models/person';
+import { Person, Assignment } from '../_models/person';
 
 // Person Action Constants
 export const PersonActionTypes = {
@@ -75,7 +75,7 @@ export class PersonActions {
             payload: person
         };
     }
-
+    
     deletePerson(person: Person): Action {
         return {
             type: PersonActionTypes.DELETE_PERSON,

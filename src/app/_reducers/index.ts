@@ -41,12 +41,13 @@ export const getPeopleHaveLoaded$ = createSelector(getPersonState, fromPeople.ge
 export const getPersonSelected$ = createSelector(getPersonState, fromPeople.getSelectedPerson$);
 
 // ASSIGNMENT REDUCERS
-export const getAssignmentList$ = createSelector(getAssignmentState, fromAssignments.getAssignments$);
+export const getAssignments$ = createSelector(getAssignmentState, fromAssignments.getAssignments$);
+export const getAssignmentsView$ = createSelector(getAssignments$, getPositionsList$, fromAssignments.getAssignmentsView$);
 export const getAssignmentsHaveLoaded$ = createSelector(getAssignmentState, fromAssignments.getHasLoaded$);
 export const getAssignmentSelected$ = createSelector(getAssignmentState, fromAssignments.getSelectedAssignment$);;
 export const getAssignmentSortOrderAsc$ = createSelector(getAssignmentState, fromAssignments.getSortAsc$);
-export const getAssignmentSortedView$ = createSelector([getPersonSelected$, getAssignmentList$, getPositionsList$, getAssignmentSortOrderAsc$], fromAssignments.getSortedAssignmentsView$);
-
+export const getAssignmentSortedView$ = createSelector([getPersonSelected$, getAssignmentsView$, getAssignmentSortOrderAsc$], fromAssignments.getAssignmentsSortedView$);
 
 // STAFF-FILTER REDUCERS
-export const getStaffListView$ = createSelector([getPeopleList$, getStaffFilterState, getAssignmentList$, getPositionsList$], fromStaffFilter.getStaffListView$);
+export const getStaffView$ = createSelector([getPeopleList$, getAssignmentsView$], fromStaffFilter.getStaffList$);
+export const getStaffSortedView$ = createSelector([getStaffView$, getStaffFilterState, getAssignmentsView$], fromStaffFilter.getStaffListSortedView$);

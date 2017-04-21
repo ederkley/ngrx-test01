@@ -40,21 +40,22 @@ export class AppComponent implements OnInit {
     ).map(([peopleHasLoaded, assignmentsHasLoaded, positionsHasLoaded]) => !!peopleHasLoaded && !!assignmentsHasLoaded && !!positionsHasLoaded);    
 
     // update staff list whenever people, assignments, positions or filter changes
-    this.staffView$ = _store.select(fromRoot.getStaffListView$);
+    this.staffView$ = _store.select(fromRoot.getStaffSortedView$);
 
-    // update total people whenever people changes
+    // update total # people whenever people changes
     this.people$ = _store.select(fromRoot.getPeopleList$);
-    
-    // load people, assignments and positions
-    this._store.dispatch(this.personActions.loadPeople());
-    this._store.dispatch(this.assignmentActions.loadAssignments());
-    this._store.dispatch(this.positionActions.loadPositions());
 
     // update observable of selected person when it changes
     this.selectedPerson$ = _store.select(fromRoot.getPersonSelected$);
     this.selectedPerson$.subscribe(person => {
       this._selectedPerson = !!person;
+      this._addingPerson = false;
     });
+    
+    // load people, assignments and positions from API
+    this._store.dispatch(this.personActions.loadPeople());
+    this._store.dispatch(this.assignmentActions.loadAssignments());
+    this._store.dispatch(this.positionActions.loadPositions());
 
     // set default filter
     this.updateFilter(this.defaultFilter);

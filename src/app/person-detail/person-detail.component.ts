@@ -14,7 +14,7 @@ import * as fromRoot from '../_reducers';
   styles: ['li.selected span { background-color: blue; color: white } ']
 })
 export class PersonDetailComponent implements OnInit, OnChanges {
-  private _form: FormGroup;
+  public parentForm: FormGroup;
   private _addingNewAssignment = false;
   private _selectAssignment = false;
   private selectedAssignment$: Observable<Assignment>;
@@ -31,35 +31,29 @@ export class PersonDetailComponent implements OnInit, OnChanges {
     this.selectedAssignment$ = _store.select(fromRoot.getAssignmentSelected$);
     this.selectedAssignment$.subscribe(assignment => this._selectAssignment = !!assignment);
     // prepare form
-    this._form = this._fb.group({
+    this.parentForm = _fb.group({
       name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(60)]],
       dateCommenced: ['', [Validators.required]],
-      dateDOB: [''],
-      initialPosition: [this._fb.group({
-        position: ['',[Validators.required]],
-        dateStart: ['',[Validators.required]],
-        dateEnd: [''],
-        acting: ['']
-      }), [Validators.required]]
+      dateDOB: ['']
     });
   };
 
   ngOnInit() {
-    this._form.valueChanges
-        .filter(data => this._form.valid)
+    this.parentForm.valueChanges
+        .filter(data => this.parentForm.valid)
         .subscribe(data => console.log(JSON.stringify(data)));
   };
 
   ngOnChanges() {
     // update observable of selected person when it changes
     if (this.person) {
-      this._form.patchValue({
+      this.parentForm.patchValue({
           name: this.person.name,
           dateCommenced: this.person.commenceDate && new Date(this.person.commenceDate).toISOString().substring(0, 10),
           dateDOB: this.person.DOB && new Date(this.person.DOB).toISOString().substring(0, 10)
         });
     } else {
-      this._form.patchValue({
+      this.parentForm.patchValue({
           name: undefined,
           dateCommenced: new Date().toISOString().substring(0, 10),
           dateDOB: undefined
@@ -67,13 +61,19 @@ export class PersonDetailComponent implements OnInit, OnChanges {
     };
   };
 
-  onUpdatePerson() {
+  onUpdatePerson(formValues) {
+    let assignmentForm = this.parentForm.controls['assignment'].value;
+    let assignment: Assignment = new Assignment(0,
+      assignmentForm.position.id,
+      assignmentForm.acting,
+      assignmentForm.dateStart,
+      assignmentForm.dateEnd,
+      assignmentForm.position);
     let person: Person = new Person(
-      this._form.controls['name'].value,
-      this._form.controls['dateCommenced'].value,
-      0,
-      this._form.controls['dateDOB'].value
-    );
+      this.parentForm.controls['name'].value,
+      this.parentForm.controls['dateCommenced'].value,
+      this.parentForm.controls['dateDOB'].value,
+      assignment);
     this.updatePerson.emit(person);
   };
 

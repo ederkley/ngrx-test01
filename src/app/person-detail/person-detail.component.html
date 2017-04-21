@@ -1,5 +1,5 @@
-<form [formGroup]="_form" (ngSubmit)="onUpdatePerson()">
-  <button type="submit" [disabled]="!_form.valid">OK</button>
+<form [formGroup]="parentForm">
+  <button type="button" [disabled]="!parentForm.valid" (click)="onUpdatePerson(parentForm.value)">OK</button>
   <button type="button" (click)="updatePerson.emit(undefined)">Cancel</button>
 
   <div class="form-group">
@@ -26,13 +26,13 @@
            placeholder="Date of birth">
   </div>
 
-  <div *ngIf="addingNewPerson" class="form-group">
+  <div *ngIf="addingNewPerson">
     <app-assignment-detail
-      [parentForm]="_form">
+      [parentForm]="parentForm">
     </app-assignment-detail>
   </div>
 
-  <div *ngIf="!addingNewPerson" class="form-group">
+  <div *ngIf="!addingNewPerson">
     Current Position: {{person?.currentPosition?.title}}<br/>
     <button type="button" (click)="addAssignment()">New Assignment</button>
     <app-assignment-list>
